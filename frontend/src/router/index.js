@@ -6,6 +6,7 @@ import CompanyBoardPostPage from "../pages/company/board/CompanyBoardPostPage.vu
 import OrdersPage from "@/pages/user/orders/OrdersPage.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
+import CompanySignupComponent from "@/components/company/CompanySignupComponent.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -29,6 +30,7 @@ const router = createRouter({
       children: [
         {path: "login", component: LoginComponent, meta: { requiresAuth: false } },
         {path: "user/signup", component: UserSignupComponent, meta: { requiresAuth: false } },
+        {path: "company/signup", component: CompanySignupComponent, meta: { requiresAuth: false } },
         {path: "", redirect: "/auth/login", meta: { requiresAuth: false } },
       ]
     }
