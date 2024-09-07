@@ -1,63 +1,63 @@
 <template>
-            <div class="css-1l2tkkh eug5r8l2">
-                <div class="pc css-3rbu7q epggjnz0">
-                    <div class="top-info-section">
-                        <div class="pc css-jagjhu e1w7rsa02">
-                            <div class="grade-name">
-                                <div class="user-name">심키즈님</div>
-                            </div>
-                        </div>
-                        <div class="css-rurvds e5rtjnl2">
-                            <div class="pc css-z53t5q e5rtjnl1">
-                                <div class="item-wrap">
-                                    <button class="menu-item">
-                                        <div class="name-text">포인트</div>
-                                        <div class="amount-text">
-                                            <div class="number-text">0</div>
-                                            원
-                                        </div>
-                                    </button>
-                                </div>
-                            </div>
-                            <a href="/member/membership" class="pc css-1d9zl68 e5rtjnl0"></a>
-                        </div>
+    <div class="css-1l2tkkh eug5r8l2">
+        <div class="pc css-3rbu7q epggjnz0">
+            <div class="top-info-section">
+                <div class="pc css-jagjhu e1w7rsa02">
+                    <div class="grade-name">
+                        <div class="user-name">심키즈님</div>
                     </div>
-                    <div class="pc css-1ozh7ew e1n1zlz21">
-                        <div class="css-1tzlowo e1ifbcqu0">자주찾는 메뉴</div>
-                        <div class="menu-wrap">
-                            <button class="menu-link">
-                                <img src="@/assets/cart-icon.svg" width="28" height="28" />
-                                <div class="active css-10aedqr e1n1zlz20">
-                                    주문 내역
-                                </div>
-                            </button><button class="menu-link">
-                                <img src="@/assets/heart-icon.svg" width="29" height="28" />
-                                <div class="css-10aedqr e1n1zlz20">
-                                    찜한 게시글
+                </div>
+                <div class="css-rurvds e5rtjnl2">
+                    <div class="pc css-z53t5q e5rtjnl1">
+                        <div class="item-wrap">
+                            <button class="menu-item">
+                                <div class="name-text">포인트</div>
+                                <div class="amount-text">
+                                    <div class="number-text">0</div>
+                                    원
                                 </div>
                             </button>
                         </div>
                     </div>
-                    <div class="menu-info-section">
-                        <div class="css-bivr1n eoeriki0">
-                            <div class="css-1tzlowo e1ifbcqu0">문의</div>
-                            <a class="css-1qe2c6r e1ytq75h2">
-                                <div class="css-1mq58uz e1ytq75h1">My 문의</div>
-                            </a>
-                        </div>
-                        <div class="css-bivr1n eoeriki0">
-                            <div class="css-1tzlowo e1ifbcqu0">내 정보관리</div>
-                            <a class="css-1qe2c6r e1ytq75h2">
-                                <div class="css-1mq58uz e1ytq75h1">내 정보</div>
-                            </a><a class="css-1qe2c6r e1ytq75h2">
-                                <div class="css-1mq58uz e1ytq75h1">개인정보 수정</div>
-                            </a><a class="css-1qe2c6r e1ytq75h2">
-                                <div class="css-1mq58uz e1ytq75h1">배송지 관리</div>
-                            </a>
-                        </div>
-                    </div>
+                    <a href="/member/membership" class="pc css-1d9zl68 e5rtjnl0"></a>
                 </div>
             </div>
+            <div class="pc css-1ozh7ew e1n1zlz21">
+                <div class="css-1tzlowo e1ifbcqu0">자주찾는 메뉴</div>
+                <div class="menu-wrap">
+                    <button class="menu-link">
+                        <img src="@/assets/cart-icon.svg" width="28" height="28" />
+                        <div class="active css-10aedqr e1n1zlz20">
+                            주문 내역
+                        </div>
+                    </button><button class="menu-link">
+                        <img src="@/assets/heart-icon.svg" width="29" height="28" />
+                        <div class="css-10aedqr e1n1zlz20">
+                            찜한 게시글
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <div class="menu-info-section">
+                <div class="css-bivr1n eoeriki0">
+                    <div class="css-1tzlowo e1ifbcqu0">문의</div>
+                    <a class="css-1qe2c6r e1ytq75h2">
+                        <div class="css-1mq58uz e1ytq75h1">My 문의</div>
+                    </a>
+                </div>
+                <div class="css-bivr1n eoeriki0">
+                    <div class="css-1tzlowo e1ifbcqu0">내 정보관리</div>
+                    <a class="css-1qe2c6r e1ytq75h2">
+                        <div class="css-1mq58uz e1ytq75h1">내 정보</div>
+                    </a><a class="css-1qe2c6r e1ytq75h2">
+                        <div class="css-1mq58uz e1ytq75h1">개인정보 수정</div>
+                    </a><a class="css-1qe2c6r e1ytq75h2">
+                        <div class="css-1mq58uz e1ytq75h1">배송지 관리</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <style scoped>
@@ -79,7 +79,7 @@
 
 .css-1l2tkkh {
     overflow: hidden;
-    width: 375px;
+    width: 300px;
     border-radius: 16px;
 }
 
@@ -311,7 +311,7 @@
 /*-------------  마이페이지 주문 내역 부분 ------------------*/
 .css-heioij {
     overflow: hidden;
-    width: 650px;
+    width: 700px;
     background-color: rgb(255, 255, 255);
     border-radius: 16px;
 }
