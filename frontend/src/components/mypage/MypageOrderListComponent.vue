@@ -1,74 +1,74 @@
 <template>
-            <div class="css-heioij eug5r8l1">
-                <div class="css-oc8mjz ed9qr673">
-                    <div class="css-eq7f8j ed9qr672">
-                        <h2 class="css-1lmd4kz ed9qr671">주문 내역</h2>
-                    </div>
-                </div>
-                <div class="css-1xdhyk6 eug5r8l0">
-                    <div class="css-10ekv2i e13vhfr40">
-                        <div class="css-ole4zz e2nz7g70"></div>
-                        <div class="css-1phmj5u e190ng8o0">
-                            <div class="css-2kmie e1g49j8k1">
-                                <div class="css-peeqro e190ng8o1">
-                                    <div class="css-jyp95e e1l5ke4x0">
-                                        <button class="css-7sy6n e1rmfz7b0">
-                                            <i class="_1k44z3a0" style="width: 40px; height: 40px;">
-                                                <img src="@/assets/arrow.png" alt="icon" width="40" height="40">
-                                            </i>
-                                        </button>
-                                        <div class="css-7uztss e1rmfz7b4">
+    <div class="css-heioij eug5r8l1">
+        <div class="css-oc8mjz ed9qr673">
+            <div class="css-eq7f8j ed9qr672">
+                <h2 class="css-1lmd4kz ed9qr671">주문 내역</h2>
+            </div>
+        </div>
+        <div class="css-1xdhyk6 eug5r8l0">
+            <div class="css-10ekv2i e13vhfr40">
+                <div class="css-ole4zz e2nz7g70"></div>
+                <div class="css-1phmj5u e190ng8o0">
+                    <div class="css-2kmie e1g49j8k1">
+                        <div class="css-peeqro e190ng8o1">
+                            <div class="css-jyp95e e1l5ke4x0">
+                                <button class="css-7sy6n e1rmfz7b0">
+                                    <i class="_1k44z3a0" style="width: 40px; height: 40px;">
+                                        <img src="@/assets/arrow.png" alt="icon" width="40" height="40">
+                                    </i>
+                                </button>
+                                <div class="css-7uztss e1rmfz7b4">
 
-                                            <div>
-                                                <p
-                                                    class="_97oqoup _97oqouv _97oqou5 ldmw177c _97oqou19 _97oqouj ldmw177q _97oqou12 _97oqouc ldmw177j css-wcc2f6 e1rmfz7b3">
-                                                    2023.05.31</p>
-                                                <div class="css-k7chvl e1rmfz7b1">
-                                                    <p
-                                                        class="_97oqoup _97oqoux _97oqou7 ldmw177a _97oqou1b _97oqoul ldmw177s _97oqou13 _97oqoud ldmw177i css-1vgapaa e1rmfz7b2">
-                                                        주문번호 2307216320131 </p>
-                                                </div>
-                                            </div>
+                                    <div>
+                                        <p
+                                            class="_97oqoup _97oqouv _97oqou5 ldmw177c _97oqou19 _97oqouj ldmw177q _97oqou12 _97oqouc ldmw177j css-wcc2f6 e1rmfz7b3">
+                                            2023.05.31</p>
+                                        <div class="css-k7chvl e1rmfz7b1">
+                                            <p
+                                                class="_97oqoup _97oqoux _97oqou7 ldmw177a _97oqou1b _97oqoul ldmw177s _97oqou13 _97oqoud ldmw177i css-1vgapaa e1rmfz7b2">
+                                                주문번호 2307216320131 </p>
                                         </div>
-                                        <div height="1px" width="100%" class="css-yng2ii e1ypu1ln0"></div>
-                                        <div class="css-1t4yb7q e1xhbacy2">
-                                            <div class="css-wnosz2 e1xhbacy0">
-                                                <p
-                                                    class="_97oqoup _97oqouv _97oqou5 ldmw177c _97oqou19 _97oqouj ldmw177q _97oqou12 _97oqouc ldmw177j css-1n1zmlq e1xhbacy1">
-                                                    주문완료</p>
-                                            </div>
-                                        </div>
-                                        <div class="css-vts8bc e9fxgjh2">
-                                            <div class="css-1tf2711 e73mjag8"><a href="/goods/5054274"
-                                                    class="css-1ll9bqd e73mjag0"><img
-                                                        src="https://img-cf.kurly.com/hdims/resize/%5E%3E120x%3E156/cropcenter/120x156/quality/85/src/shop/data/goods/1594097581645l0.jpg"
-                                                        alt="[콜린스 다이닝] 한끼 보리 샐러드" class="css-13pph03 e73mjag7"></a>
-                                                <div class="_17g6wc40">
-                                                    <a href="/goods/5054274" class="css-1ll9bqd e73mjag0">
-                                                        <p
-                                                            class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-1dl78ek e73mjag3">
-                                                            [콜린스 다이닝] 한끼 보리 샐러드</p>
-                                                    </a>
-                                                    <div class="css-1tf2711 e73mjag8">
-                                                        <p
-                                                            class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou11 _97oqoub ldmw177k css-1dl78ek e73mjag4">
-                                                            6,480원</p>
-                                                        <p class="css-if5wh3 e73mjag1">7,200원</p>
-                                                        <div width="1px" height="10px" class="css-9ib26w e1ypu1ln0">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="css-8vtrb0 eus1fbt1"></div>
                                     </div>
                                 </div>
+                                <div height="1px" width="100%" class="css-yng2ii e1ypu1ln0"></div>
+                                <div class="css-1t4yb7q e1xhbacy2">
+                                    <div class="css-wnosz2 e1xhbacy0">
+                                        <p
+                                            class="_97oqoup _97oqouv _97oqou5 ldmw177c _97oqou19 _97oqouj ldmw177q _97oqou12 _97oqouc ldmw177j css-1n1zmlq e1xhbacy1">
+                                            주문완료</p>
+                                    </div>
+                                </div>
+                                <div class="css-vts8bc e9fxgjh2">
+                                    <div class="css-1tf2711 e73mjag8"><a href="/goods/5054274"
+                                            class="css-1ll9bqd e73mjag0"><img
+                                                src="https://img-cf.kurly.com/hdims/resize/%5E%3E120x%3E156/cropcenter/120x156/quality/85/src/shop/data/goods/1594097581645l0.jpg"
+                                                alt="[콜린스 다이닝] 한끼 보리 샐러드" class="css-13pph03 e73mjag7"></a>
+                                        <div class="_17g6wc40">
+                                            <a href="/goods/5054274" class="css-1ll9bqd e73mjag0">
+                                                <p
+                                                    class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-1dl78ek e73mjag3">
+                                                    [콜린스 다이닝] 한끼 보리 샐러드</p>
+                                            </a>
+                                            <div class="css-1tf2711 e73mjag8">
+                                                <p
+                                                    class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou11 _97oqoub ldmw177k css-1dl78ek e73mjag4">
+                                                    6,480원</p>
+                                                <p class="css-if5wh3 e73mjag1">7,200원</p>
+                                                <div width="1px" height="10px" class="css-9ib26w e1ypu1ln0">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="css-8vtrb0 eus1fbt1"></div>
                             </div>
-                            <div class="css-21ijkk e190ng8o3"></div>
                         </div>
                     </div>
+                    <div class="css-21ijkk e190ng8o3"></div>
                 </div>
             </div>
+        </div>
+    </div>
 </template>
 
 <style scoped>
@@ -260,7 +260,7 @@ p {
 }
 
 .css-7sy6n {
-    width: 40px;
+    width: 75px;
     height: 40px;
     flex-shrink: 0;
     position: absolute;
