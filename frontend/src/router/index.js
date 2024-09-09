@@ -14,6 +14,8 @@ import FindPasswordComponent from "@/components/user/FindPasswordComponent.vue";
 import ResetPasswordComponent from "@/components/user/ResetPasswordComponent.vue";
 import FindIdSuccessComponent from "@/components/user/FindIdSuccessComponent.vue";
 import FindIdComponent from "@/components/user/FindIdComponent.vue";
+import BoardListPage from "@/pages/common/BoardListPage.vue";
+import ProductBoardListComponent from "@/components/mainpage/ProductBoardListComponent.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -53,10 +55,17 @@ const router = createRouter({
     },
 
     {
+      path: "/board", component: BoardListPage, meta: { requiresAuth: false },
+      children: [
+        {path: "list", component: ProductBoardListComponent, meta: { requiresAuth: false } }
+      ]
+    },
+  
+    {
       path: "/mypage",
       component: MyPage,
     },
-  ],
+  ]
 });
 
 export default router;
