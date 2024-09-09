@@ -4,6 +4,7 @@ import AuthPage from "@/pages/common/AuthPage.vue";
 import MainPage from "@/pages/common/MainPage.vue";
 import MyPage from "@/pages/user/MyPage.vue";
 import CompanyBoardPostPage from "../pages/company/board/CompanyBoardPostPage.vue";
+import CompanyBoardListPage from "../pages/company/board/CompanyBoardListPage.vue";
 import OrdersPage from "@/pages/user/orders/OrdersPage.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import CompanySignupComponent from "@/components/company/CompanySignupComponent.vue";
@@ -22,11 +23,15 @@ const router = createRouter({
       component: MainPage,
       children: [
         {
-          path: "company",
+          path: "product-boards/company",
           component: CompanyBoardPostPage,
           meta: { requiresAuth: false },
         },
-        { path: "orders", component: OrdersPage }
+        {
+          path: "product-boards/company/list",
+          component: CompanyBoardListPage,
+        },
+        { path: "orders", component: OrdersPage },
       ],
     },
 
@@ -51,8 +56,7 @@ const router = createRouter({
       path: "/mypage",
       component: MyPage,
     },
-
-  ]
+  ],
 });
 
 export default router;
