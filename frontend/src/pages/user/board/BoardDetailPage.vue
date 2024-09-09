@@ -8,18 +8,38 @@
         </main>
         <nav class="css-1le17tz en4zazl1">
           <ul class="css-tse2s2 en4zazl0">
-            <li class="css-1tzhzcg efe6b6j1">
+            <li
+              :class="[
+                'css-1tzhzcg',
+                'efe6b6j1',
+                'tab',
+                { active: activeTab === 'description' },
+              ]"
+              @click.prevent="activeTab = 'description'"
+            >
               <a class="css-1t0ft7s efe6b6j0"
                 ><span class="name">상품설명</span></a
               >
             </li>
-            <li class="css-1tzhzcg efe6b6j1">
+            <li
+              :class="[
+                'css-1tzhzcg',
+                'efe6b6j1',
+                'tab',
+                { active: activeTab === 'inquiries' },
+              ]"
+              @click.prevent="activeTab = 'inquiries'"
+            >
               <a class="css-1t0ft7s efe6b6j0"><span class="name">문의</span></a>
             </li>
           </ul>
         </nav>
         <div class="css-0 el27cq1">
-          <div id="description" class="css-18eozqj el27cq0">
+          <div
+            id="description"
+            class="css-18eozqj el27cq0"
+            v-show="activeTab === 'description'"
+          >
             <div class="css-1d3w5wq e1d86arr0">
               <div class="css-1lyi66c">
                 <div class="goods_wrap">
@@ -41,7 +61,7 @@
         </div>
 
         <!--문의 하기 리스트-->
-        <div class="css-30tvht eewa3w91">
+        <div class="css-30tvht eewa3w91" v-show="activeTab === 'inquiries'">
           <div class="css-17juoyc eewa3w90">
             <button
               class="css-mhrz8m e4nu7ef3"
@@ -114,6 +134,11 @@ export default {
   components: {
     BoardDetailThumnailComponent,
     BoardDetailProductInfoComponent,
+  },
+  data() {
+    return {
+      activeTab: "description", // 초기에는 '상품설명' 탭이 활성화됨
+    };
   },
 };
 </script>
@@ -205,6 +230,14 @@ p.buy {
     no-repeat;
   vertical-align: middle;
   content: "";
+}
+
+.tab.active {
+  background: #fff; /* 활성화된 탭 배경색 */
+}
+
+.tab.active a span {
+  color: #5f0080; /* 활성화된 탭 텍스트 색상 */
 }
 
 .css-1qy9c46 {

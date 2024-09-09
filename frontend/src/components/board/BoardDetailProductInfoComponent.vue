@@ -30,7 +30,6 @@
         </dd>
       </li>
     </ul>
-    <!-- <div class="css-1bp09d0 e17iylht1"> -->
     <!-- 판매 상품 옵션 -->
     <div class="css-2lvxh7 e1qy0s5w0">
       <li class="css-e6zlnr epzddad2">
@@ -44,6 +43,7 @@
                   class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl jss1 css-xald09"
                 >
                   <div
+                    @click="toggleDropdown"
                     tabindex="0"
                     role="button"
                     aria-expanded="false"
@@ -58,7 +58,8 @@
                     tabindex="-1"
                     class="MuiSelect-nativeInput css-1k3x8v3"
                     value=""
-                  /><svg
+                  />
+                  <svg
                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined css-1636szt"
                     focusable="false"
                     aria-hidden="true"
@@ -78,8 +79,9 @@
                 </div>
               </div>
 
-              <!--상품 세부 리스트 -->
+              <!--상품 옵션 리스트 -->
               <div
+                v-show="isDropdownOpen"
                 class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiMenu-paper MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper css-185tsxr"
                 tabindex="-1"
                 style="
@@ -105,42 +107,25 @@
                   tabindex="-1"
                 >
                   <li
+                    v-for="option in productOptions"
+                    :key="option.value"
+                    @click="selectOption(option)"
                     class="MuiMenuItem-root MuiMenuItem-gutters MuiButtonBase-root css-1p79lf5"
                     tabindex="-1"
                     role="option"
                     aria-selected="false"
-                    data-value="1000758059"
                   >
                     <div class="css-15h3zi e12wapb67">
                       <div class="css-unrh3l e12wapb66">
                         <p class="css-1k8t52o e12wapb65">
-                          <span class="css-19h9nlb e12wapb64"
-                            >[99치킨] 순살 닭강정</span
+                          <span class="css-19h9nlb e12wapb64">
+                            {{ option.label }}</span
                           >
                         </p>
                         <div class="css-t4macj e12wapb62">
-                          <div class="css-1fvrsoi e12wapb60">9,900원</div>
-                        </div>
-                      </div>
-                    </div>
-                    <span class="MuiTouchRipple-root css-w0pj6f"></span>
-                  </li>
-                  <li
-                    class="MuiMenuItem-root MuiMenuItem-gutters MuiButtonBase-root css-1p79lf5"
-                    tabindex="-1"
-                    role="option"
-                    aria-selected="false"
-                    data-value="1000750152"
-                  >
-                    <div class="css-15h3zi e12wapb67">
-                      <div class="css-unrh3l e12wapb66">
-                        <p class="css-1k8t52o e12wapb65">
-                          <span class="css-19h9nlb e12wapb64"
-                            >[99치킨] 마라 순살 닭강정</span
-                          >
-                        </p>
-                        <div class="css-t4macj e12wapb62">
-                          <div class="css-1fvrsoi e12wapb60">9,900원</div>
+                          <div class="css-1fvrsoi e12wapb60">
+                            {{ option.price }}원
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -149,12 +134,20 @@
                 </ul>
               </div>
             </div>
+
             <!--추가된 상품 목록 리스트 : 수량 처리가능한 리스트-->
-            <div class="css-j9a02z e1aw4qzr1">
-              <div class="cart-option-item css-1cb5lnc e1bjklo18">
+            <div class="cart-items">
+              <div
+                v-for="(item, index) in cartItems"
+                :key="index"
+                class="cart-option-item css-1cb5lnc e1bjklo18"
+              >
                 <div class="css-1qdyvok e1bjklo16">
-                  <span class="css-1yojl0t e1bjklo14">[99치킨] 순살 닭강정</span
-                  ><button class="css-rrel8y e1ad0u7r0">
+                  <span class="css-1yojl0t e1bjklo14">{{ item.name }}</span>
+                  <button
+                    class="css-rrel8y e1ad0u7r0"
+                    @click="removeItem(index)"
+                  >
                     <img
                       src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZGVmcz4KICAgICAgICA8cGF0aCBkPSJNMTAuOTEgMTAuOTEgMCAwIiBpZD0iMDMxNHo5c3Z0YSIvPgogICAgICAgIDxwYXRoIGQ9Ik0wIDEwLjkxIDEwLjkxIDAiIGlkPSJ6cjgxbTJkYXZiIi8+CiAgICA8L2RlZnM+CiAgICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+CiAgICAgICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNi41NDUgNi41NDUpIj4KICAgICAgICAgICAgPHVzZSBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iLjU0NSIgeGxpbms6aHJlZj0iIzAzMTR6OXN2dGEiLz4KICAgICAgICAgICAgPHVzZSBzdHJva2U9IiM5OTkiIHN0cm9rZS13aWR0aD0iMS4wOTEiIHhsaW5rOmhyZWY9IiMwMzE0ejlzdnRhIi8+CiAgICAgICAgPC9nPgogICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDYuNTQ1IDYuNTQ1KSI+CiAgICAgICAgICAgIDx1c2Ugc3Ryb2tlPSIjNjY2IiBzdHJva2Utd2lkdGg9Ii41NDUiIHhsaW5rOmhyZWY9IiN6cjgxbTJkYXZiIi8+CiAgICAgICAgICAgIDx1c2Ugc3Ryb2tlPSIjOTk5IiBzdHJva2Utd2lkdGg9IjEuMDkxIiB4bGluazpocmVmPSIjenI4MW0yZGF2YiIvPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+Cg=="
                       alt="삭제 버튼"
@@ -167,45 +160,21 @@
                       type="button"
                       aria-label="수량내리기"
                       class="css-8azp8 e1hx75jb0"
+                      @click="decreaseQuantity(index)"
+                      :disabled="item.quantity <= 1"
                     ></button>
-                    <div class="count css-6m57y0 e1cqr3m41">1</div>
+                    <div class="count css-6m57y0 e1cqr3m41">
+                      {{ item.quantity }}
+                    </div>
                     <button
                       type="button"
                       aria-label="수량올리기"
                       class="css-18y6jr4 e1hx75jb0"
+                      @click="increaseQuantity(index)"
                     ></button>
                   </div>
                   <div class="css-1jzvrpg e1bjklo12">
-                    <span class="css-gqkxk8 e1bjklo10">9,900원</span>
-                  </div>
-                </div>
-              </div>
-              <div class="cart-option-item css-1cb5lnc e1bjklo18">
-                <div class="css-1qdyvok e1bjklo16">
-                  <span class="css-1yojl0t e1bjklo14">[99치킨] 순살 닭강정</span
-                  ><button class="css-rrel8y e1ad0u7r0">
-                    <img
-                      src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZGVmcz4KICAgICAgICA8cGF0aCBkPSJNMTAuOTEgMTAuOTEgMCAwIiBpZD0iMDMxNHo5c3Z0YSIvPgogICAgICAgIDxwYXRoIGQ9Ik0wIDEwLjkxIDEwLjkxIDAiIGlkPSJ6cjgxbTJkYXZiIi8+CiAgICA8L2RlZnM+CiAgICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+CiAgICAgICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNi41NDUgNi41NDUpIj4KICAgICAgICAgICAgPHVzZSBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iLjU0NSIgeGxpbms6aHJlZj0iIzAzMTR6OXN2dGEiLz4KICAgICAgICAgICAgPHVzZSBzdHJva2U9IiM5OTkiIHN0cm9rZS13aWR0aD0iMS4wOTEiIHhsaW5rOmhyZWY9IiMwMzE0ejlzdnRhIi8+CiAgICAgICAgPC9nPgogICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDYuNTQ1IDYuNTQ1KSI+CiAgICAgICAgICAgIDx1c2Ugc3Ryb2tlPSIjNjY2IiBzdHJva2Utd2lkdGg9Ii41NDUiIHhsaW5rOmhyZWY9IiN6cjgxbTJkYXZiIi8+CiAgICAgICAgICAgIDx1c2Ugc3Ryb2tlPSIjOTk5IiBzdHJva2Utd2lkdGg9IjEuMDkxIiB4bGluazpocmVmPSIjenI4MW0yZGF2YiIvPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+Cg=="
-                      alt="삭제 버튼"
-                    />
-                  </button>
-                </div>
-                <div class="css-tk6lxo e1bjklo15">
-                  <div class="css-nx0orh e1cqr3m40">
-                    <button
-                      type="button"
-                      aria-label="수량내리기"
-                      class="css-8azp8 e1hx75jb0"
-                    ></button>
-                    <div class="count css-6m57y0 e1cqr3m41">1</div>
-                    <button
-                      type="button"
-                      aria-label="수량올리기"
-                      class="css-18y6jr4 e1hx75jb0"
-                    ></button>
-                  </div>
-                  <div class="css-1jzvrpg e1bjklo12">
-                    <span class="css-gqkxk8 e1bjklo10">9,900원</span>
+                    <span class="css-gqkxk8 e1bjklo10">{{ item.price }}원</span>
                   </div>
                 </div>
               </div>
@@ -219,7 +188,7 @@
       <div class="css-ixlb9s eebc7rx4">
         <div class="css-yhijln eebc7rx3">
           <span class="css-w1is7v eebc7rx2">총 상품금액 :</span
-          ><span class="css-x4cdgl eebc7rx1">15,900</span
+          ><span class="css-x4cdgl eebc7rx1">{{ totalPrice }}</span
           ><span class="css-1jb8hmu eebc7rx0">원</span>
         </div>
       </div>
@@ -231,30 +200,97 @@
         width="56"
         height="56"
         radius="3"
+        @click="toggleHeart"
       >
         <span class="css-nytqmg e4nu7ef1">
-          <img
-            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0yNS44MDcgNy44NjNhNS43NzcgNS43NzcgMCAwIDAtOC4xNzIgMEwxNiA5LjQ5N2wtMS42MzUtMS42MzRhNS43NzkgNS43NzkgMCAxIDAtOC4xNzMgOC4xNzJsMS42MzQgMS42MzQgNy40NjYgNy40NjdhMSAxIDAgMCAwIDEuNDE1IDBzMCAwIDAgMGw3LjQ2Ni03LjQ2N2gwbDEuNjM0LTEuNjM0YTUuNzc3IDUuNzc3IDAgMCAwIDAtOC4xNzJ6IiBzdHJva2U9IiM1RjAwODAiIHN0cm9rZS13aWR0aD0iMS42IiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K"
-            alt=""
-            class="css-0"
-          />
-          <!-- 하트 칠해진 img
-            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0yNS44MDcgNy44NjNhNS43NzcgNS43NzcgMCAwIDAtOC4xNzIgMEwxNiA5LjQ5N2wtMS42MzUtMS42MzRhNS43NzkgNS43NzkgMCAxIDAtOC4xNzMgOC4xNzJsMS42MzQgMS42MzQgNy40NjYgNy40NjdhMSAxIDAgMCAwIDEuNDE1IDBzMCAwIDAgMGw3LjQ2Ni03LjQ2N2gwbDEuNjM0LTEuNjM0YTUuNzc3IDUuNzc3IDAgMCAwIDAtOC4xNzJ6IiBmaWxsPSIjRkY1QTVBIiBzdHJva2U9IiNGRjVBNUEiIHN0cm9rZS13aWR0aD0iMS42IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K"
-                                        alt="" class="css-0"> -->
+          <img :src="heartImage" alt="Heart" />
         </span>
       </button>
+
       <button class="cart-button css-1qirdbn e4nu7ef3" type="button" radius="3">
         <span class="css-nytqmg e4nu7ef1">구매하기</span>
       </button>
     </div>
-    <!-- </div> -->
   </section>
 </template>
 
 <script>
 export default {
   name: "BoardDetailProductInfoComponent",
-  props: {},
+  data() {
+    return {
+      isDropdownOpen: false,
+      productOptions: [
+        { value: "1000758059", label: "[99치킨] 순살 닭강정", price: 19900 },
+        {
+          value: "1000750152",
+          label: "[99치킨] 마라 순살 닭강정",
+          price: 9900,
+        },
+      ],
+      cartItems: [],
+      isHeartFilled: false,
+      heartImage:
+        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0yNS44MDcgNy44NjNhNS43NzcgNS43NzcgMCAwIDAtOC4xNzIgMEwxNiA5LjQ5N2wtMS42MzUtMS42MzRhNS43NzkgNS43NzkgMCAxIDAtOC4xNzMgOC4xNzJsMS42MzQgMS42MzQgNy40NjYgNy40NjdhMSAxIDAgMCAwIDEuNDE1IDBzMCAwIDAgMGw3LjQ2Ni03LjQ2N2gwbDEuNjM0LTEuNjM0YTUuNzc3IDUuNzc3IDAgMCAwIDAtOC4xNzJ6IiBzdHJva2U9IiM1RjAwODAiIHN0cm9rZS13aWR0aD0iMS42IiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K",
+      filledHeartImage:
+        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0yNS44MDcgNy44NjNhNS43NzcgNS43NzcgMCAwIDAtOC4xNzIgMEwxNiA5LjQ5N2wtMS42MzUtMS42MzRhNS43NzkgNS43NzkgMCAxIDAtOC4xNzMgOC4xNzJsMS42MzQgMS42MzQgNy40NjYgNy40NjdhMSAxIDAgMCAwIDEuNDE1IDBzMCAwIDAgMGw3LjQ2Ni03LjQ2N2gwbDEuNjM0LTEuNjM0YTUuNzc3IDUuNzc3IDAgMCAwIDAtOC4xNzJ6IiBmaWxsPSIjRkY1QTVBIiBzdHJva2U9IiNGRjVBNUEiIHN0cm9rZS13aWR0aD0iMS42IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K",
+      emptyHeartImage:
+        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0yNS44MDcgNy44NjNhNS43NzcgNS43NzcgMCAwIDAtOC4xNzIgMEwxNiA5LjQ5N2wtMS42MzUtMS42MzRhNS43NzkgNS43NzkgMCAxIDAtOC4xNzMgOC4xNzJsMS42MzQgMS42MzQgNy40NjYgNy40NjdhMSAxIDAgMCAwIDEuNDE1IDBzMCAwIDAgMGw3LjQ2Ni03LjQ2N2gwbDEuNjM0LTEuNjM0YTUuNzc3IDUuNzc3IDAgMCAwIDAtOC4xNzJ6IiBzdHJva2U9IiM1RjAwODAiIHN0cm9rZS13aWR0aD0iMS42IiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K",
+    };
+  },
+  computed: {
+    totalPrice() {
+      return this.cartItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
+    },
+  },
+  methods: {
+    toggleDropdown() {
+      this.isDropdownOpen = !this.isDropdownOpen;
+    },
+
+    selectOption(option) {
+      const existingItem = this.cartItems.find(
+        (item) => item.value === option.value
+      );
+
+      if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        this.cartItems.push({
+          value: option.value,
+          name: option.label,
+          price: option.price,
+          quantity: 1,
+        });
+      }
+
+      this.isDropdownOpen = false;
+    },
+
+    increaseQuantity(index) {
+      this.cartItems[index].quantity++;
+    },
+
+    decreaseQuantity(index) {
+      if (this.cartItems[index].quantity > 1) {
+        this.cartItems[index].quantity--;
+      }
+    },
+
+    removeItem(index) {
+      this.cartItems.splice(index, 1);
+    },
+
+    toggleHeart() {
+      this.isHeartFilled = !this.isHeartFilled;
+      this.heartImage = this.isHeartFilled
+        ? this.filledHeartImage
+        : this.emptyHeartImage;
+    },
+  },
 };
 </script>
 <style scoped>
@@ -917,5 +953,9 @@ legend {
   font-size: 12px;
   color: rgb(51, 51, 51);
   padding-right: 4px;
+}
+
+.cart-items {
+  margin-top: 20px;
 }
 </style>
