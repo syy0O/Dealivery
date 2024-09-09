@@ -7,6 +7,7 @@ import CompanyBoardPostPage from "../pages/company/board/CompanyBoardPostPage.vu
 import OrdersPage from "@/pages/user/orders/OrdersPage.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import CompanySignupComponent from "@/components/company/CompanySignupComponent.vue";
+import FindPasswordComponent from "@/components/user/FindPasswordComponent.vue";
 import ResetPasswordComponent from "@/components/user/ResetPasswordComponent.vue";
 import FindIdSuccessComponent from "@/components/user/FindIdSuccessComponent.vue";
 import FindIdComponent from "@/components/user/FindIdComponent.vue";
@@ -34,6 +35,7 @@ const router = createRouter({
         {path: "login", component: LoginComponent, meta: { requiresAuth: false } },
         {path: "user/signup", component: UserSignupComponent, meta: { requiresAuth: false } },
         {path: "company/signup", component: CompanySignupComponent, meta: { requiresAuth: false } },
+        {path: "pwd/find", component: FindPasswordComponent, meta: { requiresAuth: false } },
         {path: "pwd/reset", component: ResetPasswordComponent, meta: { requiresAuth: false } },
         {path: "id/find/success", component: FindIdSuccessComponent, meta: { requiresAuth: false } },
         {path: "id/find", component: FindIdComponent, meta: { requiresAuth: false } },
