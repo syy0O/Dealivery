@@ -46,7 +46,7 @@ const router = createRouter({
         {path: "", redirect: "/auth/login", meta: { requiresAuth: false } },
       ]
     },
-    
+
     {
       path: "/mypage",
       component: MyPage,
