@@ -139,6 +139,10 @@ export default {
 };
 </script>
 <style scoped>
+button {
+  cursor: pointer;
+}
+
 .css-1le17tz {
   z-index: 20;
   top: 56px;
@@ -289,6 +293,7 @@ table {
   border-bottom: 1px solid rgb(244, 244, 244);
   line-height: 19px;
   letter-spacing: -0.5px;
+  cursor: pointer;
 }
 
 .css-sno6ed {
