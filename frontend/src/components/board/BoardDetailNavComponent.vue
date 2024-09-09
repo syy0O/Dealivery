@@ -26,6 +26,7 @@
         </li>
       </ul>
     </nav>
+    <!--상품 상세 설명 section-->
     <div class="css-0 el27cq1">
       <div
         id="description"
@@ -52,7 +53,7 @@
       </div>
     </div>
 
-    <!--문의 하기 리스트-->
+    <!--문의 하기 리스트 section-->
     <div class="css-30tvht eewa3w91" v-show="activeTab === 'inquiries'">
       <div class="css-17juoyc eewa3w90">
         <button
@@ -84,26 +85,32 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="css-atz965 e1l5ky7y9">
-              <td class="css-1brd6ns e1l5ky7y8">아이도</td>
-              <td class="css-1pkqelu e1l5ky7y7">엄*희</td>
-              <td class="css-1pkqelu e1l5ky7y6">2022.04.20</td>
-              <td class="css-bhr3cq e1l5ky7y5">답변완료</td>
-            </tr>
-            <tr class="css-atz965 e1l5ky7y9">
-              <td class="css-1brd6ns e1l5ky7y8">아이도</td>
-              <td class="css-1pkqelu e1l5ky7y7">엄*희</td>
-              <td class="css-1pkqelu e1l5ky7y6">2022.04.20</td>
-              <td class="css-bhr3cq e1l5ky7y5">답변완료</td>
+            <tr
+              v-for="(row, index) in tableData"
+              :key="index"
+              class="css-atz965 e1l5ky7y9"
+            >
+              <td class="css-1brd6ns e1l5ky7y8">{{ row.title }}</td>
+              <td class="css-1pkqelu e1l5ky7y7">{{ row.author }}</td>
+              <td class="css-1pkqelu e1l5ky7y6">{{ row.createdDate }}</td>
+              <td class="css-bhr3cq e1l5ky7y5">{{ row.status }}</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="css-18ad0gx e9e6ap50">
         <div class="css-sxxs1g eytury60">
-          <button disabled="" type="button" class="css-rzcdhr e1hbwyso0">
+          <button
+            disabled="!hasPrev"
+            type="button"
+            class="css-rzcdhr e1hbwyso0"
+          >
             <div class="css-7qb0sc e1ilyb3p0">이전</div></button
-          ><button disabled="" type="button" class="css-1jwilit e1pk9060">
+          ><button
+            disabled="!hasNext"
+            type="button"
+            class="css-1jwilit e1pk9060"
+          >
             <div class="css-7qb0sc e1ilyb3p0">다음</div>
           </button>
         </div>
@@ -116,23 +123,26 @@
 export default {
   name: "BoardDetailNavComponent",
   props: {
-    msg: String,
+    tableData: {
+      type: Array,
+      required: true,
+    },
   },
 
   data() {
     return {
-      activeTab: "description", // 초기에는 '상품설명' 탭이 활성화됨
+      activeTab: "description",
+      hasPrev: false,
+      hasNext: true,
     };
   },
 };
 </script>
 <style scoped>
-/*문의 nav*/
 .css-1le17tz {
   z-index: 20;
   top: 56px;
   width: 1010px;
-  box-shadow: inset 0 -0.5px 0 0 #ddd;
   background-color: #fff;
   margin-top: 50px;
   margin-bottom: 50px;
@@ -162,6 +172,7 @@ export default {
   border-color: #eee;
   border-style: solid;
   background-color: #fafafa;
+  box-sizing: border-box;
 }
 
 .css-1tzhzcg:last-of-type {
