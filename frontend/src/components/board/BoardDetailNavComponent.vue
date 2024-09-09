@@ -392,6 +392,10 @@ table {
   height: 1px;
 }
 
+.tab {
+  cursor: pointer;
+}
+
 .tab.active {
   background: #fff; /* 활성화된 탭 배경색 */
 }

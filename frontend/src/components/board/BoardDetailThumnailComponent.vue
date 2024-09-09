@@ -128,6 +128,7 @@ export default {
   min-height: 100%;
   max-height: 100%;
   object-fit: cover;
+  cursor: pointer;
 }
 
 .thumnail-wrapper {

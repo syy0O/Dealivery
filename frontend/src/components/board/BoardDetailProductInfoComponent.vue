@@ -299,6 +299,10 @@ export default {
   padding: 0;
 }
 
+button {
+  cursor: pointer;
+}
+
 /*상품 설명 (오른쪽 section)*/
 .css-1ua1wyk {
   width: 560px;
@@ -574,7 +578,6 @@ svg:not(:root) {
   position: absolute;
   right: 7px;
   top: calc(50% - 0.5em);
-  pointer-events: none;
   color: rgba(0, 0, 0, 0.54);
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -683,12 +686,14 @@ legend {
   color: rgb(51, 51, 51);
   background-color: rgb(255, 255, 255);
   border: 1px solid rgb(221, 221, 221);
+  cursor: pointer;
 }
 
 .css-nytqmg {
   display: inline-block;
   font-size: 16px;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .cart-button {
@@ -882,6 +887,7 @@ legend {
   height: 24px;
   background: transparent;
   border: none;
+  cursor: pointer;
 }
 
 .css-tk6lxo {
