@@ -4,7 +4,7 @@
       <div class="css-16c0d8l">
         <main id="product-atf" class="css-1eoy87d">
           <BoardDetailThumnailComponent :thumbnails="thumbnails" />
-          <BoardDetailProductInfoComponent />
+          <BoardDetailProductInfoComponent @submitOrder="submitOrder" />
         </main>
         <BoardDetailNavComponent :tableData="tableData" />
       </div>
@@ -53,6 +53,11 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    submitOrder(cartItems) {
+      console.log(cartItems);
+    },
   },
 };
 </script>

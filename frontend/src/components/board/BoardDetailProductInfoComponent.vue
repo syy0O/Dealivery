@@ -207,7 +207,12 @@
         </span>
       </button>
 
-      <button class="cart-button css-1qirdbn e4nu7ef3" type="button" radius="3">
+      <button
+        @click="emitSubmitOrder"
+        class="cart-button css-1qirdbn"
+        type="button"
+        radius="3"
+      >
         <span class="css-nytqmg e4nu7ef1">구매하기</span>
       </button>
     </div>
@@ -244,6 +249,9 @@ export default {
         (total, item) => total + item.price * item.quantity,
         0
       );
+    },
+    isAnySelected() {
+      return this.cartItems.length > 0;
     },
   },
   methods: {
@@ -289,6 +297,14 @@ export default {
       this.heartImage = this.isHeartFilled
         ? this.filledHeartImage
         : this.emptyHeartImage;
+    },
+
+    emitSubmitOrder() {
+      if (!this.isAnySelected) {
+        alert("상품을 선택하세요.");
+        return;
+      }
+      this.$emit("submitOrder", this.cartItems);
     },
   },
 };
@@ -696,17 +712,8 @@ legend {
   cursor: pointer;
 }
 
-.cart-button {
-  font-weight: 500;
-}
-
-@media (min-width: 1050px) {
-  .css-1qirdbn {
-    height: 56px;
-  }
-}
-
 .css-1qirdbn {
+  font-weight: 500;
   display: block;
   padding: 0 10px;
   text-align: center;
@@ -717,6 +724,22 @@ legend {
   color: #fff;
   background-color: #5f0080;
   border: 0 none;
+}
+
+.order-inactive {
+  display: block;
+  padding: 0px 10px;
+  text-align: center;
+  overflow: hidden;
+  width: 60%;
+  height: 52px;
+  border-radius: 3px;
+  color: #fff;
+  background-color: #6c757d;
+  border: 0 none;
+  font-weight: 500;
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 
 .css-nytqmg {
