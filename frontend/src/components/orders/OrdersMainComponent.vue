@@ -332,16 +332,31 @@
                 <div class="css-82a6rk e150alo80">
                   <div class="css-gd125q e4nb37r1">
                     <div>
-                      <div class="css-18dvwsu ef0cmoa0">
+                      <div class="css-18dvwsu">
                         <button
-                          @click="toggleKakaoPayBtn"
+                          @click="selectPaymentMethod('kakao')"
                           type="button"
-                          :class="
-                            !isPayMethodSelected ? 'css-1wlyg0y' : 'css-1fecctx'
-                          "
+                          :class="{
+                            'css-1wlyg0y': selectedPaymentMethod !== 'kakao',
+                            'css-1fecctx': selectedPaymentMethod === 'kakao',
+                          }"
                           color="#f6e500"
                         >
                           <img src="@/assets/kakao-pay-icon.svg" />
+                        </button>
+                      </div>
+                      <div class="css-18dvwsu">
+                        <button
+                          @click="selectPaymentMethod('toss')"
+                          type="button"
+                          :class="{
+                            'css-1wlyg0y': selectedPaymentMethod !== 'toss',
+                            'tosspay-selected':
+                              selectedPaymentMethod === 'toss',
+                          }"
+                          color="#f6e500"
+                        >
+                          <img src="@/assets/logo-toss-pay.svg" />
                         </button>
                       </div>
                     </div>
@@ -371,14 +386,15 @@
 
             <div class="css-1azakc el0c5j40">
               <button
-                :class="
-                  isPayMethodSelected ? 'css-1lha8en' : 'payment-inactive'
-                "
+                :class="{
+                  'css-1lha8en': selectedPaymentMethod,
+                  'payment-inactive': !selectedPaymentMethod,
+                }"
                 type="button"
                 width="240"
                 height="56"
                 radius="3"
-                :disabled="!isPayMethodSelected"
+                :disabled="!selectedPaymentMethod"
               >
                 <span class="css-nytqmg e4nu7ef1">256,000원 결제하기</span>
               </button>
@@ -453,7 +469,7 @@ export default {
       isIconRotated: false,
       isToggleContentVisible: false,
       isDeliveryNotiVisible: false,
-      isPayMethodSelected: false,
+      selectedPaymentMethod: null, // 선택된 결제 수단
     };
   },
   methods: {
@@ -464,8 +480,13 @@ export default {
     toggleDeliveryNotiBtn() {
       this.isDeliveryNotiVisible = !this.isDeliveryNotiVisible;
     },
-    toggleKakaoPayBtn() {
-      this.isPayMethodSelected = !this.isPayMethodSelected;
+    selectPaymentMethod(method) {
+      if (method == this.selectedPaymentMethod) {
+        this.selectedPaymentMethod = null;
+        return;
+      }
+
+      this.selectedPaymentMethod = method;
     },
   },
 };
@@ -925,6 +946,7 @@ svg:not(:root) {
 
 .css-18dvwsu {
   display: flex;
+  margin-top: 10px;
 }
 
 .css-1wlyg0y {
@@ -955,6 +977,23 @@ svg:not(:root) {
   font-size: 14px;
   color: rgb(255, 255, 255);
   background: rgb(246, 229, 0);
+  font-weight: 500;
+  border-radius: 3px;
+}
+
+.tosspay-selected {
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  position: relative;
+  width: 300px;
+  height: 48px;
+  font-size: 14px;
+  border: 1px solid #0f0f0f;
+  color: rgb(255, 255, 255);
+  background: #fff;
   font-weight: 500;
   border-radius: 3px;
 }

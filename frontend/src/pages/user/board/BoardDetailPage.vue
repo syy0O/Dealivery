@@ -17,6 +17,9 @@ import BoardDetailThumnailComponent from "@/components/board/BoardDetailThumnail
 import BoardDetailProductInfoComponent from "@/components/board/BoardDetailProductInfoComponent.vue";
 import BoardDetailNavComponent from "@/components/board/BoardDetailNavComponent.vue";
 
+import { useOrderStore } from "@/stores/useOrderStore";
+import { mapStores } from "pinia";
+
 export default {
   name: "OrdersPage",
   props: {
@@ -26,6 +29,9 @@ export default {
     BoardDetailThumnailComponent,
     BoardDetailProductInfoComponent,
     BoardDetailNavComponent,
+  },
+  computed: {
+    ...mapStores(useOrderStore),
   },
   data() {
     return {
@@ -55,8 +61,15 @@ export default {
     };
   },
   methods: {
-    submitOrder(cartItems) {
+    async submitOrder(cartItems) {
       console.log(cartItems);
+      let result = await this.orderStore.submitOrder(cartItems);
+      if (result) {
+        console.log("[SUCCESS] 주문 생성 성공");
+        this.$router.push("/orders");
+      } else {
+        console.log("[ERROR] 주문 생성 실패");
+      }
     },
   },
 };
