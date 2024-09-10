@@ -1,4 +1,5 @@
 <template>
+  <HeaderComponent />
   <div id="top">
     <div class="css-n48rgu">
       <div class="css-16c0d8l">
@@ -10,9 +11,12 @@
       </div>
     </div>
   </div>
+  <FooterComponent />
 </template>
 
 <script>
+import HeaderComponent from "@/components/common/HeaderComponent.vue";
+import FooterComponent from "@/components/common/FooterComponent.vue";
 import BoardDetailThumnailComponent from "@/components/board/BoardDetailThumnailComponent.vue";
 import BoardDetailProductInfoComponent from "@/components/board/BoardDetailProductInfoComponent.vue";
 import BoardDetailNavComponent from "@/components/board/BoardDetailNavComponent.vue";
@@ -26,6 +30,8 @@ export default {
     msg: String,
   },
   components: {
+    HeaderComponent,
+    FooterComponent,
     BoardDetailThumnailComponent,
     BoardDetailProductInfoComponent,
     BoardDetailNavComponent,

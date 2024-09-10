@@ -6,10 +6,12 @@ import * as PortOne from "@portone/browser-sdk/v2";
 
 export const useOrderStore = defineStore('order', {
     state: () => ({
-        orderedProducts: [], orderIdx: null, paymentId: ""
+        orderedProducts: [], orderIdx: null, paymentId: "", boardInfo: null
     }),
     actions: {
-        async submitOrder(orderRequest) { // 주문 생성 : 백엔드에 주문 가능하면 200Ok, 재고 부족 or 이미 끝난 이벤트 : 400 error
+        async submitOrder(orderRequest) { // 주문 생성 : 백엔드에 주문 가능하면 200 Ok, 재고 부족 or 이미 끝난 이벤트 : 400 error
+            this.boardInfo = orderRequest.boardInfo
+
             try {
                 let response = await axios.post("https://run.mocky.io/v3/bba611fe-6871-4be8-9e5d-c9251ba9090a", orderRequest, { withCredentials: true });
                 console.log("Response : " + response);
@@ -18,7 +20,7 @@ export const useOrderStore = defineStore('order', {
                     return false;
                 }
 
-                this.orderedProducts = orderRequest
+                this.orderedProducts = orderRequest.cartItems
                 this.orderIdx = response.data.data.orderIdx
 
                 return true;

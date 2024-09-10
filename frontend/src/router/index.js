@@ -31,13 +31,10 @@ const router = createRouter({
           component: CompanyBoardPostPage,
           meta: { requiresAuth: false },
         },
-
-        { path: "board/detail/:idx", component: BoardDetailPage },
         {
           path: "product-boards/company/list",
           component: CompanyBoardListPage,
-        },
-        { path: "orders", component: OrdersPage },
+        }
       ],
     },
 
@@ -61,10 +58,11 @@ const router = createRouter({
     {
       path: "/board", component: BoardListPage, meta: { requiresAuth: false },
       children: [
-        {path: "list", component: ProductBoardListComponent, meta: { requiresAuth: false } }
+        { path: "list", component: ProductBoardListComponent, meta: { requiresAuth: false } },
       ]
     },
-  
+    { path: "/orders", component: OrdersPage },
+    { path: "/board/detail/:idx", component: BoardDetailPage },
     {
       path: "/mypage",
       component: MyPage,
