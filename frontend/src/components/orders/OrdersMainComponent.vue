@@ -386,6 +386,7 @@
 
             <div class="css-1azakc el0c5j40">
               <button
+                @click="makePayment"
                 :class="{
                   'css-1lha8en': selectedPaymentMethod,
                   'payment-inactive': !selectedPaymentMethod,
@@ -462,6 +463,9 @@
 </template>
 
 <script>
+import { useOrderStore } from "@/stores/useOrderStore";
+import { mapStores } from "pinia";
+
 export default {
   name: "OrdersPage",
   data() {
@@ -471,6 +475,9 @@ export default {
       isDeliveryNotiVisible: false,
       selectedPaymentMethod: null, // 선택된 결제 수단
     };
+  },
+  computed: {
+    ...mapStores(useOrderStore),
   },
   methods: {
     toggleContent() {
@@ -487,6 +494,9 @@ export default {
       }
 
       this.selectedPaymentMethod = method;
+    },
+    makePayment() {
+      this.orderStore.makePayment(this.selectedPaymentMethod);
     },
   },
 };
