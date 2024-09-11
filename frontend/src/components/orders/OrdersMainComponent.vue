@@ -48,10 +48,10 @@
                       <p
                         class="ldmw177b ldmw177r ldmw177k css-m5oldq e17q5gas2"
                       >
-                        {{ item.price }}원
+                        {{ item.price.toLocaleString() }}원
                       </p>
                       <span class="css-1s0al7f e17q5gas1"
-                        >{{ item.originalPrice }}원</span
+                        >{{ item.originalPrice.toLocaleString() }}원</span
                       >
                       <div
                         width="var(--ldmw1716)"
@@ -179,11 +179,13 @@
                     class="css-1az0nid e1gm2j0y8"
                   >
                     <span class="css-cp6cch e1gm2j0y4"
-                      >최대 사용 가능 포인트 : {{ maximumAvailablePoint }}
+                      >최대 사용 가능 포인트 :
+                      {{ maximumAvailablePoint.toLocaleString() }}
                       <span class="css-o5boot e1gm2j0y5">p</span></span
                     >
                     <span class="css-o5boot e1gm2j0y5"
-                      >보유 포인트 : {{ ordererInfo.point }} p</span
+                      >보유 포인트 :
+                      {{ ordererInfo.point.toLocaleString() }} p</span
                     >
                   </div>
                 </div>
@@ -309,7 +311,7 @@
                   <div>
                     <span class="css-2pg1ps eahaaoi10"
                       ><span class="css-rfpchb eahaaoi3"></span
-                      >{{ totalAmount }}</span
+                      >{{ totalAmount.toLocaleString() }}</span
                     ><span class="css-158icaa eahaaoi8">원</span>
                   </div>
                 </div>
@@ -321,7 +323,7 @@
                   <div>
                     <span class="css-2pg1ps eahaaoi10"
                       ><span class="css-rfpchb eahaaoi3"></span
-                      >{{ originalTotalAmount }}</span
+                      >{{ originalTotalAmount.toLocaleString() }}</span
                     ><span class="css-158icaa eahaaoi8">원</span>
                   </div>
                 </div>
@@ -333,7 +335,9 @@
                   <div>
                     <span class="css-2pg1ps eahaaoi10"
                       ><span class="css-rfpchb eahaaoi3">-</span
-                      >{{ originalTotalAmount - totalAmount }}</span
+                      >{{
+                        (originalTotalAmount - totalAmount).toLocaleString()
+                      }}</span
                     ><span class="css-158icaa eahaaoi8">원</span>
                   </div>
                 </div>
@@ -351,7 +355,7 @@
                   <div>
                     <span class="css-2pg1ps eahaaoi10"
                       ><span class="css-rfpchb eahaaoi3"></span
-                      >{{ totalAmount }}</span
+                      >{{ totalAmount.toLocaleString() }}</span
                     ><span class="css-158icaa eahaaoi8">원</span>
                   </div>
                 </div>
@@ -419,7 +423,12 @@ export default {
         " 서울 동작구 상도로 지하 76 (7호선 신대방삼거리역) Beyond SW 캠프",
     };
 
-    this.maximumAvailablePoint = Math.round(this.totalAmount * (10 / 100));
+    let tenPercentOfPrice = Math.round(this.totalAmount * (10 / 100));
+
+    this.maximumAvailablePoint =
+      this.ordererInfo.point < tenPercentOfPrice
+        ? this.ordererInfo.point
+        : tenPercentOfPrice;
   },
 
   methods: {

@@ -130,7 +130,7 @@
                             }}원
                           </div>
                           <span class="css-1s0al7f e17q5gas1"
-                            >{{ option.originalPrice }}원</span
+                            >{{ option.originalPrice.toLocaleString() }}원</span
                           >
                         </div>
                       </div>
@@ -180,7 +180,9 @@
                     ></button>
                   </div>
                   <div class="css-1jzvrpg e1bjklo12">
-                    <span class="css-gqkxk8 e1bjklo10">{{ item.price }}원</span>
+                    <span class="css-gqkxk8 e1bjklo10"
+                      >{{ item.price.toLocaleString() }}원</span
+                    >
                   </div>
                 </div>
               </div>
@@ -194,7 +196,9 @@
       <div class="css-ixlb9s eebc7rx4">
         <div class="css-yhijln eebc7rx3">
           <span class="css-w1is7v eebc7rx2">총 상품금액 :</span
-          ><span class="css-x4cdgl eebc7rx1">{{ totalPrice }}</span
+          ><span class="css-x4cdgl eebc7rx1">{{
+            totalPrice.toLocaleString()
+          }}</span
           ><span class="css-1jb8hmu eebc7rx0">원</span>
         </div>
       </div>
