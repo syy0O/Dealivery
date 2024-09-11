@@ -21,6 +21,7 @@ import CompanyOrderListPage from "../pages/company/orders/CompanyOrderListPage.v
 import MypageOrderListComponent from "@/components/mypage/MypageOrderListComponent.vue";
 import MypageQnAComponent from "@/components/mypage/MypageQnAComponent.vue";
 import MypageLikesEventComponent from "@/components/mypage/MypageLikesEventComponent.vue";
+import MyPageAddressComponent from "@/components/mypage/MypageAddressComponent.vue";
 import CompanyQnAListPage from "@/pages/company/qna/CompanyQnAListPage.vue";
 
 const router = createRouter({
@@ -29,9 +30,7 @@ const router = createRouter({
     {
       path: "/",
       component: MainPage,
-      children: [
-
-      ],
+      children: [],
     },
     {
       path: "/auth",
@@ -130,6 +129,8 @@ const router = createRouter({
         { path: "order", component: MypageOrderListComponent },
         { path: "qna", component: MypageQnAComponent },
         { path: "likes", component: MypageLikesEventComponent },
+        { path: "address", component: MyPageAddressComponent },
+
       ],
     },
   ],
