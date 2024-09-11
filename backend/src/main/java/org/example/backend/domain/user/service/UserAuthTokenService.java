@@ -73,7 +73,7 @@ public class UserAuthTokenService {
         UserAuthToken userAuthToken = userAuthTokenRepository.findByEmail(email).orElseThrow(
                 () -> new InvalidCustomException(BaseResponseStatus.USER_SIGNUP_FAIL_INVALID_EMAIL_CODE)
         );
-        if (!LocalDateTime.now().isBefore(userAuthToken.getExpiredTime())){
+        if (!LocalDateTime.now().isBefore(userAuthToken.getExpiredAt())){
             throw new InvalidCustomException(BaseResponseStatus.EMAIL_VERIFY_FAIL_EXPIRED);
         }
         if (!token.equals(userAuthToken.getToken())){

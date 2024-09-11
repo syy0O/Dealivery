@@ -25,7 +25,7 @@ public class CompanyAuthTokenDto {
             return CompanyAuthToken.builder()
                     .email(this.email)
                     .token(token)
-                    .expiredTime(expiredTime)
+                    .expiredAt(expiredTime)
                     .build();
         }
     }
