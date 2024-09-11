@@ -7,7 +7,7 @@
           <CompanyAsideComponent></CompanyAsideComponent>
           <div id="viewOrderList" class="page_section section_orderlist">
             <div class="head_aticle">
-              <h2 class="tit">게시글 조회</h2>
+              <h2 class="tit">주문 관리</h2>
             </div>
             <DropdownMenu
               :dropdown_menu="'search_date'"
@@ -29,10 +29,9 @@
               :layer_search_class="'layer_search_order'"
             />
 
-            <ListCardComponent
+            <OrderListCardComponent
               :dataList="boards"
               :noDataMsg="'작성한 게시글이 없습니다.'"
-              @deleteItem="deleteItem"
             />
           </div>
         </div>
@@ -47,16 +46,16 @@ import HeaderComponent from "../../../components/common/HeaderComponent.vue";
 import FooterComponent from "../../../components/common/FooterComponent.vue";
 import CompanyAsideComponent from "@/components/company/CompanyAsideComponent.vue";
 import DropdownMenu from "../../../components/company/DropdownMenu.vue";
-import ListCardComponent from "../../../components/company/ListCardComponent.vue";
-import { mapStores } from "pinia";
-import { useCompanyBoardStore } from "../../../stores/UseCompanyBoardStore";
+import OrderListCardComponent from "../../../components/company/OrderListCardComponent.vue";
+// import { mapStores } from "pinia";
+// import { useCompanyBoardStore } from "../../../stores/UseCompanyBoardStore";
 
 export default {
-  name: "CompanyBoardListPage",
+  name: "CompanyOrderListPage",
   components: {
     CompanyAsideComponent,
     DropdownMenu,
-    ListCardComponent,
+    OrderListCardComponent,
     HeaderComponent,
     FooterComponent,
   },
@@ -65,34 +64,25 @@ export default {
       selectedDateRange: "전체기간",
       selectedOrderStatus: "전체보기",
       dateOptions: ["전체기간", "1개월", "3개월", "6개월", "12개월"],
-      statusOptions: ["전체보기", "진행 중", "진행 완료"],
+      statusOptions: ["전체보기", "주문 완료", "주문 실패"],
       boards: [],
     };
   },
   computed: {
-    ...mapStores(useCompanyBoardStore),
+    // ...mapStores(useCompanyBoardStore),
   },
   created() {
-    this.setBoards();
+    // this.setBoards();
   },
   methods: {
-    async setBoards() {
-      this.boards = await this.companyBoardStore.getProductBoardList();
-    },
-    async selectDateRange(option) {
+    // async setBoards() {
+    //   this.boards = await this.companyBoardStore.getProductBoardList();
+    // },
+    selectDateRange(option) {
       this.selectedDateRange = option;
-      this.boards = await this.companyBoardStore.getProductBoardListByDateRange(
-        option
-      );
     },
-    async selectOrderStatus(option) {
+    selectOrderStatus(option) {
       this.selectedOrderStatus = option;
-      this.boards =
-        await this.companyBoardStore.getProductBoardListByOrderStatus(option);
-    },
-    // delete axios 요청 백엔드 개발 후 구현
-    deleteItem(id) {
-      this.boards = this.boards.filter((board) => board.id !== id);
     },
   },
 };

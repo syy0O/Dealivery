@@ -1,104 +1,68 @@
 <template>
-  <ul class="list_ul">
-    <li v-for="data in dataList" :key="data.id">
-      <div class="date">
-        {{ getDuration(data.startedAt, data.endedAt) }} ({{
-          getDurationTime(data.startedAt, data.endedAt)
-        }}
-        진행)
-      </div>
-      <div class="list_elems">
-        <div class="image">
-          <img :src="data.productThumbnailUrl" alt="상품 이미지" />
-        </div>
+  <ul class="list_order">
+    <li>
+      <div class="date">2020.12.17 (12시 29분)</div>
+      <div class="order_goods">
         <div class="name">
-          <a @click.prevent="goToBoardPost(data.id)">{{ data.title }}</a>
+          <a href="#none" class="order-link" @click="displayModal"
+            >[Dole] 후릇컵 3종 외 2건</a
+          >
+          <div v-if="isDisplayModal">
+            <CompanyOrderModalComponent @closeModal="displayModal" />
+          </div>
         </div>
-        <div class="elem_info">
+        <div class="order_info">
           <div class="desc">
             <dl>
-              <dt>카테고리</dt>
-              <dd>{{ data.category }}</dd>
+              <dt>주문번호</dt>
+              <dd>1608175672040</dd>
+            </dl>
+
+            <dl>
+              <dt>결제금액</dt>
+              <dd>13,560원</dd>
+            </dl>
+          </div>
+
+          <div class="desc" style="margin-left: 50px">
+            <dl>
+              <dt>주문자명</dt>
+              <dd>심키즈</dd>
+            </dl>
+
+            <dl>
+              <dt>주문방법</dt>
+              <dd>카카오페이</dd>
             </dl>
           </div>
         </div>
-        <div class="elem_status_box">
+        <div class="order_status">
           <span class="inner_status">
-            <div
-              :class="{
-                status: true,
-                complete: data.status === '진행 완료',
-              }"
-            >
-              {{ data.status }}
-            </div>
-            <form action="#">
-              <button
-                @click="deleteItem(data.id)"
-                class="link ga_tracking_event"
-                :disabled="data.status === '진행중'"
-              >
-                삭제
-              </button>
-            </form>
+            <div class="order_status_box">주문 완료</div>
           </span>
         </div>
       </div>
     </li>
   </ul>
-  <div class="no_order_data" v-if="dataList === null">
-    {{ noDataMsg }}
-  </div>
 </template>
 
 <script>
+import CompanyOrderModalComponent from "./CompanyOrderModalComponent.vue";
+
 export default {
-  name: "ListCardComponent",
-  props: {
-    noDataMsg: {
-      type: String,
-      default: "데이터가 없습니다.",
-    },
-    dataList: {
-      type: Array,
-      default: null,
-    },
+  name: "OrderListCardComponent",
+  components: {
+    CompanyOrderModalComponent,
   },
+  props: {},
   data() {
-    return {};
+    return {
+      isDisplayModal: false,
+    };
   },
   methods: {
-    getDuration(stratedAt, endedAt) {
-      const startDate = new Date(stratedAt);
-      const endDate = new Date(endedAt);
-
-      const formatDate = (date) => {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
-        const hour = String(date.getHours()).padStart(2, "0");
-        const minute = String(date.getMinutes()).padStart(2, "0");
-        return `${year}-${month}-${day} ${hour}:${minute}`;
-      };
-
-      const formattedStartDate = formatDate(startDate);
-      const formattedEndDate = formatDate(endDate);
-
-      return `${formattedStartDate} ~ ${formattedEndDate}`;
-    },
-    getDurationTime(startedAt, endedAt) {
-      const timeDifference = new Date(endedAt) - new Date(startedAt);
-
-      return parseInt(timeDifference / (1000 * 60 * 60)) + "시간";
-    },
-    deleteItem(id) {
-      this.$emit("deleteItem", id);
-    },
-    goToBoardPost(idx) {
-      this.$router.push({
-        name: "CompanyBoardPostPage",
-        params: { id: idx },
-      });
+    displayModal() {
+      this.isDisplayModal = !this.isDisplayModal;
     },
   },
 };
@@ -227,29 +191,34 @@ li {
   margin: 0;
   padding: 0;
 }
-.section_orderlist .list_ul {
+
+.section_orderlist .list_order {
   padding-top: 10px;
   border-top: 2px solid #333;
   margin-bottom: 100px;
 }
-.section_orderlist .list_ul .date {
+
+.section_orderlist .list_order .date {
   padding-top: 20px;
   font-size: 16px;
   line-height: 24px;
   font-weight: 700;
   color: #666;
 }
-.section_orderlist .list_ul .list_elems {
+
+.section_orderlist .list_order .order_goods {
   position: relative;
   margin-top: 10px;
   padding: 0 20px;
   border: 1px solid #dddfe1;
 }
-.section_orderlist .list_ul .name {
+
+.section_orderlist .list_order .name {
   padding: 20px 0 13px;
   border-bottom: 1px solid #dddfe1;
 }
-.section_orderlist .list_ul .name a {
+
+.section_orderlist .list_order .name a {
   display: block;
   overflow: hidden;
   background: url(https://res.kurly.com/pc/ico/1806/ico_arrow_10x15.png)
@@ -260,51 +229,85 @@ li {
   color: #000;
   cursor: pointer;
 }
-.section_orderlist .list_ul .elem_info {
+
+.section_orderlist .list_order .order_info {
   overflow: hidden;
   padding: 14px 0 20px;
 }
-.section_orderlist .list_ul .desc {
+
+.section_orderlist .list_order .desc {
   overflow: hidden;
   padding-top: 1px;
 }
-.section_orderlist .list_ul .elem_info dl:first-child {
+
+.section_orderlist .list_order .order_info dl:first-child {
   padding-top: 3px;
 }
-.section_orderlist .list_ul .elem_info dl {
+
+.section_orderlist .list_order .order_info dl {
   overflow: hidden;
   padding-top: 6px;
 }
-.section_orderlist .list_ul .elem_info dt {
+
+.section_orderlist .list_order .order_info dt {
   float: left;
   padding-right: 15px;
   font-size: 12px;
   color: #000;
   line-height: 20px;
 }
-.section_orderlist .list_ul .elem_info dd {
+
+.section_orderlist .list_order .order_info dd {
   float: left;
   font-size: 14px;
   line-height: 20px;
   font-weight: 700;
   color: #000;
 }
-.elem_info {
+
+/* .section_orderlist .list_order .order_info .end {
+  color: #514859;
+} */
+
+.order_info {
   display: flex;
 }
-.section_orderlist .list_ul .elem_status_box {
+
+.section_orderlist .list_order .order_status {
   display: table;
   position: absolute;
   right: 57px;
-  bottom: 90px;
+  bottom: 0;
   height: 114px;
   vertical-align: middle;
 }
-.section_orderlist .list_ul .inner_status {
+
+.section_orderlist .list_order .inner_status {
   display: table-cell;
   vertical-align: middle;
 }
-/* .section_orderlist .list_ul .elem_status_box .link {
+
+.section_orderlist .list_order .order_status .link_review {
+  margin-bottom: 4px;
+  border: 1px solid #512771;
+  background-color: #5f0080;
+  color: #fff;
+}
+
+.section_orderlist .list_order .order_status .link {
+  display: block;
+  width: 90px;
+  height: 34px;
+  border: 1px solid #5f0080;
+  background-color: #fff;
+  font-size: 12px;
+  color: #5f0080;
+  line-height: 32px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.section_orderlist .list_order .order_status .order_status_box {
   display: block;
   width: 90px;
   height: 34px;
@@ -315,74 +318,24 @@ li {
   line-height: 32px;
   text-align: center;
   cursor: default;
+}
+
+#user_order_state {
+  margin-bottom: 6px;
+  padding-left: 10px;
+  margin-top: 10px;
+}
+
+/* select:focus {
+  outline: none;
 } */
+
 .no_order_data {
+  display: none;
   border-bottom: 1px solid #dddfe1;
   padding: 90px 0 220px 0;
   font-size: 15px;
   color: #757575;
   text-align: center;
-}
-.section_orderlist .list_ul .elem_status_box .link {
-  display: block;
-  width: 90px;
-  height: 34px;
-  border: 1px solid #5f0080;
-  background-color: #fff;
-  font-size: 12px;
-  color: #5f0080;
-  line-height: 32px;
-  text-align: center;
-  margin-bottom: 5px;
-  cursor: pointer;
-  margin-top: 5px;
-}
-
-.section_orderlist .list_ul .elem_status_box .inner_status .status {
-  display: block;
-  width: 90px;
-  height: 34px;
-  border: 1px solid #5f0080;
-  background-color: #fff;
-  font-size: 12px;
-  color: #5f0080;
-  line-height: 32px;
-  text-align: center;
-  margin-bottom: 5px;
-  cursor: default;
-  margin-top: 5px;
-}
-
-.section_orderlist .list_ul .elem_status_box .complete {
-  display: block;
-  width: 90px;
-  height: 34px;
-  border: 1px solid #333;
-  background-color: #fff;
-  font-size: 12px;
-  color: #333;
-  line-height: 32px;
-  text-align: center;
-  margin-bottom: 5px;
-  cursor: default;
-  margin-top: 5px;
-}
-
-.list_elems .image {
-  margin-right: 20px;
-  margin-top: 20px;
-  width: 300px;
-  height: 150px;
-}
-.list_elems .image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-button:disabled {
-  background-color: #ccc !important;
-  cursor: default !important;
-  color: white !important;
-  border: 1px solid !important;
 }
 </style>
