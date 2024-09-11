@@ -295,7 +295,7 @@
                 :disabled="!selectedPaymentMethod"
               >
                 <span class="css-nytqmg e4nu7ef1"
-                  >{{ totalAmount }}원 결제하기</span
+                  >{{ totalAmount.toLocaleString() }}원 결제하기</span
                 >
               </button>
             </div>
@@ -463,33 +463,40 @@ export default {
       }
     },
     isNumber(event) {
-      const char = String.fromCharCode(event.keyCode);
-      const inputValue = event.target.value + char;
+      const char = event.key;
 
-      let availableMax = Math.min(
-        this.ordererInfo.point,
-        this.maximumAvailablePoint
-      );
-
-      if (!/[0-9]/.test(char) || /^0+$/.test(inputValue)) {
+      // 한글 입력 차단
+      const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(char);
+      if (isKorean) {
         event.preventDefault();
         return;
       }
 
-      if (Number(inputValue) > availableMax) {
+      // 숫자가 아닌 문자 차단
+      if (!/[0-9]/.test(char)) {
         event.preventDefault();
-        this.useAllPoints();
       }
     },
     onPointInput(event) {
-      let inputValue = Number(event.target.value);
+      // 입력값에서 숫자가 아닌 문자를 모두 제거
+      let inputValue = event.target.value.replace(/[^0-9]/g, "");
 
-      // 0을 여러 번 입력하지 못하게 하고, 첫 번째 0 제거
+      // 0으로 시작하는 경우 제거
       if (inputValue.length > 1 && inputValue[0] === "0") {
         inputValue = inputValue.replace(/^0+/, "");
       }
 
-      this.usedPoint = inputValue;
+      // 최대 사용 가능 포인트 초과 방지
+      const availableMax = Math.min(
+        this.ordererInfo.point,
+        this.maximumAvailablePoint
+      );
+      this.usedPoint = inputValue
+        ? Math.min(Number(inputValue), availableMax)
+        : 0;
+
+      // 필터링된 값을 다시 input에 반영
+      event.target.value = this.usedPoint;
     },
     useAllPoints() {
       if (this.ordererInfo.point <= this.maximumAvailablePoint) {
