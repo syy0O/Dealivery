@@ -6,7 +6,7 @@ import * as PortOne from "@portone/browser-sdk/v2";
 
 export const useOrderStore = defineStore('order', {
     state: () => ({
-        orderedProducts: [], orderIdx: null, paymentId: "", boardInfo: null
+        orderedProducts: [], orderIdx: null, paymentId: "", boardInfo: null, orderInfo: null, paymentInfo: null
     }),
     actions: {
         async submitOrder(orderRequest) { // 주문 생성 : 백엔드에 주문 가능하면 200 Ok, 재고 부족 or 이미 끝난 이벤트 : 400 error
@@ -30,8 +30,8 @@ export const useOrderStore = defineStore('order', {
             }
         },
 
-        async makePayment(/*orderRexquest*/paymentMethod) {
-            let channelKey = paymentMethod === 'kakao' ? process.env.VUE_APP_KAKAOPAY_CHANNEL : process.env.VUE_APP_TOSSPAY_CHANNEL
+        async makePayment(paymentRequest) {
+            let channelKey = paymentRequest.paymentMethod === 'kakao' ? process.env.VUE_APP_KAKAOPAY_CHANNEL : process.env.VUE_APP_TOSSPAY_CHANNEL
 
             let paymentId = "order_no_000" + new Date().getMilliseconds()
 
@@ -39,19 +39,25 @@ export const useOrderStore = defineStore('order', {
                 customData: this.orderRequest,
                 storeId: process.env.VUE_APP_PORTONE_STORE_ID,
                 paymentId: paymentId,
-                orderName: "이거되나",
-                totalAmount: 13000,
+                orderName: this.boardInfo.title,
+                totalAmount: paymentRequest.totalAmount,
                 currency: "KRW",
                 channelKey: channelKey,
                 payMethod: "EASY_PAY"
             });
 
+
+            this.paymentInfo = paymentRequest
+
             if (response.code != null) { // 결제 오류 발생
                 //TODO: backend에 refund하는 함수 호출
-                return alert(response.message);
+                alert(response.message);
+                return false;
             }
 
             //TODO: backend에 결제 검증하는 함수 호출 -> paymentId 넘기고, Orderid 넘김
+            alert("주문 완료되었습니다");
+            return true;
 
         },
     }

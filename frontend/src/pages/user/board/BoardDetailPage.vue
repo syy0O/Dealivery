@@ -26,9 +26,6 @@ import { mapStores } from "pinia";
 
 export default {
   name: "OrdersPage",
-  props: {
-    msg: String,
-  },
   components: {
     HeaderComponent,
     FooterComponent,

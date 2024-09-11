@@ -128,8 +128,7 @@
               <div class="css-82a6rk e150alo80">
                 <span class="css-3uygi7 e17yjk9v3">기본배송지</span>
                 <p class="css-36j4vu e17yjk9v2">
-                  서울 동작구 상도로 지하 76 (7호선 신대방삼거리역) Beyond SW
-                  캠프
+                  {{ ordererInfo.defaultAddress }}
                 </p>
                 <div class="css-iqoq9n e17yjk9v0">
                   <button
@@ -179,10 +178,12 @@
                     data-testid="available-total-point"
                     class="css-1az0nid e1gm2j0y8"
                   >
-                    <span class="css-o5boot e1gm2j0y5">사용가능 잔액</span
-                    ><span class="css-cp6cch e1gm2j0y4"
-                      >{{ ordererInfo.point }}
-                      <span class="css-o5boot e1gm2j0y5">원</span></span
+                    <span class="css-cp6cch e1gm2j0y4"
+                      >최대 사용 가능 포인트 : {{ maximumAvailablePoint }}
+                      <span class="css-o5boot e1gm2j0y5">p</span></span
+                    >
+                    <span class="css-o5boot e1gm2j0y5"
+                      >보유 포인트 : {{ ordererInfo.point }} p</span
                     >
                   </div>
                 </div>
@@ -213,6 +214,7 @@
                     <span class="css-nytqmg e4nu7ef1">모두사용</span>
                   </button>
                 </div>
+
                 <div class="css-1waf5ak ezr038b1"></div>
               </div>
             </div>
@@ -349,7 +351,7 @@
                   <div>
                     <span class="css-2pg1ps eahaaoi10"
                       ><span class="css-rfpchb eahaaoi3"></span
-                      >{{ totalAmount - usedPoint }}</span
+                      >{{ totalAmount }}</span
                     ><span class="css-158icaa eahaaoi8">원</span>
                   </div>
                 </div>
@@ -379,14 +381,17 @@ export default {
       ordererInfo: {},
       orderedProducts: [],
       usedPoint: 0,
+      maximumAvailablePoint: 0,
     };
   },
   computed: {
     ...mapStores(useOrderStore, useUserStore),
     totalAmount() {
-      return this.orderStore.orderedProducts.reduce((total, product) => {
-        return total + product.price * product.quantity;
-      }, 0);
+      return (
+        this.orderStore.orderedProducts.reduce((total, product) => {
+          return total + product.price * product.quantity;
+        }, 0) - this.usedPoint
+      );
     },
     originalTotalAmount() {
       return this.orderStore.orderedProducts.reduce((total, product) => {
@@ -405,12 +410,16 @@ export default {
     this.boardInfo = this.orderStore.boardInfo;
     this.orderedProducts = this.orderStore.orderedProducts;
     this.ordererInfo = {
+      // this.ordererInfo = this.userStore.
       name: "유송연",
       phone: "010-1111-1111",
       email: "simkids@gmail.com",
-      point: 4890,
+      point: 24890,
+      defaultAddress:
+        " 서울 동작구 상도로 지하 76 (7호선 신대방삼거리역) Beyond SW 캠프",
     };
-    // this.ordererInfo = this.userStore.
+
+    this.maximumAvailablePoint = Math.round(this.totalAmount * (10 / 100));
   },
 
   methods: {
@@ -429,8 +438,20 @@ export default {
 
       this.selectedPaymentMethod = method;
     },
-    makePayment() {
-      this.orderStore.makePayment(this.selectedPaymentMethod);
+    async makePayment() {
+      const paymentData = {
+        paymentMethod: this.selectedPaymentMethod,
+        address: this.ordererInfo.defaultAddress, // 배송지 정보 가져오기
+        usedPoint: this.usedPoint, // 사용한 포인트
+        totalAmount: this.totalAmount, // 전체 결제금액에서 포인트 차감
+      };
+
+      let result = await this.orderStore.makePayment(paymentData);
+      if (result) {
+        this.$router.push("/");
+      } else {
+        this.$router.push("/");
+      }
     },
     isNumber(event) {
       const char = String.fromCharCode(event.keyCode);
@@ -461,7 +482,11 @@ export default {
       this.usedPoint = inputValue;
     },
     useAllPoints() {
-      this.usedPoint = this.ordererInfo.point;
+      if (this.ordererInfo.point <= this.maximumAvailablePoint) {
+        this.usedPoint = this.ordererInfo.point;
+      } else {
+        this.usedPoint = this.maximumAvailablePoint;
+      }
     },
   },
 };
@@ -1356,5 +1381,60 @@ ul {
 
 .css-1wqgkv4:last-of-type {
   margin-bottom: 0px;
+}
+
+.point-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.point-input-section {
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper {
+  position: relative;
+  height: 44px;
+  flex: 1;
+}
+
+.point-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 16px;
+}
+
+.use-all-button {
+  margin-left: 10px;
+  height: 44px;
+  padding: 0 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.use-all-button:hover {
+  background-color: #0056b3;
+}
+
+.point-info {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #333;
+}
+
+.point-info span {
+  margin-right: 15px;
 }
 </style>
