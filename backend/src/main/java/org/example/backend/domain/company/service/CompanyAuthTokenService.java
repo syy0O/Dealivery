@@ -1,12 +1,12 @@
-package org.example.backend.domain.user.service;
+package org.example.backend.domain.company.service;
 
 import freemarker.template.Template;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.domain.user.model.dto.UserAuthTokenDto;
-import org.example.backend.domain.user.model.entity.UserAuthToken;
-import org.example.backend.domain.user.repository.UserAuthTokenRepository;
+import org.example.backend.domain.company.model.dto.CompanyAuthTokenDto;
+import org.example.backend.domain.company.model.entity.CompanyAuthToken;
+import org.example.backend.domain.company.repository.CompanyAuthTokenRepository;
 import org.example.backend.global.common.constants.BaseResponseStatus;
 import org.example.backend.global.exception.InvalidCustomException;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,27 +22,28 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
 @Service
 @RequiredArgsConstructor
-public class UserAuthTokenService {
+public class CompanyAuthTokenService {
 
     @Value("${project.mail.url}")
     private String mailUrl;
     private final String TOKEN_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private final UserAuthTokenRepository userAuthTokenRepository;
+    private final CompanyAuthTokenRepository companyAuthTokenRepository;
     private final JavaMailSender mailSender;
     private final FreeMarkerConfigurer freemarkerConfigurer;
 
     //요청으로 받은 이메일로 코드 생성 및 저장 후 인증메일 발송
     @Transactional
-    public Boolean doAuth(UserAuthTokenDto.UserEmailAuthRequest request){
+    public Boolean doAuth(CompanyAuthTokenDto.CompanyEmailAuthRequest request){
         //요청한 이메일로 생성된 토큰 전부 삭제
-        userAuthTokenRepository.deleteAllByEmail(request.getEmail());
+        companyAuthTokenRepository.deleteAllByEmail(request.getEmail());
         //인증토큰 생성
         String token = generateToken();
         LocalDateTime expiredTime = getTokenExpiry(10);
-        UserAuthToken userAuthToken = userAuthTokenRepository.save(request.toEntity(token, expiredTime));
-        if (userAuthToken == null) {
+        CompanyAuthToken companyAuthToken = companyAuthTokenRepository.save(request.toEntity(token, expiredTime));
+        if (companyAuthToken == null) {
             throw new InvalidCustomException(BaseResponseStatus.EMAIL_VERIFY_FAIL_CAN_NOT_CREATE);
         }
         //DB에 토큰 저장이 잘 되면 메일 전송
@@ -70,13 +71,13 @@ public class UserAuthTokenService {
 
     // 토큰 유효성 검증 메서드
     public Boolean isTokenValid(String token, String email) {
-        UserAuthToken userAuthToken = userAuthTokenRepository.findByEmail(email).orElseThrow(
+        CompanyAuthToken companyAuthToken = companyAuthTokenRepository.findByEmail(email).orElseThrow(
                 () -> new InvalidCustomException(BaseResponseStatus.USER_SIGNUP_FAIL_INVALID_EMAIL_CODE)
         );
-        if (!LocalDateTime.now().isBefore(userAuthToken.getExpiredTime())){
+        if (!LocalDateTime.now().isBefore(companyAuthToken.getExpiredTime())){
             throw new InvalidCustomException(BaseResponseStatus.EMAIL_VERIFY_FAIL_EXPIRED);
         }
-        if (!token.equals(userAuthToken.getToken())){
+        if (!token.equals(companyAuthToken.getToken())){
             throw new InvalidCustomException(BaseResponseStatus.EMAIL_VERIFY_FAIL_INCORRECT);
         }
         return true;
