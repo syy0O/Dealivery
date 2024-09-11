@@ -457,22 +457,23 @@ export default {
       const char = String.fromCharCode(event.keyCode);
       const inputValue = event.target.value + char;
 
+      let availableMax = Math.min(
+        this.ordererInfo.point,
+        this.maximumAvailablePoint
+      );
+
       if (!/[0-9]/.test(char) || /^0+$/.test(inputValue)) {
         event.preventDefault();
         return;
       }
 
-      if (Number(inputValue) > this.ordererInfo.point) {
+      if (Number(inputValue) > availableMax) {
         event.preventDefault();
         this.useAllPoints();
       }
     },
     onPointInput(event) {
       let inputValue = Number(event.target.value);
-
-      if (inputValue > this.ordererInfo.point) {
-        inputValue = this.ordererInfo.point;
-      }
 
       // 0을 여러 번 입력하지 못하게 하고, 첫 번째 0 제거
       if (inputValue.length > 1 && inputValue[0] === "0") {
