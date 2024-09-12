@@ -41,13 +41,13 @@ public class CompanyAuthTokenService {
         companyAuthTokenRepository.deleteAllByEmail(request.getEmail());
         //인증토큰 생성
         String token = generateToken();
-        LocalDateTime expiredTime = getTokenExpiry(10);
-        CompanyAuthToken companyAuthToken = companyAuthTokenRepository.save(request.toEntity(token, expiredTime));
+        LocalDateTime expiredAt = getTokenExpiry(10);
+        CompanyAuthToken companyAuthToken = companyAuthTokenRepository.save(request.toEntity(token, expiredAt));
         if (companyAuthToken == null) {
             throw new InvalidCustomException(BaseResponseStatus.EMAIL_VERIFY_FAIL_CAN_NOT_CREATE);
         }
         //DB에 토큰 저장이 잘 되면 메일 전송
-        if (!sendEmail(request.getEmail(), token,expiredTime)){
+        if (!sendEmail(request.getEmail(), token,expiredAt)){
             throw new InvalidCustomException(BaseResponseStatus.EMAIL_VERIFY_FAIL_CAN_NOT_SEND);
         }
         return true;
@@ -74,7 +74,7 @@ public class CompanyAuthTokenService {
         CompanyAuthToken companyAuthToken = companyAuthTokenRepository.findByEmail(email).orElseThrow(
                 () -> new InvalidCustomException(BaseResponseStatus.USER_SIGNUP_FAIL_INVALID_EMAIL_CODE)
         );
-        if (!LocalDateTime.now().isBefore(companyAuthToken.getExpiredTime())){
+        if (!LocalDateTime.now().isBefore(companyAuthToken.getExpiredAt())){
             throw new InvalidCustomException(BaseResponseStatus.EMAIL_VERIFY_FAIL_EXPIRED);
         }
         if (!token.equals(companyAuthToken.getToken())){

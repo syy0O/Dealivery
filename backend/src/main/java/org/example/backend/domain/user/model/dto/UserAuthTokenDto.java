@@ -18,7 +18,7 @@ public class UserAuthTokenDto {
             return UserAuthToken.builder()
                     .email(this.email)
                     .token(token)
-                    .expiredTime(expiredTime)
+                    .expiredAt(expiredTime)
                     .build();
         }
     }

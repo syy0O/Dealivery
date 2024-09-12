@@ -1,6 +1,9 @@
-package org.example.backend.domain.user.model.entity;
+package org.example.backend.domain.company.model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,15 +16,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserAuthToken {
+public class CompanyRegisterVerify {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    private String email;
+    private String regNumber;
 
-    private String token;
+    private Boolean status;
 
     private LocalDateTime expiredAt;
 
