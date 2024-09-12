@@ -1,3 +1,10 @@
+api:
+  nts-businessman:
+    v1:
+      validate:
+        serviceKey: ${NTS_KEY}
+        url: ${NTS_BASEURL}
+
 project:
   mail:
     url: ${MAIL_URL}

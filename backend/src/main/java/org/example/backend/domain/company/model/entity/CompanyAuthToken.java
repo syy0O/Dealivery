@@ -26,7 +26,7 @@ public class CompanyAuthToken {
 
     private String token;
 
-    private LocalDateTime expiredTime;
+    private LocalDateTime expiredAt;
 
 
 
