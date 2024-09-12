@@ -69,11 +69,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row, index) in tableData" :key="index" class="css-atz965 e1l5ky7y9">
+            <tr v-for="(row, index) in localTableData" :key="index" class="css-atz965 e1l5ky7y9">
               <td class="css-1brd6ns e1l5ky7y8">{{ row.title }}</td>
               <td class="css-1pkqelu e1l5ky7y7">{{ row.author }}</td>
-              <td class="css-1pkqelu e1l5ky7y6">{{ row.createdDate }}</td>
-              <td class="css-bhr3cq e1l5ky7y5">{{ row.status }}</td>
+              <td class="css-1pkqelu e1l5ky7y6">{{ row.created_at }}</td>
+              <td class="css-bhr3cq e1l5ky7y5">{{ row.answer_status }}</td>
             </tr>
           </tbody>
         </table>
@@ -88,7 +88,7 @@
         </div>
       </div>
     </div>
-    <QnaRegisterModalComponent v-if="showModal" @close="closeModal" />
+    <QnaRegisterModalComponent v-if="showModal" @close="closeModal" @submit="addNewInquiry"/>
   </div>
 </template>
 
@@ -110,6 +110,7 @@ export default {
       hasPrev: false,
       hasNext: true,
       showModal: false, // 모달을 관리할 변수 추가
+      localTableData: [...this.tableData], // tableData의 복사본을 생성하여 사용
     };
   },
   methods: {
@@ -118,6 +119,26 @@ export default {
     },
     closeModal() {
       this.showModal = false; // 모달 닫기
+    },
+    addNewInquiry(newInquiry) {
+      // 현재 날짜로 생성 일자를 설정
+      const inquiryWithDate = {
+        ...newInquiry,
+        created_at: new Date().toISOString().split('T')[0], // 현재 날짜 추가
+        answer_status: '답변대기', // 기본 답변 상태 추가
+      };
+
+      // localTableData에 새로운 문의 추가
+      this.localTableData = [...this.localTableData, inquiryWithDate];
+
+      // 모달 닫기
+      this.closeModal();
+    }
+  },
+  watch: {
+    tableData(newData) {
+      // tableData가 변경되면 localTableData도 업데이트
+      this.localTableData = [...newData];
     },
   },
   components: {

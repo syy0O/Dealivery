@@ -29,7 +29,7 @@
                                     <div height="42" class="css-1xbd2py e1uzxhvi3">
                                         <input data-testid="input-box" name="subject" placeholder="제목을 입력해 주세요"
                                             type="text" height="42" class="css-cjei9u e1uzxhvi2" v-model="subject"
-                                            maxlength="35"> <!-- maxlength 속성 추가 -->
+                                            maxlength="35">
                                     </div>
                                 </div>
                             </div>
@@ -40,27 +40,10 @@
                                 <div class="css-17xxk8 e6w4oc80">
                                     <div class="css-0 e1tjt2bn7">
                                         <div class="css-l45xk5 e1tjt2bn5">
-                                            <div class="placeholder css-1ofzfyp e1tjt2bn6" v-if="!content && !focused">
-                                                <div class="css-ylej1f e41kell0">
-                                                    <strong>상품문의 작성 전 확인해 주세요</strong>
-                                                    <strong>글자 수 제한</strong>
-                                                    <ul>
-                                                        <li>제목은 공백을 제외하고 최소 2자 이상, 최대 35자까지 입력해야 등록 가능합니다.</li>
-                                                        <li>내용은 공백을 제외하고 최소 5자 이상, 최대 255자까지 입력해야 등록 가능합니다.</li>
-                                                    </ul>
-                                                    <strong>주문취소</strong>
-                                                    <ul>
-                                                        <li>[결제대기] 단계 : [마이페이지 > 주문내역 > 주문내역 상세] 에서 직접 취소 가능</li>
-                                                        <li>생산이 시작된 [주문완료] 이후에는 취소가 제한되는 점 고객님의 양해 부탁드립니다.</li>
-                                                    </ul>
-                                                    <p>※ 주문상품의 부분 취소는 불가능합니다. 전체 주문 취소 후 재구매 해주세요.</p>
-                                                </div>
-                                            </div>
                                             <textarea inputmode="text" aria-label="textarea-message" name="content"
                                                 class="css-5etceh e1tjt2bn1" v-model="content" @focus="focused = true"
                                                 @blur="focused = false" @input="limitContentLength"
-                                                style="overflow-y: auto;">
-                                            </textarea>
+                                                style="overflow-y: auto;"></textarea>
                                             <span class="content-length-counter css-dbwxb9 e1tjt2bn0">
                                                 <span><span :class="{ 'flashing': content.length > 255 }"
                                                         class="css-14kcwq8 e1tjt2bn2">{{ content.length }}</span>
@@ -76,7 +59,8 @@
                             <button class="css-wg85j7 e4nu7ef3" type="button" @click="closeModal">
                                 <span class="css-nytqmg e4nu7ef1">취소</span>
                             </button>
-                            <button class="css-f4f4h7 e4nu7ef3" type="button" :disabled="!isFormValid">
+                            <button class="css-f4f4h7 e4nu7ef3" type="button" :disabled="!isFormValid"
+                                @click="submitForm">
                                 <span class="css-nytqmg e4nu7ef1">등록</span>
                             </button>
                         </div>
@@ -93,34 +77,42 @@ export default {
     name: "QnaRegisterModalComponent",
     data() {
         return {
-            subject: '',
-            content: '',
-            focused: false // 텍스트 영역의 포커스 상태를 관리합니다.
+            subject: "",
+            content: "",
+            focused: false,
         };
     },
     computed: {
         isFormValid() {
-            return this.trimmedSubject.length >= 2 && this.trimmedContent.length >= 5;
+            return this.subject.trim().length >= 2 && this.content.trim().length >= 5;
         },
-        trimmedSubject() {
-            return this.subject.trim();
-        },
-        trimmedContent() {
-            return this.content.trim();
-        }
     },
     methods: {
         closeModal() {
-            this.$emit('close');
+            this.$emit("close");
+        },
+        submitForm() {
+            const newInquiry = {
+                title: this.subject,
+                content: this.content,
+                author: "익명", // 실제로는 로그인된 사용자의 이름을 사용
+                created_at: new Date().toISOString().split("T")[0],
+                answer_status: "답변대기",
+            };
+
+            // 부모 컴포넌트에 데이터 전달
+            this.$emit("submit", newInquiry);
+            this.closeModal();
         },
         limitContentLength() {
             if (this.content.length > 255) {
                 this.content = this.content.slice(0, 255);
             }
-        }
-    }
+        },
+    },
 };
 </script>
+
 
 <style scoped>
 *,
