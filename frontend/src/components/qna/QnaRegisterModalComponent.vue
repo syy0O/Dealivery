@@ -40,6 +40,22 @@
                                 <div class="css-17xxk8 e6w4oc80">
                                     <div class="css-0 e1tjt2bn7">
                                         <div class="css-l45xk5 e1tjt2bn5">
+                                            <div class="placeholder css-1ofzfyp e1tjt2bn6" v-if="!content && !focused">
+                                                <div class="css-ylej1f e41kell0">
+                                                    <strong>상품문의 작성 전 확인해 주세요</strong>
+                                                    <strong>글자 수 제한</strong>
+                                                    <ul>
+                                                        <li>제목은 공백을 제외하고 최소 2자 이상, 최대 35자까지 입력해야 등록 가능합니다.</li>
+                                                        <li>내용은 공백을 제외하고 최소 5자 이상, 최대 255자까지 입력해야 등록 가능합니다.</li>
+                                                    </ul>
+                                                    <strong>주문취소</strong>
+                                                    <ul>
+                                                        <li>[결제대기] 단계 : [마이페이지 > 주문내역 > 주문내역 상세] 에서 직접 취소 가능</li>
+                                                        <li>생산이 시작된 [주문완료] 이후에는 취소가 제한되는 점 고객님의 양해 부탁드립니다.</li>
+                                                    </ul>
+                                                    <p>※ 주문상품의 부분 취소는 불가능합니다. 전체 주문 취소 후 재구매 해주세요.</p>
+                                                </div>
+                                            </div>
                                             <textarea inputmode="text" aria-label="textarea-message" name="content"
                                                 class="css-5etceh e1tjt2bn1" v-model="content" @focus="focused = true"
                                                 @blur="focused = false" @input="limitContentLength"
@@ -519,7 +535,7 @@ th {
 
 .css-17xxk8 .placeholder {
     overflow-y: auto;
-    z-index: 1;
+    z-index: 0;
     height: 86%;
 }
 

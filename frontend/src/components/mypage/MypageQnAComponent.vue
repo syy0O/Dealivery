@@ -74,9 +74,11 @@ export default {
             this.showDetailIndex = this.showDetailIndex === index ? null : index;
         },
         afterEnter(el) {
-            el.style.maxHeight = 'none';
+            console.log("Entering element", el);
+            el.style.maxHeight = 'none'; // 혹시 문제 발생 시 여유있게 설정
         },
         afterLeave(el) {
+            console.log("Leaving element", el);
             el.style.maxHeight = '0px';
         }
     }
@@ -365,6 +367,7 @@ button {
     overflow: hidden;
     max-height: 0;
     background-color: rgb(250, 250, 250);
+    transition: max-height 0.5s ease;
 }
 
 .css-1w5u25a>.row-inquiry-detail-enter-active,
@@ -372,14 +375,13 @@ button {
     transition: max-height 0.5s ease;
 }
 
-.css-1w5u25a>.row-inquiry-detail-enter,
-.css-1w5u25a>.row-inquiry-detail-leave-to {
+.css-1w5u25a>.row-inquiry-detail-enter {
     max-height: 0;
 }
 
 .css-1w5u25a>.row-inquiry-detail-enter-to {
-    max-height: 300px;
-    /* Adjust based on content height */
+    max-height: 1000px;
+    /* 넉넉한 값으로 설정하여 내용이 보이게 */
 }
 
 .row-inquiry-detail>.inquiry-detail-content {
