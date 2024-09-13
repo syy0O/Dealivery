@@ -45,7 +45,7 @@
     <!-- 문의 하기 리스트 section -->
     <div class="css-30tvht eewa3w91" v-show="activeTab === 'inquiries'">
       <div class="css-17juoyc eewa3w90">
-        <button class="css-mhrz8m e4nu7ef3" type="button" width="120" height="40" @click="openModal">
+        <button class="css-mhrz8m e4nu7ef3" type="button" width="120" height="40" @click="openNewInquiryModal">
           <span class="css-nytqmg e4nu7ef1">문의하기</span>
         </button>
       </div>
@@ -87,35 +87,38 @@
                   </div>
                 </div>
                 <div class="css-1j49yxi e11ufodi1">
-                  <button type="button">수정</button>
+                  <button type="button" @click="openEditModal(index)">수정</button>
                   <button type="button" class="css-1ankuif e11ufodi0" @click="deleteInquiry(index)">삭제</button>
                 </div>
               </div>
               <div class=" css-tnubsz e1ptpt003">
-                    <div class="css-1n83etr e1ptpt002">
-                      <div class="css-m1wgq7 e1ptpt001">
-                        <span class="css-1non6l6 ey0f1wv0"></span>
-                      </div>
-                      <div class="css-1bv2zte e1ptpt000">
-                        <div>안녕하세요. 고객님 <br><br>바쁘신 와중에 오늘도 컬리를 찾아주셔서 먼저 감사 인사드립니다.<br><br>
-                          문의하신 [[선물세트] 태우한우 1 + 실속 구이 세트 (냉장)]상품의 경우, 수령일을 포함하여 최소 [ 7 ]일 남은 제품을 보내드리고 있다는 점 안내해 드립니다.
-                          <br><br>다만, 고객님께서 수령하신 날짜를 포함하여 [ 7 ]일이나, 혹시라도 이 기준에 부합하지 못하거나 섭취 할 수 없는 상품을 수령 하셨다면 번거로우시겠지만
-                          컬리 고객행복센터를 통해 이상 여부가 확인 가능한 사진과 함께 접수를 부탁드리며, 담당자를 통하여 신속하게 도움 드릴 수 있도록 최선을 다하겠습니다.<br><br>
-                          감사합니다.<br>Better Life for All. Kurly
-                        </div>
-                      </div>
+                <div class="css-1n83etr e1ptpt002">
+                  <div class="css-m1wgq7 e1ptpt001">
+                    <span class="css-1non6l6 ey0f1wv0"></span>
+                  </div>
+                  <div class="css-1bv2zte e1ptpt000">
+                    <div>안녕하세요. 고객님 <br><br>바쁘신 와중에 오늘도 컬리를 찾아주셔서 먼저 감사 인사드립니다.<br><br>
+                      문의하신 [[선물세트] 태우한우 1 + 실속 구이 세트 (냉장)]상품의 경우, 수령일을 포함하여 최소 [ 7 ]일 남은 제품을 보내드리고 있다는 점 안내해 드립니다.
+                      <br><br>다만, 고객님께서 수령하신 날짜를 포함하여 [ 7 ]일이나, 혹시라도 이 기준에 부합하지 못하거나 섭취 할 수 없는 상품을 수령 하셨다면 번거로우시겠지만
+                      컬리 고객행복센터를 통해 이상 여부가 확인 가능한 사진과 함께 접수를 부탁드리며, 담당자를 통하여 신속하게 도움 드릴 수 있도록 최선을 다하겠습니다.<br><br>
+                      감사합니다.<br>Better Life for All. Kurly
                     </div>
-                    <div class="css-17g9jzg e1gk8zam0">2024.02.07</div>
+                  </div>
                 </div>
+                <div class="css-17g9jzg e1gk8zam0">2024.02.07</div>
+              </div>
             </td>
           </tr>
         </tbody>
-
-
-
       </table>
     </div>
-    <QnaRegisterModalComponent v-if="showModal" @close="closeModal" @submit="addNewInquiry" />
+
+    <!-- 새 문의 작성 모달 -->
+    <QnaRegisterModalComponent v-if="showNewInquiryModal" @close="closeModal" @submit="addNewInquiry" />
+
+    <!-- 수정 모달 -->
+    <QnaRegisterModalComponent v-if="showEditInquiryModal" :initialSubject="selectedInquiry.title"
+      :initialContent="selectedInquiry.content" @close="closeModal" @submit="updateInquiry" />
   </div>
 </template>
 
@@ -136,17 +139,29 @@ export default {
       activeTab: "description",
       hasPrev: false,
       hasNext: true,
-      showModal: false,
+      showNewInquiryModal: false,
+      showEditInquiryModal: false,
+      selectedInquiry: {
+        title: "",
+        content: "",
+      },
       localTableData: [...this.tableData],
       expandedInquiryIndex: null,
+      editingIndex: null, // 수정할 문의 인덱스
     };
   },
   methods: {
-    openModal() {
-      this.showModal = true;
+    openNewInquiryModal() {
+      this.showNewInquiryModal = true;
+    },
+    openEditModal(index) {
+      this.selectedInquiry = { ...this.localTableData[index] }; // 선택한 문의 데이터를 저장
+      this.editingIndex = index; // 수정할 문의의 인덱스를 저장
+      this.showEditInquiryModal = true;
     },
     closeModal() {
-      this.showModal = false;
+      this.showNewInquiryModal = false;
+      this.showEditInquiryModal = false;
     },
     toggleInquiry(index) {
       console.log("Current Inquiry Data:", this.localTableData[index]);
@@ -166,21 +181,21 @@ export default {
       el.style.maxHeight = '0px';
     },
     addNewInquiry(newInquiry) {
-      const inquiryWithDate = {
-        ...newInquiry,
-        content: newInquiry.content || '내용이 없습니다.',
-        created_at: new Date().toISOString().split('T')[0],
-        answer_status: '답변대기',
-      };
-      this.localTableData.push(inquiryWithDate);
+      newInquiry.created_at = new Date().toISOString().split("T")[0];
+      this.localTableData.push(newInquiry);
       this.closeModal();
     },
-    editInquiry(index) {
-      const inquiryToEdit = this.localTableData[index];
-      this.$emit('edit', inquiryToEdit);
-    },
-    deleteInquiry(index) {
-      this.localTableData.splice(index, 1);
+    updateInquiry(updatedInquiry) {
+      if (this.editingIndex !== null) {
+        // 수정된 데이터를 배열에 직접 반영
+        this.localTableData[this.editingIndex] = {
+          ...this.localTableData[this.editingIndex],
+          ...updatedInquiry,
+          created_at: new Date().toISOString().split("T")[0], // 수정 날짜로 갱신
+        };
+        this.editingIndex = null;
+        this.closeModal();
+      }
     },
   },
   watch: {

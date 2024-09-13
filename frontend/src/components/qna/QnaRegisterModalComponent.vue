@@ -91,17 +91,36 @@
 <script>
 export default {
     name: "QnaRegisterModalComponent",
+    props: {
+        initialSubject: {
+            type: String,
+            default: ""
+        },
+        initialContent: {
+            type: String,
+            default: ""
+        }
+    },
     data() {
         return {
-            subject: "",
-            content: "",
+            subject: this.initialSubject,
+            content: this.initialContent,
             focused: false,
         };
+    },
+    watch: {
+        // props가 변경될 때 data에 반영
+        initialSubject(newVal) {
+            this.subject = newVal;
+        },
+        initialContent(newVal) {
+            this.content = newVal;
+        }
     },
     computed: {
         isFormValid() {
             return this.subject.trim().length >= 2 && this.content.trim().length >= 5;
-        },
+        }
     },
     methods: {
         closeModal() {
@@ -124,8 +143,8 @@ export default {
             if (this.content.length > 255) {
                 this.content = this.content.slice(0, 255);
             }
-        },
-    },
+        }
+    }
 };
 </script>
 
