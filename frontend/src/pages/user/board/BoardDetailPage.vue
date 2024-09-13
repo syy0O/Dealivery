@@ -49,16 +49,18 @@ export default {
       ],
       tableData: [
         {
-          title: "아이도",
-          author: "엄*희",
-          date: "2022.04.20",
-          status: "답변완료",
+          title: "배송문의드립니다",
+          content: "지금 주문하면 배송 며칠 정도 걸리나요?",
+          author: "송나경",
+          created_at: "2024.09.03",
+          answer_status: "답변완료",
         },
         {
-          title: "아이도",
-          author: "엄*희",
-          date: "2022.04.20",
-          status: "답변완료",
+          title: "상품보관 문의드려요.",
+          content: "냉장보관해야되나요?",
+          author: "심키즈",
+          created_at: "2024.09.04",
+          answer_status: "답변완료",
         },
       ],
     };
@@ -77,6 +79,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 /*공통 부분*/
 * {

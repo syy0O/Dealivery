@@ -29,7 +29,7 @@
                                     <div height="42" class="css-1xbd2py e1uzxhvi3">
                                         <input data-testid="input-box" name="subject" placeholder="제목을 입력해 주세요"
                                             type="text" height="42" class="css-cjei9u e1uzxhvi2" v-model="subject"
-                                            maxlength="35"> <!-- maxlength 속성 추가 -->
+                                            maxlength="35">
                                     </div>
                                 </div>
                             </div>
@@ -59,8 +59,7 @@
                                             <textarea inputmode="text" aria-label="textarea-message" name="content"
                                                 class="css-5etceh e1tjt2bn1" v-model="content" @focus="focused = true"
                                                 @blur="focused = false" @input="limitContentLength"
-                                                style="overflow-y: auto;">
-                                            </textarea>
+                                                style="overflow-y: auto;"></textarea>
                                             <span class="content-length-counter css-dbwxb9 e1tjt2bn0">
                                                 <span><span :class="{ 'flashing': content.length > 255 }"
                                                         class="css-14kcwq8 e1tjt2bn2">{{ content.length }}</span>
@@ -76,7 +75,8 @@
                             <button class="css-wg85j7 e4nu7ef3" type="button" @click="closeModal">
                                 <span class="css-nytqmg e4nu7ef1">취소</span>
                             </button>
-                            <button class="css-f4f4h7 e4nu7ef3" type="button" :disabled="!isFormValid">
+                            <button class="css-f4f4h7 e4nu7ef3" type="button" :disabled="!isFormValid"
+                                @click="submitForm">
                                 <span class="css-nytqmg e4nu7ef1">등록</span>
                             </button>
                         </div>
@@ -91,27 +91,53 @@
 <script>
 export default {
     name: "QnaRegisterModalComponent",
+    props: {
+        initialSubject: {
+            type: String,
+            default: ""
+        },
+        initialContent: {
+            type: String,
+            default: ""
+        }
+    },
     data() {
         return {
-            subject: '',
-            content: '',
-            focused: false // 텍스트 영역의 포커스 상태를 관리합니다.
+            subject: this.initialSubject,
+            content: this.initialContent,
+            focused: false,
         };
+    },
+    watch: {
+        // props가 변경될 때 data에 반영
+        initialSubject(newVal) {
+            this.subject = newVal;
+        },
+        initialContent(newVal) {
+            this.content = newVal;
+        }
     },
     computed: {
         isFormValid() {
-            return this.trimmedSubject.length >= 2 && this.trimmedContent.length >= 5;
-        },
-        trimmedSubject() {
-            return this.subject.trim();
-        },
-        trimmedContent() {
-            return this.content.trim();
+            return this.subject.trim().length >= 2 && this.content.trim().length >= 5;
         }
     },
     methods: {
         closeModal() {
-            this.$emit('close');
+            this.$emit("close");
+        },
+        submitForm() {
+            const newInquiry = {
+                title: this.subject,
+                content: this.content,
+                author: "익명", // 실제로는 로그인된 사용자의 이름을 사용
+                created_at: new Date().toISOString().split("T")[0],
+                answer_status: "답변대기",
+            };
+
+            // 부모 컴포넌트에 데이터 전달
+            this.$emit("submit", newInquiry);
+            this.closeModal();
         },
         limitContentLength() {
             if (this.content.length > 255) {
@@ -121,6 +147,7 @@ export default {
     }
 };
 </script>
+
 
 <style scoped>
 *,
@@ -527,7 +554,7 @@ th {
 
 .css-17xxk8 .placeholder {
     overflow-y: auto;
-    z-index: 1;
+    z-index: 0;
     height: 86%;
 }
 
