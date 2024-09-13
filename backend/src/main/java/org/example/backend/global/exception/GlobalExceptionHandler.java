@@ -1,18 +1,14 @@
 package org.example.backend.global.exception;
 
 
-import jakarta.validation.ConstraintViolationException;
-import org.example.backend.global.common.BaseResponse;
+import org.example.backend.global.common.constants.BaseResponse;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestControllerAdvice
 @Order(value = 1)
@@ -29,7 +25,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<BaseResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         return ResponseEntity
-                .badRequest().body(new BaseResponse("잘못된 요청입니다."));
+                .status(HttpStatus.BAD_REQUEST).body(new BaseResponse("잘못된 요청입니다."));
+    }
 
+    //DB작업 실패시 (제약조건 위반) 예외 핸들러
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<BaseResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT).body(new BaseResponse("이미 존재하는 값이 포함되어있습니다."));
     }
 }

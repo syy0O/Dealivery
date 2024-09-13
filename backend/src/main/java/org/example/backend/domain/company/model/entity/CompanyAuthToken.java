@@ -1,6 +1,9 @@
-package org.example.backend.domain.user.model.entity;
+package org.example.backend.domain.company.model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserAuthToken {
+public class CompanyAuthToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
