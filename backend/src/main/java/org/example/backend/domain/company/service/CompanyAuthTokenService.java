@@ -72,7 +72,7 @@ public class CompanyAuthTokenService {
     // 토큰 유효성 검증 메서드
     public Boolean isTokenValid(String token, String email) {
         CompanyAuthToken companyAuthToken = companyAuthTokenRepository.findByEmail(email).orElseThrow(
-                () -> new InvalidCustomException(BaseResponseStatus.USER_SIGNUP_FAIL_INVALID_EMAIL_CODE)
+            () -> new InvalidCustomException(BaseResponseStatus.USER_SIGNUP_FAIL_INVALID_EMAIL_CODE)
         );
         if (!LocalDateTime.now().isBefore(companyAuthToken.getExpiredAt())){
             throw new InvalidCustomException(BaseResponseStatus.EMAIL_VERIFY_FAIL_EXPIRED);
