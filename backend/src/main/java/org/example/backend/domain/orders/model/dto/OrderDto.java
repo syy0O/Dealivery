@@ -1,13 +1,12 @@
 package org.example.backend.domain.orders.model.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
-import lombok.Data;
 
 import lombok.Getter;
 import org.example.backend.domain.orders.model.entity.Orders;
 import org.example.backend.global.common.constants.OrderStatus;
+import org.example.backend.global.common.constants.PaymentType;
 import org.example.backend.global.utils.RandomCodeGenerator;
 
 public class OrderDto {
@@ -38,7 +37,7 @@ public class OrderDto {
         private String postNumber;
 
         private String paymentId;
-        private String payMethod;
+        private PaymentType payMethod;
         private Integer usedPoint;
     }
 

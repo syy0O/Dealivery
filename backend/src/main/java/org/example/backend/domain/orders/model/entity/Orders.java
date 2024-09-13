@@ -1,6 +1,8 @@
 package org.example.backend.domain.orders.model.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
@@ -16,14 +18,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.domain.orders.model.dto.OrderDto.OrderCompleteRequest;
 import org.example.backend.global.common.constants.OrderStatus;
+import org.example.backend.global.common.constants.PaymentType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@EntityListeners(AuditingEntityListener.class)
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +42,7 @@ public class Orders {
     private OrderStatus status;
 
     @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime modifiedAt;
@@ -49,7 +55,8 @@ public class Orders {
     private String postNumber;
 
     private String paymentId;
-    private String payMethod;
+    @Enumerated(EnumType.STRING)
+    private PaymentType payMethod;
     private Integer usedPoint;
 
     @OneToMany(mappedBy = "orders", fetch = FetchType.LAZY)
