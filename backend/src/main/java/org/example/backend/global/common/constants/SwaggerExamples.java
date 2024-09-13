@@ -36,4 +36,23 @@ public class SwaggerExamples {
        {
            "email": "이메일입력"
        }""";
+
+
+    // 주문 등록 요청 틀
+    public static final String ORDERS_REGISTER_REQUEST = """
+       {
+           "boardIdx" : "게시글 idx 입력",
+           "orderedProducts" : [
+                {
+                    "idx" : "게시글에서 주문한 상품 idx",
+                    "quantity" : "주문한 수량"
+                },
+                {
+                    "idx" : "게시글에서 주문한 상품 idx",
+                    "quantity" : "주문한 수량"
+                }
+           ]
+       }
+    """;
+
 }
