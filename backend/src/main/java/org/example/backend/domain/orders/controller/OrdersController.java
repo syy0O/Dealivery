@@ -5,6 +5,7 @@ import static org.example.backend.domain.orders.model.dto.OrderDto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.domain.orders.service.OrderService;
@@ -30,10 +31,11 @@ public class OrdersController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             mediaType = "application/json",
-                            examples = {
-                                    @ExampleObject(value = SwaggerExamples.ORDERS_REGISTER_REQUEST)}
+                            schema = @Schema(implementation = OrderRegisterRequest.class),
+                            examples = @ExampleObject(value = SwaggerExamples.ORDERS_REGISTER_REQUEST)
                     )
-            ))
+            )
+    )
     public ResponseEntity<BaseResponse> registerOrder(/*@AuthenticationPrincipal CustomUserDetails customUserDetails,*/ @RequestBody OrderRegisterRequest order) {
         OrderCreateResponse res = orderService.register(order);
         return ResponseEntity.ok(new BaseResponse(res));
