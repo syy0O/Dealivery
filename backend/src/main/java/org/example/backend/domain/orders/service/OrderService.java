@@ -53,7 +53,7 @@ public class OrderService {
     public void validateOrder(OrderRegisterRequest order){
 
         ProductBoard board = productBoardRepository.findById(order.getBoardIdx())
-                .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_ENVENT_NOT_FOUND));
+                .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND));
 
         if (board.getEndedAt().isBefore(LocalDateTime.now())) {
             throw new InvalidCustomException(ORDER_FAIL_EXPIRED_EVENT); // 이벤트가 끝났을 때
