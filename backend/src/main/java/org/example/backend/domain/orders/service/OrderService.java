@@ -60,12 +60,14 @@ public class OrderService {
         }
 
         order.getOrderedProducts().forEach((product) -> {
-            Product orderdProduct = productRepository.findById(product.getIdx())
+            Product orderdProduct = productRepository.findByIdWithLock(product.getIdx())
                     .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_PRODUCT_NOT_FOUND)); // 해당하는 상품을 찾을 수가 없을 때
 
             if (product.getQuantity() > orderdProduct.getStock()) {
                 throw new InvalidCustomException(ORDER_CREATE_FAIL_LACK_STOCK); // 재고 수량 없을 때
             }
+
+            orderdProduct.decreaseStock(product.getQuantity()); // 재고 수량 변경
         });
     }
 }

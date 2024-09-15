@@ -30,4 +30,8 @@ public class Product {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name ="productBoard_idx")
 	private ProductBoard productBoard;
+
+    public void decreaseStock(Integer quantity) {
+		this.stock -= quantity;
+    }
 }
