@@ -2,27 +2,37 @@
   <div class="css-16c0d8l">
     <nav class="css-1le17tz en4zazl1">
       <ul class="css-tse2s2 en4zazl0">
-        <li :class="[
-          'css-1tzhzcg',
-          'efe6b6j1',
-          'tab',
-          { active: activeTab === 'description' },
-        ]" @click.prevent="activeTab = 'description'">
+        <li
+          :class="[
+            'css-1tzhzcg',
+            'efe6b6j1',
+            'tab',
+            { active: activeTab === 'description' },
+          ]"
+          @click.prevent="activeTab = 'description'"
+        >
           <a class="css-1t0ft7s efe6b6j0"><span class="name">상품설명</span></a>
         </li>
-        <li :class="[
-          'css-1tzhzcg',
-          'efe6b6j1',
-          'tab',
-          { active: activeTab === 'inquiries' },
-        ]" @click.prevent="activeTab = 'inquiries'">
+        <li
+          :class="[
+            'css-1tzhzcg',
+            'efe6b6j1',
+            'tab',
+            { active: activeTab === 'inquiries' },
+          ]"
+          @click.prevent="activeTab = 'inquiries'"
+        >
           <a class="css-1t0ft7s efe6b6j0"><span class="name">문의</span></a>
         </li>
       </ul>
     </nav>
     <!-- 상품 상세 설명 section -->
     <div class="css-0 el27cq1">
-      <div id="description" class="css-18eozqj el27cq0" v-show="activeTab === 'description'">
+      <div
+        id="description"
+        class="css-18eozqj el27cq0"
+        v-show="activeTab === 'description'"
+      >
         <div class="css-1d3w5wq e1d86arr0">
           <div class="css-1lyi66c">
             <div class="goods_wrap">
@@ -30,7 +40,8 @@
                 <div class="context">
                   <div class="pic">
                     <img
-                      src="https://img-cf.kurly.com/hdims/resize/%3E1010x/quality/90/src/shop/data/goodsview/20240829/gv10001551896_1.jpg" />
+                      src="https://img-cf.kurly.com/hdims/resize/%3E1010x/quality/90/src/shop/data/goodsview/20240829/gv10001551896_1.jpg"
+                    />
                   </div>
                   <p class="words"></p>
                 </div>
@@ -66,6 +77,7 @@
             <th class="status">답변상태</th>
           </tr>
         </thead>
+
 
 
         <tbody v-for="(row, index) in localTableData" :key="index">
@@ -143,7 +155,7 @@
 </template>
 
 <script>
-import QnaRegisterModalComponent from '../qna/QnaRegisterModalComponent.vue';
+import QnaRegisterModalComponent from "../qna/QnaRegisterModalComponent.vue";
 
 export default {
   name: "BoardDetailNavComponent",
@@ -436,7 +448,8 @@ table {
   display: block;
   width: 14px;
   height: 14px;
-  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxMiAxNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxnIGZpbGw9IiNCNUI1QjUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPHBhdGggZD0iTTExLjA0MyAxMi41NzVhLjI1OS4yNTkgMCAwIDEtLjI1OC4yNTdIMS4yMTRhLjI1OS4yNTkgMCAwIDEtLjI1OC0uMjU3VjUuNDJjMC0uMTQyLjExNy0uMjU4LjI1OC0uMjU4aDkuNTdjLjE0NCAwIC4yNi4xMTYuMjYuMjU4djcuMTU1ek0zLjY4NSAzLjIzN0EyLjI4MyAyLjI4MyAwIDAgMSA1Ljk2Ni45NTdhMi4yODIgMi4yODIgMCAwIDEgMi4yODEgMi4yOHYuOTY4SDMuNjg1di0uOTY4em03LjEuOTY4aC0xLjU4di0uOTY4QTMuMjQxIDMuMjQxIDAgMCAwIDUuOTY1IDAgMy4yNCAzLjI0IDAgMCAwIDIuNzMgMy4yMzd2Ljk2OEgxLjIxNEMuNTQ0IDQuMjA1IDAgNC43NSAwIDUuNDJ2Ny4xNTVjMCAuNjY5LjU0NSAxLjIxNCAxLjIxNCAxLjIxNGg5LjU3Yy42NzEgMCAxLjIxNi0uNTQ1IDEuMjE2LTEuMjE0VjUuNDJjMC0uNjctLjU0NS0xLjIxNS0xLjIxNS0xLjIxNXoiLz4KICAgICAgICA8cGF0aCBkPSJNNSA4LjJjMCAuMzQzLjE4NC42MzIuNDQ4LjgxMnYxLjMzaDEuMTAzdi0xLjMzQS45ODYuOTg2IDAgMCAwIDcgOC4yYTEgMSAwIDAgMC0yIDB6Ii8+CiAgICA8L2c+Cjwvc3ZnPgo=) no-repeat;
+  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxMiAxNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxnIGZpbGw9IiNCNUI1QjUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPHBhdGggZD0iTTExLjA0MyAxMi41NzVhLjI1OS4yNTkgMCAwIDEtLjI1OC4yNTdIMS4yMTRhLjI1OS4yNTkgMCAwIDEtLjI1OC0uMjU3VjUuNDJjMC0uMTQyLjExNy0uMjU4LjI1OC0uMjU4aDkuNTdjLjE0NCAwIC4yNi4xMTYuMjYuMjU4djcuMTU1ek0zLjY4NSAzLjIzN0EyLjI4MyAyLjI4MyAwIDAgMSA1Ljk2Ni45NTdhMi4yODIgMi4yODIgMCAwIDEgMi4yODEgMi4yOHYuOTY4SDMuNjg1di0uOTY4em03LjEuOTY4aC0xLjU4di0uOTY4QTMuMjQxIDMuMjQxIDAgMCAwIDUuOTY1IDAgMy4yNCAzLjI0IDAgMCAwIDIuNzMgMy4yMzd2Ljk2OEgxLjIxNEMuNTQ0IDQuMjA1IDAgNC43NSAwIDUuNDJ2Ny4xNTVjMCAuNjY5LjU0NSAxLjIxNCAxLjIxNCAxLjIxNGg5LjU3Yy42NzEgMCAxLjIxNi0uNTQ1IDEuMjE2LTEuMjE0VjUuNDJjMC0uNjctLjU0NS0xLjIxNS0xLjIxNS0xLjIxNXoiLz4KICAgICAgICA8cGF0aCBkPSJNNSA4LjJjMCAuMzQzLjE4NC42MzIuNDQ4LjgxMnYxLjMzaDEuMTAzdi0xLjMzQS45ODYuOTg2IDAgMCAwIDcgOC4yYTEgMSAwIDAgMC0yIDB6Ii8+CiAgICA8L2c+Cjwvc3ZnPgo=)
+    no-repeat;
   margin-left: 6px;
 }
 
@@ -488,7 +501,7 @@ table {
   cursor: default;
 }
 
-.css-sxxs1g button+button {
+.css-sxxs1g button + button {
   margin-left: 12px;
 }
 
