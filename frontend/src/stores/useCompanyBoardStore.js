@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-const backend = "http://localhost:8080/product-boards";
-const mockyListURL =
-  "https://run.mocky.io/v3/785219a1-65f2-45ba-875d-46e0019566ae";
+const backend = "/api/product-boards";
+// const mockyListURL =
+//   "https://run.mocky.io/v3/785219a1-65f2-45ba-875d-46e0019566ae";
 const mockyListOptionURL =
   "https://run.mocky.io/v3/3801fe56-0faf-4fe0-a765-b7e966f1af6f";
 const mockyDetailURL =
@@ -18,11 +18,29 @@ export const useCompanyBoardStore = defineStore("companyBoard", {
       endedAt: "",
       category: "",
     },
+    currentPage: 0,
+    totalPages: 0,
   }),
   actions: {
-    async getProductBoardList() {
-      const data = await axios.get(mockyListURL);
-      return data.data;
+    async getProductBoardList(page) {
+      const response = await axios.get(backend + "/company/list", {
+        params: {
+          page: page,
+        },
+      });
+      return response.data.result;
+    },
+    async getProductBoardListWithOption(page, status, month) {
+      status = String(status);
+      status = status.includes("전체") ? null : status;
+      const response = await axios.get(backend + "/company/list", {
+        params: {
+          page: page,
+          status: status,
+          month: month,
+        },
+      });
+      return response.data.result;
     },
     async getProductBoardListByDateRange(option) {
       console.log(option);

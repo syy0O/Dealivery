@@ -208,7 +208,7 @@
 import CompanyBoardModalComponent from "./CompanyBoardModalComponent.vue";
 import CompanyBoardPhotoUploadComponent from "./CompanyBoardPhotoUploadComponent.vue";
 import { mapStores } from "pinia";
-import { useCompanyBoardStore } from "../../stores/UseCompanyBoardStore";
+import { useCompanyBoardStore } from "../../stores/useCompanyBoardStore";
 
 export default {
   name: "CompanyBoardPostComponent",
