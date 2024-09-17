@@ -44,17 +44,18 @@ export const useCompanyBoardStore = defineStore("companyBoard", {
     async createProductBoard(req) {
       const formData = new FormData();
 
-      const productBoardRequest = {
+      const boardCreateRequest = {
         title: req.title,
+        discountRate: req.discountRate,
         products: req.products,
-        startedAt: req.startTime,
-        endedAt: req.endTime,
+        startedAt: req.startedAt,
+        endedAt: req.endedAt,
         category: req.category,
       };
 
       formData.append(
-        "productBoardRequest",
-        new Blob([JSON.stringify(productBoardRequest)], {
+        "boardCreateRequest",
+        new Blob([JSON.stringify(boardCreateRequest)], {
           type: "application/json",
         })
       );

@@ -72,7 +72,11 @@
           <tr @click="toggleInquiry(index)" class="css-atz965 e1l5ky7y9">
             <td class="css-1brd6ns e1l5ky7y8">{{ row.title }}</td>
             <td class="css-1pkqelu e1l5ky7y7">{{ maskAuthorName(row.author) }}</td>
+<<<<<<< HEAD
             <td class="css-1pkqelu e1l5ky7y6">{{ row.created_at }}</td>
+=======
+            <td class="css-1pkqelu e1l5ky7y6">{{ row.modified_at || row.created_at }}</td>
+>>>>>>> 91d9b35893d19ca95ff1f6a5b529803c7cc8e9b0
             <td class="css-bhr3cq e1l5ky7y5">{{ row.answer_status }}</td>
           </tr>
           <tr v-show="expandedInquiryIndex === index" class="css-1mvq381 e61d7mt0">
@@ -86,17 +90,27 @@
                     <span>{{ row.content }}<br></span>
                   </div>
                 </div>
+<<<<<<< HEAD
                 <div class="css-1j49yxi e11ufodi1">
                   <button type="button" @click="openEditModal(index)">수정</button>
                   <button type="button" class="css-1ankuif e11ufodi0" @click="deleteInquiry(index)">삭제</button>
                 </div>
               </div>
               <div class=" css-tnubsz e1ptpt003">
+=======
+                <div class="css-1j49yxi e11ufodi1" v-if="row.answer_status !== '답변완료'">
+                  <button type=" button" @click="openEditModal(index)">수정</button>
+                  <button type="button" class="css-1ankuif e11ufodi0" @click="deleteInquiry(index)">삭제</button>
+                </div>
+              </div>
+              <div class=" css-tnubsz e1ptpt003" v-if="row.answer_status !== '답변대기'">
+>>>>>>> 91d9b35893d19ca95ff1f6a5b529803c7cc8e9b0
                 <div class="css-1n83etr e1ptpt002">
                   <div class="css-m1wgq7 e1ptpt001">
                     <span class="css-1non6l6 ey0f1wv0"></span>
                   </div>
                   <div class="css-1bv2zte e1ptpt000">
+<<<<<<< HEAD
                     <div>안녕하세요. 고객님 <br><br>바쁘신 와중에 오늘도 컬리를 찾아주셔서 먼저 감사 인사드립니다.<br><br>
                       문의하신 [[선물세트] 태우한우 1 + 실속 구이 세트 (냉장)]상품의 경우, 수령일을 포함하여 최소 [ 7 ]일 남은 제품을 보내드리고 있다는 점 안내해 드립니다.
                       <br><br>다만, 고객님께서 수령하신 날짜를 포함하여 [ 7 ]일이나, 혹시라도 이 기준에 부합하지 못하거나 섭취 할 수 없는 상품을 수령 하셨다면 번거로우시겠지만
@@ -106,6 +120,12 @@
                   </div>
                 </div>
                 <div class="css-17g9jzg e1gk8zam0">2024.02.07</div>
+=======
+                    <div>{{ row.answer_content }}</div>
+                  </div>
+                </div>
+                <div class="css-17g9jzg e1gk8zam0">{{ row.answer_modified_at || row.answer_created_at }}</div>
+>>>>>>> 91d9b35893d19ca95ff1f6a5b529803c7cc8e9b0
               </div>
             </td>
           </tr>
@@ -164,8 +184,11 @@ export default {
       this.showEditInquiryModal = false;
     },
     toggleInquiry(index) {
+<<<<<<< HEAD
       console.log("Current Inquiry Data:", this.localTableData[index]);
       console.log("Expanded Inquiry Index:", this.expandedInquiryIndex);
+=======
+>>>>>>> 91d9b35893d19ca95ff1f6a5b529803c7cc8e9b0
       this.expandedInquiryIndex = this.expandedInquiryIndex === index ? null : index;
     },
     maskAuthorName(name) {
@@ -197,6 +220,7 @@ export default {
         this.closeModal();
       }
     },
+<<<<<<< HEAD
   },
   watch: {
     tableData(newData) {
@@ -204,6 +228,30 @@ export default {
         ...item,
         content: item.content || '내용이 없습니다.',
       }));
+=======
+    deleteInquiry(index) {
+      // 문의를 삭제할 때, 현재 토글된 인덱스를 초기화
+      this.localTableData.splice(index, 1); // 해당 인덱스의 문의 삭제
+      if (this.expandedInquiryIndex === index) {
+        // 삭제된 인덱스가 현재 토글된 인덱스라면 초기화
+        this.expandedInquiryIndex = null;
+      } else if (this.expandedInquiryIndex > index) {
+        // 삭제된 인덱스가 현재 토글된 인덱스보다 앞에 있을 경우, 인덱스 보정
+        this.expandedInquiryIndex -= 1;
+      }
+    },
+  },
+  watch: {
+    tableData(newData) {
+      if (Array.isArray(newData)) {
+        this.localTableData = newData.map(item => ({
+          ...item,
+          content: item.content || '내용이 없습니다.',
+        }));
+      } else {
+        console.error("tableData is not an array:", newData);
+      }
+>>>>>>> 91d9b35893d19ca95ff1f6a5b529803c7cc8e9b0
     },
   },
   components: {

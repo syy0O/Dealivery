@@ -7,7 +7,7 @@
           <BoardDetailThumnailComponent :thumbnails="thumbnails" />
           <BoardDetailProductInfoComponent @submitOrder="submitOrder" />
         </main>
-        <BoardDetailNavComponent :tableData="tableData" />
+        <BoardDetailNavComponent :tableData="qnaStore.inquiries" />
       </div>
     </div>
   </div>
@@ -22,10 +22,11 @@ import BoardDetailProductInfoComponent from "@/components/board/BoardDetailProdu
 import BoardDetailNavComponent from "@/components/board/BoardDetailNavComponent.vue";
 
 import { useOrderStore } from "@/stores/useOrderStore";
+import { useQnaStore } from "@/stores/useQnaStore";
 import { mapStores } from "pinia";
 
 export default {
-  name: "OrdersPage",
+  name: "BoardDetailPage",
   components: {
     HeaderComponent,
     FooterComponent,
@@ -34,11 +35,15 @@ export default {
     BoardDetailNavComponent,
   },
   computed: {
-    ...mapStores(useOrderStore),
+    ...mapStores(useOrderStore, useQnaStore),
+  },
+  async mounted() {
+    // 페이지가 로드될 때 fetchInquiries를 호출
+    await this.qnaStore.fetchInquiries();
   },
   data() {
     return {
-      activeTab: "description", // 초기에는 '상품설명' 탭이 활성화됨
+      activeTab: "description",
       thumbnails: [
         {
           src: "https://product-image.kurly.com/hdims/resize/%5E%3E720x%3E936/cropcenter/720x936/quality/85/src/product/image/c0599d4f-d892-4d43-a22d-277459e929bd.jpg",
@@ -47,6 +52,7 @@ export default {
           src: "https://pbs.twimg.com/media/EE0R8XcU0AAlbth.jpg",
         },
       ],
+<<<<<<< HEAD
       tableData: [
         {
           title: "배송문의드립니다",
@@ -63,6 +69,9 @@ export default {
           answer_status: "답변완료",
         },
       ],
+=======
+
+>>>>>>> 91d9b35893d19ca95ff1f6a5b529803c7cc8e9b0
     };
   },
   methods: {
@@ -76,10 +85,15 @@ export default {
         console.log("[ERROR] 주문 생성 실패");
       }
     },
+
   },
 };
 </script>
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 91d9b35893d19ca95ff1f6a5b529803c7cc8e9b0
 <style scoped>
 /*공통 부분*/
 * {
