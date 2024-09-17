@@ -28,7 +28,8 @@ public class SwaggerExamples {
          "phoneNumber": "010-3757-2297",
          "postNumber": "01111",
          "address": "보라매로 87",
-         "addressDetail": "1층 1호"
+         "addressDetail": "1층 1호",
+         "type": "inapp"
        }
     """;
     //이메일 인증 요청 틀
@@ -36,4 +37,23 @@ public class SwaggerExamples {
        {
            "email": "이메일입력"
        }""";
+
+
+    // 주문 등록 요청 틀
+    public static final String ORDERS_REGISTER_REQUEST = """
+               {
+                  "boardIdx": 1,
+                  "orderedProducts": [
+                    {
+                      "idx": 1,
+                      "quantity": 100
+                    },
+                    {
+                      "idx": 2,
+                      "quantity": 100
+                    }
+                  ]
+                }
+            """;
+
 }
