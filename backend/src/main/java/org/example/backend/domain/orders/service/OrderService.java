@@ -18,7 +18,12 @@ import org.example.backend.domain.orders.model.entity.OrderedProduct;
 import org.example.backend.domain.orders.model.entity.Orders;
 import org.example.backend.domain.orders.repository.OrderedProductRepository;
 import org.example.backend.domain.orders.repository.OrdersRepository;
+import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.global.exception.InvalidCustomException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,17 +31,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 public class OrderService {
+    private final int PAGE_SIZE = 10;
     private final OrdersRepository ordersRepository;
     private final OrderedProductRepository orderedProductRepository;
     private final ProductRepository productRepository;
     private final ProductBoardRepository productBoardRepository;
 
     @Transactional
-    public OrderCreateResponse register(OrderRegisterRequest request) {
+    public OrderCreateResponse register(/*User user,*/ OrderRegisterRequest request) {
 
         validateOrder(request);
 
-        Orders order = OrderRegisterRequest.toEntity(request.getBoardIdx());
+        Orders order = OrderRegisterRequest.toEntity(request.getBoardIdx()/*, user*/);
         ordersRepository.save(order);
 
         List<OrderedProduct> orderedProducts = request.getOrderedProducts().stream()
@@ -68,6 +74,17 @@ public class OrderService {
             }
 
             orderdProduct.decreaseStock(product.getQuantity()); // 재고 수량 변경
+        });
+    }
+
+    public Page<OrderListResponse> history(/*User user,*/ Integer page, String status, Integer month) {
+        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.Direction.DESC, "idx");
+
+        Page<Orders> orders = ordersRepository.historyWithPaging(pageable, /*user,*/ status, month);
+        return orders.map(order -> {
+            String title = productBoardRepository.findById(order.getBoardIdx())
+                    .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND)).getTitle();
+            return order.toOrderListResponse(title);
         });
     }
 }

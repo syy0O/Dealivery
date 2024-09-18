@@ -9,6 +9,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +18,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.backend.domain.board.model.dto.BoardDto;
+import org.example.backend.domain.orders.model.dto.OrderDto;
 import org.example.backend.domain.orders.model.dto.OrderDto.OrderCompleteRequest;
+import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.global.common.constants.OrderStatus;
 import org.example.backend.global.common.constants.PaymentType;
 import org.springframework.data.annotation.CreatedDate;
@@ -59,8 +64,13 @@ public class Orders {
     private PaymentType payMethod;
     private Integer usedPoint;
 
+//    @ManyToOne
+//    @JoinColumn(name = "user_idx")
+//    private User user;
+
     @OneToMany(mappedBy = "orders", fetch = FetchType.LAZY)
     private List<OrderedProduct> orderedProducts;
+
 
     public void update(OrderCompleteRequest dto) {
         this.address = dto.getAddress();
@@ -75,4 +85,16 @@ public class Orders {
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
+
+    public OrderDto.OrderListResponse toOrderListResponse(String title) {
+        return OrderDto.OrderListResponse.builder()
+                .orderIdx(this.idx)
+                .ordersNumber(this.ordersNumber)
+                .title(title)
+                .status(this.status.getStatus())
+                .payMethod(this.payMethod.getType())
+                .modifiedAt(this.modifiedAt)
+                .build();
+    }
+
 }
