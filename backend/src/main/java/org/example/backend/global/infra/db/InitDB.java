@@ -77,7 +77,7 @@ public class InitDB {
                 products.add(Product.builder()
                         .name("상품 " + j)
                         .stock(100)
-                        .price((i + 1) * 10000)
+                        .price(20900)
                         .productBoard(productBoards.get(i))
                         .build());
             }
