@@ -1,4 +1,4 @@
-package org.example.backend.domain.user.model.entity;
+package org.example.backend.domain.delivery.model.entity;
 
 
 import jakarta.persistence.*;
@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.domain.user.model.dto.DeliveryDto;
-import org.example.backend.domain.user.model.dto.UserDto;
+import org.example.backend.domain.delivery.model.dto.DeliveryDto;
+import org.example.backend.domain.user.model.entity.User;
 
 @Entity
 @Getter

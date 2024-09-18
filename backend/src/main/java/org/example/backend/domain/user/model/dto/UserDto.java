@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.domain.user.model.entity.Delivery;
+import org.example.backend.domain.delivery.model.dto.DeliveryDto;
+import org.example.backend.domain.delivery.model.entity.Delivery;
 import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.global.common.constants.Role;
 

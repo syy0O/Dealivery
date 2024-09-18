@@ -4,7 +4,7 @@ package org.example.backend.domain.user.service;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.domain.user.model.dto.UserDto;
 import org.example.backend.domain.user.model.entity.User;
-import org.example.backend.domain.user.repository.DeliveryRepository;
+import org.example.backend.domain.delivery.repository.DeliveryRepository;
 import org.example.backend.domain.user.repository.UserRepository;
 import org.example.backend.global.common.constants.BaseResponseStatus;
 import org.example.backend.global.exception.InvalidCustomException;
