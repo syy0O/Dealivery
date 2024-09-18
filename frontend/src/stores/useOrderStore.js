@@ -65,12 +65,12 @@ export const useOrderStore = defineStore('order', {
             }, (rsp) => {
 
                 if (paymentRequest.paymentMethod === 'kakaopay' && !rsp.success) {
-                    this.cancleOrder(this.orderInfo.orderIdx, '/', '결제가 취소되었습니다. 주문이 취소됩니다.')
+                    this.cancelOrder(this.orderInfo.orderIdx, '/', '결제가 취소되었습니다. 주문이 취소됩니다.')
 
                 }
 
                 else if (paymentRequest.paymentMethod === 'tosspay' && rsp.error_msg != null) {
-                    this.cancleOrder(this.orderInfo.orderIdx, '/', '결제가 취소되었습니다. 주문이 취소됩니다.')
+                    this.cancelOrder(this.orderInfo.orderIdx, '/', '결제가 취소되었습니다. 주문이 취소됩니다.')
                 }
 
                 else {
