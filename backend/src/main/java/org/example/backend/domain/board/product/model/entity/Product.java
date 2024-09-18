@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Entity
 @Builder
@@ -34,4 +36,8 @@ public class Product {
     public void decreaseStock(Integer quantity) {
 		this.stock -= quantity;
     }
+
+	public void increaseStock(Integer quantity) {
+		this.stock += quantity;
+	}
 }
