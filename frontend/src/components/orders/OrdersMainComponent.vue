@@ -474,17 +474,49 @@ export default {
 
       this.selectedPaymentMethod = method;
     },
-    async makePayment() {
-      const paymentData = {
-        paymentMethod: this.selectedPaymentMethod,
-        address: this.ordererInfo.defaultAddress, // 배송지 정보 가져오기
-        usedPoint: this.usedPoint, // 사용한 포인트
-        totalAmount: this.totalAmount, // 전체 결제금액에서 포인트 차감
-        receiverName: this.receiverName, // 사용자가 입력한 받는 사람 이름
-        receiverPhoneNumber: this.receiverPhoneNumber, // 사용자가 입력한 전화번호
-      };
 
-      this.orderStore.makePayment(paymentData);
+    validateAll() {
+      const phoneRegex = /^\d{3}-\d{4}-\d{4}$/;
+      const fields = [
+        {
+          value: this.receiverPhoneNumber,
+          message: "휴대폰 번호를 입력해주세요.",
+          regex: phoneRegex,
+          regexMessage: "-를 포함한 휴대폰번호 11자리를 입력해주세요.",
+        },
+        {
+          value: this.receiverName,
+          message: "받는 사람의 이름을 입력해주세요.",
+        },
+      ];
+
+      for (const field of fields) {
+        if (field.value.trim().length === 0) {
+          alert(field.message);
+          return false;
+        }
+        if (field.regex && !field.regex.test(field.value)) {
+          alert(field.regexMessage);
+          return false;
+        }
+      }
+
+      return true;
+    },
+
+    async makePayment() {
+      if (this.validateAll()) {
+        const paymentData = {
+          paymentMethod: this.selectedPaymentMethod,
+          address: this.ordererInfo.defaultAddress, // 배송지 정보 가져오기
+          usedPoint: this.usedPoint, // 사용한 포인트
+          totalAmount: this.totalAmount, // 전체 결제금액에서 포인트 차감
+          receiverName: this.receiverName, // 사용자가 입력한 받는 사람 이름
+          receiverPhoneNumber: this.receiverPhoneNumber, // 사용자가 입력한 전화번호
+        };
+
+        await this.orderStore.makePayment(paymentData);
+      }
     },
     isNumber(event) {
       const char = event.key;
