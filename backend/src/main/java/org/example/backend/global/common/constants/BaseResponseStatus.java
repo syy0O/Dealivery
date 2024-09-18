@@ -83,7 +83,7 @@ public enum BaseResponseStatus {
     // 주문 기능 3000
     ORDER_FAIL_LIST(false, 3001, "주문내역 조회에 실패했습니다."),
     ORDER_CANCEL_FAIL(false, 3002, "주문취소에 실패했습니다."),
-    ORDER_PAYMENT_FAIL(false, 3003, "결제에 실패했습니다.주문 실패 처리됩니다."),
+    ORDER_PAYMENT_FAIL(false, 3003, "결제에 실패했습니다. 주문 실패 처리됩니다."),
     ORDER_CREATE_FAIL_LACK_STOCK(false, 3004, "주문에 실패했습니다. 상품재고가 부족합니다."),
     ORDER_CANCEL_FAIL_KAKAO_PAY(false, 3005, "주문에 실패했습니다. 카카오페이 결제 실패했습니다."),
     ORDER_VALIDATION_FAIL_PRICE_MISMATCH(false, 3006, "주문에 실패했습니다. 주문 정보와 결제금액이 일치하지 않아 결제취소됩니다"),
@@ -96,7 +96,8 @@ public enum BaseResponseStatus {
     ORDER_FAIL_INVALID_PRODUCT_PRICE(false, 3013, "주문에 실패했습니다. 해당하는 상품의 가격 정보가 유효하지 않습니다."),
     ORDER_FAIL_EXPIRED_EVENT(false, 3014, "주문에 실패했습니다. 종료된 이벤트입니다."),
     ORDER_FAIL_PRODUCT_NOT_FOUND(false, 3015, "주문에 실패했습니다. 해당하는 상품을 찾을 수 없습니다."),
-
+    ORDER_FAIL_PAYMENT_NOT_FOUND(false, 3016, "주문에 실패했습니다. 결제 정보를 찾을 수 없습니다."),
+    ORDER_PAYMENT_CANCEL_FAILED(false, 3017,"결제 취소 요청 중 오류가 발생했습니다. 관리자에게 문의해주세요."),
 
     // 상품게시글 기능 4000
     PRODUCT_BOARD_REGISTER_FAIL_EMPTY_TITLE(false, 4000, "상품게시글 등록에 실패했습니다. 제목을 입력해주세요"),
