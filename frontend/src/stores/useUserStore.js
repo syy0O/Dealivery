@@ -204,7 +204,8 @@ export const useUserStore = defineStore("user", {
       try{
         let response = await axios.get(backend+"/user/detail", {withCredentials: true});
         if(response.data.code === 1000){
-          console.log(response.data.result);
+          this.userDetail = response.data.result;
+          console.log(this.userDetail);
           return true;
         }else{
           return false;
@@ -212,7 +213,7 @@ export const useUserStore = defineStore("user", {
       }catch{
         alert("회원정보 조회에 실패했습니다.");
       }
-    }
+    },
   },
 
   
