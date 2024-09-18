@@ -15,6 +15,15 @@ export const useUserStore = defineStore("user", {
     userLoginRequest: {
       email: "",
       password: "",
+    },
+    userDetail: {
+      "name": "",
+      "email": "",
+      "address": "",
+      "addressDetail": "",
+      "postNumber": "",
+      "phoneNumber": "",
+      "deliveries": []
     }
 
   }),
@@ -190,6 +199,21 @@ export const useUserStore = defineStore("user", {
       }catch{
         alert("로그아웃 요청 수행중 문제가 발생했습니다.");
       }
+    },
+    async getDetail(){
+      try{
+        let response = await axios.get(backend+"/user/detail", {withCredentials: true});
+        if(response.data.code === 1000){
+          console.log(response.data.result);
+          return true;
+        }else{
+          return false;
+        }
+      }catch{
+        alert("회원정보 조회에 실패했습니다.");
+      }
     }
   },
+
+  
 });

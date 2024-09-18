@@ -14,7 +14,6 @@ export default {
   mounted(){
     const query = new URLSearchParams(window.location.search);
     const isSuccess = query.get("isSuccess") === 'true';
-    console.log(isSuccess);
     if(isSuccess){
       const isExist = query.get("isExist") === 'true';
       if (isExist){

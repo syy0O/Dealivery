@@ -20,6 +20,8 @@ import HeaderComponent from "@/components/common/HeaderComponent.vue";
 import MypageAsideComponent from "@/components/mypage/MypageAsideComponent.vue";
 import FooterComponent from "@/components/common/FooterComponent.vue";
 import TitleComponent from "@/components/mypage/TitleComponent.vue";
+import { useUserStore } from '@/stores/useUserStore';
+import { mapStores } from 'pinia';
 
 export default {
   name: "MyPage",
@@ -48,6 +50,16 @@ export default {
       } else if (menu === "address") {
         this.currentTitle = "배송지 관리";
         this.$router.push("/mypage/address");
+      }else if (menu === "info"){
+        this.getUserInfo();
+      }
+      
+    },
+    async getUserInfo(){
+      if(await this.userStore.getDetail()){
+        alert("성공");
+      }else{
+        alert("회원정보를 가져오는데 실패했습니다.");
       }
     },
     updateTitleBasedOnRoute() {
@@ -63,6 +75,9 @@ export default {
         this.$router.push("/mypage/address");
       }
     },
+  },
+  computed: {
+    ...mapStores(useUserStore)
   },
   mounted() {
     this.updateTitleBasedOnRoute(); // 페이지 로드 시 현재 경로에 따라 타이틀 설정
