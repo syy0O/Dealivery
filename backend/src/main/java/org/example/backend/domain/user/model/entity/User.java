@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.backend.domain.user.model.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -46,8 +48,17 @@ public class User {
     private String role;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Delivery> deliveryList;
+    private List<Delivery> deliveries;
 
-
-
+    public UserDto.UserDetailResponse toUserDetailResponse(){
+        return UserDto.UserDetailResponse.builder()
+                .name(this.name)
+                .email(this.email)
+                .address(this.address)
+                .addressDetail(this.addressDetail)
+                .postNumber(this.postNumber)
+                .phoneNumber(this.phoneNumber)
+                .deliveries(this.deliveries.stream().map(Delivery::toDeliveryResponse).collect(Collectors.toList()))
+                .build();
+    }
 }
