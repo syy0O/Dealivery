@@ -113,7 +113,7 @@ export const useOrderStore = defineStore('order', {
             }
         },
 
-        async cancleOrder(orderIdx, root, errMsg) {
+        async cancelOrder(orderIdx, root, errMsg) {
             await axios.patch(backend + `/${orderIdx}/cancel`, { withCredentials: true });
 
             alert(errMsg);

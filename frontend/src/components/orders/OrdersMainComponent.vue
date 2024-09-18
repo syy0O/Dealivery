@@ -456,9 +456,23 @@ export default {
       this.ordererInfo.point < tenPercentOfPrice
         ? this.ordererInfo.point
         : tenPercentOfPrice;
+
+    history.pushState(null, null, location.href);
+    window.addEventListener("popstate", this.handlePopState);
+  },
+  beforeUnmount() {
+    window.removeEventListener("popstate", this.handlePopState);
   },
 
   methods: {
+    async handlePopState() {
+      this.orderStore.cancelOrder(
+        this.orderStore.orderInfo.orderIdx,
+        "/",
+        "주문이 취소되었습니다."
+      );
+    },
+
     toggleContent() {
       this.isIconRotated = !this.isIconRotated;
       this.isToggleContentVisible = !this.isToggleContentVisible;
