@@ -2,31 +2,17 @@
   <div>
     <div class="css-t79vuj e15sbxqa2">
       <div v-show="!userStore.isLogined" class="css-1xfyvd1 eo7pjfk4">
-        <router-link to="/auth/login" class="css-oyffzd eo7pjfk2 top-menu-link"
-          >로그인</router-link
-        >
+        <router-link to="/auth/login" class="css-oyffzd eo7pjfk2 top-menu-link">로그인</router-link>
         <div class="css-1qgm48u eo7pjfk0"></div>
-        <RouterLink
-          to="/auth/user/signup"
-          class="css-xygizb eo7pjfk2 top-menu-link"
-          >일반회원가입</RouterLink
-        >
+        <RouterLink to="/auth/user/signup" class="css-xygizb eo7pjfk2 top-menu-link">일반회원가입</RouterLink>
         <div class="css-1qgm48u eo7pjfk0"></div>
-        <RouterLink
-          to="/auth/company/signup"
-          class="css-xygizb eo7pjfk2 top-menu-link"
-          >업체회원가입</RouterLink
-        >
+        <RouterLink to="/auth/company/signup" class="css-xygizb eo7pjfk2 top-menu-link">업체회원가입</RouterLink>
       </div>
 
       <div v-show="userStore.isLogined" class="css-1xfyvd1 eo7pjfk4">
-        <span class="css-oyffzd eo7pjfk2 top-menu-link" @click="logout"
-          >로그아웃</span
-        >
+        <span class="css-oyffzd eo7pjfk2 top-menu-link" @click="logout">로그아웃</span>
         <div class="css-1qgm48u eo7pjfk0"></div>
-        <RouterLink to="/mypage" class="css-xygizb eo7pjfk2 top-menu-link"
-          >마이페이지</RouterLink
-        >
+        <a to="#" class="css-xygizb eo7pjfk2 top-menu-link" @click="toMypage">마이페이지</a>
       </div>
 
       <div class="css-r7wmjj e15sbxqa3">
@@ -44,26 +30,22 @@
           <div class="css-w444a2 e1493ofl1">
             <input
               id="gnb_search"
-              v-model="search"
               placeholder="검색어를 입력해주세요"
               required=""
               class="css-11ntk83 e1493ofl3"
-              value=""
-            /><button
+              v-model="search"
+            />
+            <button
               id="submit"
               aria-label="submit"
               class="css-ywxmlw e1493ofl0"
-              @click="handleNavigation('search', this.search)"
+              @click="handleNavigation('search', search)"
             ></button>
           </div>
         </div>
         <div class="css-pqw0uk e15sbxqa1">
           <div class="css-c4pbxv e15sbxqa0">
-            <button
-              class="css-231fw3 etxxzpc0"
-              aria-label="찜하기"
-              type="button"
-            ></button>
+            <button class="css-231fw3 etxxzpc0" aria-label="찜하기" type="button"></button>
             <div class="css-ff2aah e14oy6dx2">
               <button class="css-g25h97 e14oy6dx1"></button>
             </div>
@@ -71,12 +53,13 @@
         </div>
       </div>
     </div>
+
     <div id="header" class="css-17tqugj e17w4cfr1">
       <div class="css-mlddcv e17w4cfr6">
         <div class="css-0 e17w4cfr3">
           <div class="css-axtlq9 eqn756m2">
-            <span class="css-1k5gn9s eqn756m1"></span
-            ><span class="css-t75x7c eqn756m0">카테고리</span>
+            <span class="css-1k5gn9s eqn756m1"></span>
+            <span class="css-t75x7c eqn756m0">카테고리</span>
           </div>
         </div>
         <div>
@@ -129,16 +112,25 @@ export default {
         query: query,
       });
     },
+
     routeTo(path) {
       this.$router.push(path);
     },
-    logout() {
-      this.userStore.isLogined = false;
-      this.userStore.roles = [];
-      this.routeTo("/");
+    async logout() {
+      if (await this.userStore.logout()) {
+        this.routeTo('/');
+      } else {
+        alert("로그아웃에 실패했습니다.");
+      }
+
     },
-  },
-};
+    async toMypage() {
+      if (await this.userStore.getDetail()) {
+        this.routeTo('/mypage');
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -150,7 +142,8 @@ export default {
 }
 
 a {
-  text-decoration: none; /* 밑줄 제거 (필요 시) */
+  text-decoration: none;
+  /* 밑줄 제거 (필요 시) */
 }
 
 *,
@@ -379,8 +372,7 @@ textarea {
   height: 30px;
   margin: 10px;
   bottom: 3px;
-  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPHBhdGggZmlsbD0ibm9uZSIgZD0iTTAgMGgzNnYzNkgweiIvPgogICAgICAgIDxnIHN0cm9rZT0iIzVGMDA4MCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2Utd2lkdGg9IjEuNyI+CiAgICAgICAgICAgIDxwYXRoIGQ9Im0yNi4wODEgMjYuMDgxLTQuMTItNC4xMk0xNi40NjcgMjMuMzM0YTYuODY3IDYuODY3IDAgMSAwIDAtMTMuNzM0IDYuODY3IDYuODY3IDAgMCAwIDAgMTMuNzM0eiIvPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+Cg==)
-    0px 0px no-repeat;
+  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPHBhdGggZmlsbD0ibm9uZSIgZD0iTTAgMGgzNnYzNkgweiIvPgogICAgICAgIDxnIHN0cm9rZT0iIzVGMDA4MCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2Utd2lkdGg9IjEuNyI+CiAgICAgICAgICAgIDxwYXRoIGQ9Im0yNi4wODEgMjYuMDgxLTQuMTItNC4xMk0xNi40NjcgMjMuMzM0YTYuODY3IDYuODY3IDAgMSAwIDAtMTMuNzM0IDYuODY3IDYuODY3IDAgMCAwIDAgMTMuNzM0eiIvPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+Cg==) 0px 0px no-repeat;
 }
 
 .css-pqw0uk {
@@ -404,8 +396,7 @@ textarea {
   /* 하트 아이콘 */
   width: 36px;
   height: 36px;
-  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0yOC45MjcgOC44OTNhNi40NiA2LjQ2IDAgMCAwLTkuMTM5IDBsLTEuODI5IDEuODI4LTEuODI3LTEuODI4YTYuNDYyIDYuNDYyIDAgMSAwLTkuMTQgOS4xMzhMOC44MiAxOS44Nmw4LjQzMiA4LjQzNGExIDEgMCAwIDAgMS40MTQgMGw4LjQzMy04LjQzNGgwbDEuODI4LTEuODI4YTYuNDYgNi40NiAwIDAgMCAwLTkuMTM4eiIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjEuNyIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+Cg==)
-    50% 50% no-repeat;
+  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0yOC45MjcgOC44OTNhNi40NiA2LjQ2IDAgMCAwLTkuMTM5IDBsLTEuODI5IDEuODI4LTEuODI3LTEuODI4YTYuNDYyIDYuNDYyIDAgMSAwLTkuMTQgOS4xMzhMOC44MiAxOS44Nmw4LjQzMiA4LjQzNGExIDEgMCAwIDAgMS40MTQgMGw4LjQzMy04LjQzNGgwbDEuODI4LTEuODI4YTYuNDYgNi40NiAwIDAgMCAwLTkuMTM4eiIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjEuNyIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+Cg==) 50% 50% no-repeat;
 }
 
 .css-ff2aah {
@@ -456,8 +447,7 @@ textarea {
   width: 16px;
   height: 14px;
   margin-right: 14px;
-  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNiAxNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0wIDBoMTZ2MS43SDBWMHptMCA2LjE1aDE2djEuN0gwdi0xLjd6bTAgNi4xNWgxNlYxNEgwdi0xLjd6IiBmaWxsPSIjMzMzIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KPC9zdmc+Cg==)
-    0px 0px / 16px 14px no-repeat;
+  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNiAxNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0wIDBoMTZ2MS43SDBWMHptMCA2LjE1aDE2djEuN0gwdi0xLjd6bTAgNi4xNWgxNlYxNEgwdi0xLjd6IiBmaWxsPSIjMzMzIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KPC9zdmc+Cg==) 0px 0px / 16px 14px no-repeat;
 }
 
 .css-t75x7c {
@@ -501,8 +491,11 @@ button {
 }
 
 .separator {
-  margin: 0 14px; /* 로고와 버튼 사이의 여백 조정 */
-  font-size: 20px; /* 구분자의 크기 조정 */
-  color: rgb(181, 181, 181); /* 구분자의 색상 */
+  margin: 0 14px;
+  /* 로고와 버튼 사이의 여백 조정 */
+  font-size: 20px;
+  /* 구분자의 크기 조정 */
+  color: rgb(181, 181, 181);
+  /* 구분자의 색상 */
 }
 </style>

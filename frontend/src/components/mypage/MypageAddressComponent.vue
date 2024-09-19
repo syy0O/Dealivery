@@ -19,6 +19,9 @@
         </button>
       </div>
     </div>
+    <div v-if="userStore.userDetail.deliveries.length === 0" class="empty-notice">
+      배송지가 없습니다. 배송지를 추가해주세요.
+    </div>
     <div class="css-ehagcz eug5r8l0">
       <ul>
         <div
@@ -37,13 +40,14 @@
                   "
                   width="24"
                   height="24"
-                  @click="checkRadio(index)"
+                  @click="checkRadio(delivery, index)"
                 />
               </div>
               <span></span>
             </label>
           </div>
           <div data-testid="address-area" class="css-upe1zs e77s2kj4">
+            <div v-if="delivery.isDefault" class="css-2n86z e77s2kj1">기본 배송지</div>
             <p class="css-zone-name e77s2kj2">
               {{ delivery.name }}
             </p>
@@ -55,7 +59,7 @@
           <div data-testid="update-address-button" class="css-d1hkno enjmmt30">
             <div v-if="isDisplayEditModal">
               <AddressEditModalComponent
-                :oldAddress="delivery"
+                :oldAddress="selectedDelivery"
                 @closeModal="displayEditModal"
                 @saveEditedAddress="saveEditedAddress"
               />
@@ -68,7 +72,7 @@
       </ul>
     </div>
   </div>
-  <div class="save-address-container">
+  <div v-if="userStore.userDetail.deliveries.length !== 0" class="save-address-container">
     <button class="save-address">저장하기</button>
   </div>
 </template>
@@ -88,18 +92,22 @@ export default {
   computed: {
     ...mapStores(useUserStore)
   },
+  mounted(){
+    this.setInitialSelectedAddress();
+  },
   data() {
     return {
       isDisplayModal: false,
       isDisplayEditModal: false,
       selectedAddress: null,
-      currentDelivery: {
-        id: "1",
-        name: "집",
-        zonecode: "우편번호1",
-        area: "서울 동작구 신대방동",
-        detail: "심키즈 하우스",
-      },
+      selectedDelivery: {
+        idx: null,
+        name: "",
+        postNumber: "",
+        address: "",
+        addressDetail: "",
+        isDefault: false
+      }
     };
   },
   methods: {
@@ -108,14 +116,16 @@ export default {
     },
     displayEditModal(data) {
       this.isDisplayEditModal = !this.isDisplayEditModal;
-      this.currentAddress = data;
+      this.selectedDelivery = data;
     },
-    checkRadio(index) {
+    checkRadio(delivery,index) {
       this.selectedAddress = index;
+      this.selectedDelivery = delivery;
     },
     async saveDelivery(data) {
       if(await this.userStore.createDelivery(data)){
         await this.userStore.getDeliveryList();
+        this.setInitialSelectedAddress();
       }
       
     },
@@ -123,6 +133,15 @@ export default {
       console.log(data);
       alert("추가될 기능")
     },
+    setInitialSelectedAddress() {
+      const defaultDeliveryIndex = this.userStore.userDetail.deliveries.findIndex(
+        (delivery) => delivery.isDefault === true
+      );
+      
+      if (defaultDeliveryIndex !== -1) {
+        this.selectedAddress = defaultDeliveryIndex;
+      }
+    }
   },
 };
 </script>
@@ -288,7 +307,27 @@ ul {
 
 .css-zone-name {
   font-size: 13px;
-  color: #a0a0a0;
+  color: rgb(95, 0, 128);
   margin: 5px;
+}
+
+.css-2n86z {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 11px;
+    background-color: rgb(247, 247, 247);
+    color: rgb(95, 0, 128);
+    font-weight: 600;
+    font-size: 12px;
+    text-align: center;
+}
+
+.empty-notice {
+  text-align: center;
+  padding: 40px;
+  margin-top: 20px;
+  line-height: 20px;
+  letter-spacing: -0.2px;
+  color: rgb(153, 153, 153);
 }
 </style>
