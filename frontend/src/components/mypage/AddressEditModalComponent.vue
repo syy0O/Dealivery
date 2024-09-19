@@ -43,10 +43,12 @@
               <span class="css-nytqmg e4nu7ef1">저장</span>
             </button>
             <button
-              class="css-d85pyu e4nu7ef3"
+              :disabled="oldAddress.isDefault" 
+              class="css-d85pyu e4nu7ef3 button"
               type="button"
               height="44"
               radius="3"
+              @click="deleteOne"
             >
               <span class="css-nytqmg e4nu7ef1">삭제</span>
             </button>
@@ -58,6 +60,8 @@
 </template>
 
 <script>
+import { useUserStore } from "@/stores/useUserStore";
+import { mapStores } from "pinia";
 export default {
   name: "AddressEditModalComponent",
   data() {
@@ -78,7 +82,10 @@ export default {
       default: null,
     },
   },
-  created() {
+  computed: {
+    ...mapStores(useUserStore),
+  },
+  mounted() {
     if (this.oldAddress) {
       this.editedAddress.idx = this.oldAddress.idx;
       this.editedAddress.name = this.oldAddress.name;
@@ -109,6 +116,17 @@ export default {
         this.editedAddress.addressDetail === this.oldAddress.addressDetail &&
         this.editedAddress.isDefault === this.oldAddress.isDefault
       );
+    },
+    async deleteOne(){
+      if(this.editedAddress.idx === null){
+        alert("유효하지 않은 배송지입니다.");
+        this.closeModal();
+      }else{
+        if(await this.userStore.deleteDelivery(this.editedAddress.idx)){
+         this.userStore.getDeliveryList();
+        }
+        this.closeModal();
+      }
     }
   },
 };
@@ -332,5 +350,15 @@ input[type="radio"] {
 .css-d85pyu > span {
   font-size: 14px;
   font-weight: 500;
+}
+
+.button{
+  position: relative;
+}
+
+.button:disabled {
+  background-color: #d6d6d6; /* 회색 배경색 */
+  color: #a1a1a1; /* 회색 글자색 */
+  cursor: not-allowed; /* 금지 커서 */
 }
 </style>
