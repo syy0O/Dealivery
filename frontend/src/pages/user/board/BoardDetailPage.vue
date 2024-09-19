@@ -59,6 +59,9 @@ export default {
         this.$router.push("/orders");
       }
     },
+    addNewInquiry(registeredInquiry) {
+      this.qnaStore.addNewInquiry(registeredInquiry);
+    }
   },
 };
 </script>
