@@ -28,7 +28,8 @@ public class SwaggerExamples {
          "phoneNumber": "010-3757-2297",
          "postNumber": "01111",
          "address": "보라매로 87",
-         "addressDetail": "1층 1호"
+         "addressDetail": "1층 1호",
+         "type": "inapp"
        }
     """;
     //이메일 인증 요청 틀
@@ -36,6 +37,17 @@ public class SwaggerExamples {
        {
            "email": "이메일입력"
        }""";
+
+
+    //문의 등록 틀
+    public static final String QNA_QUESTION_REQUEST = """
+       {
+           "title": "제목입력",
+           "content": "내용입력",
+           "userIdx": 1,
+           "productBoardIdx": 1
+       }
+    """;
 
 
     // 주문 등록 요청 틀

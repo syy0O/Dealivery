@@ -22,10 +22,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final DeliveryRepository deliveryRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     //등록된 계정이 있는지 검사
     public void isExist(String email) {
@@ -37,9 +33,12 @@ public class UserService {
     public boolean signup(UserDto.UserSignupRequest request) {
         User newUser = userRepository.save(request.toEntity(passwordEncoder.encode(request.getPassword())));
         //회원가입시 입력한 주소를 기본배송지로 배송지목록에 추가
-
         return true;
     }
 
 
+    public boolean socialSignup(UserDto.SocialSignupRequest socialSignupRequest) {
+        User newUser = userRepository.save(socialSignupRequest.toEntity());
+        return true;
+    }
 }

@@ -78,6 +78,7 @@ public enum BaseResponseStatus {
     EMAIL_VERIFY_FAIL_CAN_NOT_CREATE(false, 2061, "인증코드를 생성할 수 없습니다. 이메일을 확인해주세요."),
     EMAIL_VERIFY_FAIL_CAN_NOT_SEND(false, 2061, "인증메일 발송에 실패했습니다."),
     USER_SIGNUP_FAIL_ALREADY_EXIST(false, 2062, "이미 가입된 이메일입니다."),
+    USER_LOGIN_FAIL_UNAUTHORIZED_REG_NUMBER(false, 2063, "로그인에 실패했습니다. 사업자등록번호 인증 정보가 없는 회원입니다."),
 
 
     // 주문 기능 3000
@@ -102,8 +103,8 @@ public enum BaseResponseStatus {
     // 상품게시글 기능 4000
     PRODUCT_BOARD_REGISTER_FAIL_EMPTY_TITLE(false, 4000, "상품게시글 등록에 실패했습니다. 제목을 입력해주세요"),
     PRODUCT_BOARD_REGISTER_FAIL_INVALID_TITLE(false, 4001, "상품게시글 등록에 실패했습니다. 유효한 제목을 입력해주세요"),
-    PRODUCT_BOARD_REGISTER_FAIL_EMPTY_THUMBNAIL(false, 4002, "상품게시글 등록에 실패했습니다. 상품 이미지를 1장이상 등록해주세요"),
-    PRODUCT_BOARD_REGISTER_FAIL_EMPTY_DETAIL_IMAGE(false, 4003, "상품게시글 등록에 실패했습니다. 상품 상세 이미지를 등록해주세요"),
+    PRODUCT_BOARD_REGISTER_FAIL_EMPTY_IMAGE(false, 4002, "상품게시글 등록에 실패했습니다. 상품 이미지를 1장이상 등록해주세요"),
+    PRODUCT_BOARD_REGISTER_FAIL_UPLOAD_IMAGE(false, 4003, "상품 이미지 파일 업로드를 실패했습니다"),
     PRODUCT_BOARD_REGISTER_FAIL_EMPTY_START_TIME(false, 4010, "상품게시글 등록에 실패했습니다. 상품 판매 시작 시간을 입력해주세요"),
     PRODUCT_BOARD_REGISTER_FAIL_EMPTY_END_TIME(false, 4011, "상품게시글 등록에 실패했습니다. 상품 판매 종료 시간을 입력해주세요"),
     PRODUCT_BOARD_REGISTER_FAIL_INVALID_START_TIME(false, 4012, "상품게시글 등록에 실패했습니다. 유효한 시작 시간이 아닙니다."),
@@ -118,6 +119,8 @@ public enum BaseResponseStatus {
     PRODUCT_BOARD_REGISTER_FAIL_INVALID_CATEGORY(false, 4031, "상품게시글 등록에 실패했습니다. 유효한 카테고리가 아닙니다. 다시 입력해주세요"),
     PRODUCT_BOARD_REGISTER_FAIL_START_TIME_PASSED(false, 4040, "상품게시글 등록에 실패했습니다. 시작 시간이 이미 지나 게시글을 수정할 수 없습니다."),
     PRODUCT_BOARD_REMOVE_FAIL_START_TIME_PASSED(false, 4050, "상품게시글 삭제에 실패했습니다. 시작 시간이 이미 지나 게시글을 삭제할 수 없습니다."),
+    PRODUCT_BOARD_LIST_FAIL(false, 4100, "상품게시글 조회에 실패했습니다."),
+    PRODUCT_BOARD_DETAIL_FAIL(false, 4200, "상품 상세 조회에 실패했습니다."),
 
     // 관심 기능 5000
     LIKES_REGISTER_FAIL(false, 5000, "관심게시글 등록에 실패했습니다."),
@@ -152,6 +155,9 @@ public enum BaseResponseStatus {
 
     QNA_QUESTION_LIST_FAIL(false, 6018, "문의 목록 조회에 실패했습니다."),
     QNA_QUESTION_LIST_FAIL_INVALID_PRODUCT_BOARD_IDX(false, 6019, "문의 목록 조회에 실패했습니다. 잘못된 상품 게시글 ID입니다."),
+
+    QNA_USER_NOT_FOUND(false, 6020, "사용자를 찾을 수 없습니다."),
+    QNA_PRODUCT_BOARD_NOT_FOUND(false, 6021, "상품 게시글을 찾을 수 없습니다."),
 
 
     // 모든 요청 실패 9000

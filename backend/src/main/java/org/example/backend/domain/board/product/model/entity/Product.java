@@ -1,6 +1,7 @@
 package org.example.backend.domain.board.product.model.entity;
 
 import org.example.backend.domain.board.model.entity.ProductBoard;
+import org.example.backend.domain.board.product.model.dto.ProductDto;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,14 +31,21 @@ public class Product {
 	private Integer price;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name ="productBoard_idx")
+	@JoinColumn(name ="product_board_idx")
 	private ProductBoard productBoard;
 
-    public void decreaseStock(Integer quantity) {
-		this.stock -= quantity;
-    }
+  public void decreaseStock(Integer quantity) {
+  this.stock -= quantity;
+  }
 
 	public void increaseStock(Integer quantity) {
 		this.stock += quantity;
+
+	public ProductDto.Request toDto() {
+		return ProductDto.Request.builder()
+			.name(this.name)
+			.stock(this.stock)
+			.price(this.price)
+			.build();
 	}
 }
