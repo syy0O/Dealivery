@@ -6,12 +6,15 @@ import java.util.List;
 import org.example.backend.domain.board.category.model.entity.QCategory;
 import org.example.backend.domain.board.model.entity.ProductBoard;
 import org.example.backend.domain.board.model.entity.QProductBoard;
+import org.example.backend.domain.company.model.entity.QCompany;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -21,33 +24,87 @@ public class ProductBoardRepositoryCustomImpl implements ProductBoardRepositoryC
 	private final JPAQueryFactory queryFactory;
 	private final QProductBoard qProductBoard;
 	private final QCategory qCategory;
+	private final QCompany qCompany;
+
 	public ProductBoardRepositoryCustomImpl(EntityManager em) {
 		this.queryFactory = new JPAQueryFactory(em);
 		this.qProductBoard = QProductBoard.productBoard;
 		this.qCategory = QCategory.category;
+		this.qCompany = QCompany.company;
 	}
 
+	@Override
+	public Page<ProductBoard> search(String search, Pageable pageable) {
+		JPQLQuery<ProductBoard> query = queryFactory
+			.selectFrom(qProductBoard)
+			.leftJoin(qProductBoard.category, qCategory).fetchJoin()
+			.leftJoin(qProductBoard.company, qCompany).fetchJoin()
+			.where(getCondition(search));
+		int count = query.fetch().size();
+
+		List<ProductBoard> result = query
+			.orderBy(qProductBoard.idx.desc())
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+		return new PageImpl<>(result, pageable, count);
+	}
 
 	@Override
-	public Page<ProductBoard> search(String status, Integer month, Pageable pageable) {
-		BooleanExpression whereQuery = getQuery(status, month);
+	public Page<ProductBoard> companySearch(String status, Integer month, Pageable pageable) {
+		BooleanExpression condition = getCondition(status, month);
 		List<ProductBoard> result = queryFactory
 			.selectFrom(qProductBoard)
 			.leftJoin(qProductBoard.category, qCategory).fetchJoin()
-			.where(whereQuery)
+			.where(condition)
 			.orderBy(qProductBoard.idx.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
 
-		Long total = queryFactory.selectFrom(qProductBoard)
-			.where(whereQuery)
-			.fetchCount();
+		int total = queryFactory.selectFrom(qProductBoard)
+			.where(condition)
+			.fetch().size();
 
 		return new PageImpl<>(result, pageable, total);
 	}
 
-	private BooleanExpression getQuery(String status, Integer month) {
+	// ---- 전체 사용자 ----
+	private BooleanBuilder getCondition(String search) {
+		BooleanBuilder booleanBuilder = new BooleanBuilder();
+		BooleanExpression categoryCondition = containsCategory(search);
+		BooleanExpression companyCondition = containsCompanyName(search);
+		BooleanExpression titleCondition = containsTitle(search);
+		if (categoryCondition == null && companyCondition == null && titleCondition == null) {
+			return null;
+		}
+		if (categoryCondition != null) {
+			booleanBuilder.or(categoryCondition);
+		}
+		if (companyCondition != null) {
+			booleanBuilder.or(companyCondition);
+		}
+		if (titleCondition != null) {
+			booleanBuilder.or(titleCondition);
+		}
+		return booleanBuilder;
+	}
+
+	private BooleanExpression containsCategory(String search) {
+		return search == null ? null : qProductBoard.category.name.containsIgnoreCase(search);
+	}
+
+	private BooleanExpression containsCompanyName(String search) {
+		return search == null ? null : qProductBoard.company.companyName.containsIgnoreCase(search);
+	}
+
+	private BooleanExpression containsTitle(String search) {
+		return search == null ? null : qProductBoard.title.containsIgnoreCase(search);
+	}
+
+
+	// ---- 판매자 사용자 ----
+	private BooleanExpression getCondition(String status, Integer month) {
 		BooleanExpression statusExpression = statusEquals(status);
 		BooleanExpression monthExpression = monthEquals(month);
 
