@@ -52,7 +52,6 @@ export default {
           src: "https://pbs.twimg.com/media/EE0R8XcU0AAlbth.jpg",
         },
       ],
-
     };
   },
   methods: {
@@ -66,11 +65,9 @@ export default {
         console.log("[ERROR] 주문 생성 실패");
       }
     },
-
   },
 };
 </script>
-
 
 <style scoped>
 /*공통 부분*/
