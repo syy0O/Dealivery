@@ -18,10 +18,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.domain.board.model.dto.BoardDto;
+
 import org.example.backend.domain.orders.model.dto.OrderDto;
 import org.example.backend.domain.orders.model.dto.OrderDto.OrderCompleteRequest;
-import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.global.common.constants.OrderStatus;
 import org.example.backend.global.common.constants.PaymentType;
 import org.springframework.data.annotation.CreatedDate;
