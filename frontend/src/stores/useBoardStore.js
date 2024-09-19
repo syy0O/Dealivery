@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 const backend = "/api/product-boards";
 
-export const useCompanyBoardStore = defineStore("companyBoard", {
+export const useBoardStore = defineStore("board", {
   state: () => ({
     boardData: null,
     productBoardReq: {
@@ -16,6 +16,20 @@ export const useCompanyBoardStore = defineStore("companyBoard", {
     totalPages: 0,
   }),
   actions: {
+    async getList(page, category, search) {
+      const params = { page: page };
+      if (category != "undefined" && category != null && category != "전체") {
+        params.search = category;
+      } else if (search != "undefined" && search != null) {
+        params.search = search;
+      }
+      const response = await axios.get(backend + "/list", {
+        params: params,
+      });
+      return response.data.result;
+    },
+
+    // --------- 판매자 ---------
     async getProductBoardList(page) {
       const response = await axios.get(backend + "/company/list", {
         params: {
