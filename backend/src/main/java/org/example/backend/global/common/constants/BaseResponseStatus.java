@@ -118,6 +118,7 @@ public enum BaseResponseStatus {
     PRODUCT_BOARD_REGISTER_FAIL_INVALID_CATEGORY(false, 4031, "상품게시글 등록에 실패했습니다. 유효한 카테고리가 아닙니다. 다시 입력해주세요"),
     PRODUCT_BOARD_REGISTER_FAIL_START_TIME_PASSED(false, 4040, "상품게시글 등록에 실패했습니다. 시작 시간이 이미 지나 게시글을 수정할 수 없습니다."),
     PRODUCT_BOARD_REMOVE_FAIL_START_TIME_PASSED(false, 4050, "상품게시글 삭제에 실패했습니다. 시작 시간이 이미 지나 게시글을 삭제할 수 없습니다."),
+    PRODUCT_BOARD_LIST_FAIL(false, 4100, "상품게시글 조회에 실패했습니다."),
 
     // 관심 기능 5000
     LIKES_REGISTER_FAIL(false, 5000, "관심게시글 등록에 실패했습니다."),
@@ -152,6 +153,9 @@ public enum BaseResponseStatus {
 
     QNA_QUESTION_LIST_FAIL(false, 6018, "문의 목록 조회에 실패했습니다."),
     QNA_QUESTION_LIST_FAIL_INVALID_PRODUCT_BOARD_IDX(false, 6019, "문의 목록 조회에 실패했습니다. 잘못된 상품 게시글 ID입니다."),
+
+    QNA_USER_NOT_FOUND(false, 6020, "사용자를 찾을 수 없습니다."),
+    QNA_PRODUCT_BOARD_NOT_FOUND(false, 6021, "상품 게시글을 찾을 수 없습니다."),
 
 
     // 모든 요청 실패 9000
