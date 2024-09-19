@@ -37,7 +37,7 @@ export default {
     };
   },
   methods: {
-    handleMenuClick(menu) {
+    async handleMenuClick(menu) {
       if (menu === "order") {
         this.currentTitle = "주문 내역";
         this.$router.push("/mypage/order");
@@ -49,9 +49,10 @@ export default {
         this.$router.push("/mypage/likes");
       } else if (menu === "address") {
         this.currentTitle = "배송지 관리";
+        await this.getDeliveryList();
         this.$router.push("/mypage/address");
       }else if (menu === "info"){
-        this.getUserInfo();
+        await this.getUserInfo();
       }
       
     },
@@ -59,6 +60,11 @@ export default {
       if(await this.userStore.getDetail()){
         alert("성공");
       }else{
+        alert("회원정보를 가져오는데 실패했습니다.");
+      }
+    },
+    async getDeliveryList(){
+      if(!await this.userStore.getDeliveryList()){
         alert("회원정보를 가져오는데 실패했습니다.");
       }
     },

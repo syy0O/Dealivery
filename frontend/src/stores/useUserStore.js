@@ -214,6 +214,46 @@ export const useUserStore = defineStore("user", {
         alert("회원정보 조회에 실패했습니다.");
       }
     },
+
+    async getDeliveryList(){
+      try{
+        let response = await axios.get(backend+"/delivery/list", {withCredentials: true});
+        if(response.data.code === 1000){
+          this.userDetail.deliveries = response.data.result;
+          console.log(this.userDetail.deliveries);
+          return true;
+        }else{
+          return false;
+        }
+      }catch{
+        alert("배송지 목록 조회에 실패했습니다.");
+      }
+    },
+
+    async createDelivery(request){
+      try{
+        let response = await axios.post(backend+"/delivery", request,{ withCredentials: true });
+        if(response.data.code === 2064){
+          alert("해당 정보로 가입된 회원이 없습니다.");
+          return false;
+        }
+        if(response.data.code === 2040){
+          alert("배송지는 최대 10개까지 등록이 가능합니다. 삭제를 먼저 진행해주세요");
+          return false;
+        }
+        if(response.data.code !== 1000){
+          alert("문제가 발생했습니다.");
+          return false;
+        }
+        return true;
+      
+      } catch (error) {
+        alert(
+          "배송지 추가에 실패했습니다.\n\n반복적인 문제 발생시 고객센터로 문의바랍니다."
+        );
+        return false;
+      }
+    }
   },
 
   
