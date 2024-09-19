@@ -79,6 +79,8 @@ public class Orders {
         this.paymentId = dto.getPaymentId();
         this.payMethod = dto.getPayMethod();
         this.usedPoint = dto.getUsedPoint();
+        this.receiverName = dto.getReceiverName();
+        this.receiverPhoneNumber = dto.getReceiverPhoneNumber();
         this.modifiedAt = LocalDateTime.now();
     }
 
