@@ -47,20 +47,7 @@ export default {
           src: "https://pbs.twimg.com/media/EE0R8XcU0AAlbth.jpg",
         },
       ],
-      tableData: [
-        {
-          title: "아이도",
-          author: "엄*희",
-          date: "2022.04.20",
-          status: "답변완료",
-        },
-        {
-          title: "아이도",
-          author: "엄*희",
-          date: "2022.04.20",
-          status: "답변완료",
-        },
-      ],
+
     };
   },
   methods: {
@@ -75,6 +62,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 /*공통 부분*/
 * {

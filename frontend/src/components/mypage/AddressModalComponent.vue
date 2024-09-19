@@ -16,11 +16,11 @@
             <div class="css-1hxvx8x e1uzxhvi6">
               <div height="44" class="css-t7kbxx e1uzxhvi3">
                 <input
-                  v-model="address.name"
+                  v-model="delivery.name"
                   data-testid="input-box"
                   id="addressName"
                   name="addressName"
-                  placeholder="별칭을 입력해 주세요"
+                  placeholder="배송지명을 입력해 주세요"
                   type="text"
                   height="44"
                   class="css-1quw3ub e1uzxhvi2"
@@ -29,7 +29,7 @@
             </div>
             <div class="css-19u3hc5 e1n7pxx51">
               <p class="css-ks8pmw e1n7pxx50">
-                {{ address.area === "" ? "주소를 검색해주세요" : address.area }}
+                {{ delivery.address === "" ? "주소를 검색해주세요" : delivery.address }}
               </p>
               <button
                 @click="openPostcode"
@@ -51,7 +51,7 @@
             <div class="css-1hxvx8x e1uzxhvi6">
               <div height="44" class="css-t7kbxx e1uzxhvi3">
                 <input
-                  v-model="address.detail"
+                  v-model="delivery.addressDetail"
                   data-testid="input-box"
                   id="addressDetail"
                   name="addressDetail"
@@ -63,7 +63,7 @@
               </div>
             </div>
             <button
-              @click="saveAddress"
+              @click="saveDelivery"
               class="css-10voksq e4nu7ef3"
               type="button"
               height="44"
@@ -79,18 +79,23 @@
 </template>
 
 <script>
+import { useUserStore } from '@/stores/useUserStore';
+import { mapStores } from 'pinia';
 export default {
   name: "AddressModalComponent",
   data() {
     return {
-      address: {
-        id: "",
+      delivery: {
         name: "",
-        zonecode: "",
-        area: "",
-        detail: "",
+        postNumber: "",
+        address: "",
+        addressDetail: "",
+        isDefault: false
       },
     };
+  },
+  computed: {
+    ...mapStores(useUserStore)
   },
   methods: {
     closeModal() {
@@ -105,19 +110,17 @@ export default {
         width: width,
         height: height,
         oncomplete: (data) => {
-          this.address.id = Math.random().toString(36).substr(2, 9);
-          this.address.area = data.address;
-          this.address.zonecode = data.zonecode;
-          //   this.addresses.push(this.address);
+          this.delivery.address = data.address;
+          this.delivery.postNumber = data.zonecode;
         },
       }).open({
         left: window.screen.width / 2 - width / 2,
         top: window.screen.height / 2 - height / 2,
       });
     },
-    saveAddress() {
-      console.log(this.address);
-      this.$emit("saveAddress", this.address);
+    saveDelivery() {
+      console.log(this.delivery);
+      this.$emit("saveDelivery", this.delivery);
       this.closeModal();
     },
   },
