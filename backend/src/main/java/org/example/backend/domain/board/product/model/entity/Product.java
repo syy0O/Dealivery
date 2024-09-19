@@ -40,6 +40,7 @@ public class Product {
 
 	public void increaseStock(Integer quantity) {
 		this.stock += quantity;
+	}
 
 	public ProductDto.Request toDto() {
 		return ProductDto.Request.builder()
