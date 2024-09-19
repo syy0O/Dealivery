@@ -93,6 +93,6 @@ public class OrdersRepositoryCustomImpl implements OrdersRepositoryCustom{
             return null;
         }
 
-        return orders.modifiedAt.after(LocalDateTime.now().minusMonths(month));
+        return orders.createdAt.after(LocalDateTime.now().minusMonths(month));
     }
 }

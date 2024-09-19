@@ -16,11 +16,11 @@ import org.example.backend.domain.board.product.model.entity.Product;
 import org.example.backend.domain.board.product.repository.ProductRepository;
 import org.example.backend.domain.board.repository.ProductBoardRepository;
 import org.example.backend.domain.orders.model.dto.OrderedProductDto;
+import org.example.backend.domain.orders.model.dto.OrderedProductDto.OrderedProductResponse;
 import org.example.backend.domain.orders.model.entity.OrderedProduct;
 import org.example.backend.domain.orders.model.entity.Orders;
 import org.example.backend.domain.orders.repository.OrderedProductRepository;
 import org.example.backend.domain.orders.repository.OrdersRepository;
-
 import org.example.backend.global.common.constants.OrderStatus;
 import org.example.backend.global.exception.InvalidCustomException;
 import org.springframework.data.domain.Page;
@@ -144,14 +144,50 @@ public class OrderService {
         });
     }
 
-    public Page<OrderListResponse> history(/*User user,*/ Integer page, String status, Integer month) {
+    public Page<CompanyOrderListResponse> companyOrderList(/*User user,*/ Integer page, String status, Integer month) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.Direction.DESC, "idx");
 
         Page<Orders> orders = ordersRepository.historyWithPaging(pageable, /*user,*/ status, month);
         return orders.map(order -> {
             String title = productBoardRepository.findById(order.getBoardIdx())
                     .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND)).getTitle();
-            return order.toOrderListResponse(title);
+            return order.toCompanyOrderListResponse(title);
         });
+    }
+
+    public CompanyOrderDetailResponse companyOrderDetail(Long orderIdx) {
+        Orders order = ordersRepository.findById(orderIdx)
+                .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_DETAIL));
+
+        ProductBoard board = productBoardRepository.findById(order.getBoardIdx())
+                .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND));
+
+        List<OrderedProduct> orederdProducts = order.getOrderedProducts();
+        List<OrderedProductResponse> products = orederdProducts.stream().map(orderdProduct ->
+           orderdProduct.toOrderedProductResponse(board.getDiscountRate())
+        ).collect(Collectors.toList());
+
+        return order.toCompanyOrderDetailResponse(products);
+    }
+
+    public Page<UserOrderListResponse> userOrderList(Integer page, String status, Integer month) {
+        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.Direction.DESC, "idx");
+
+        Page<Orders> orders = ordersRepository.historyWithPaging(pageable, /*user,*/ status, month);
+        return orders.map(order -> {
+            ProductBoard board = productBoardRepository.findById(order.getBoardIdx())
+                    .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND));
+            return order.toUserOrderListResponse(board);
+        });
+    }
+
+    public UserOrderDetailResponse userOrderDetail(Long orderIdx) {
+        Orders orders = ordersRepository.findById(orderIdx)
+                .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_DETAIL));
+
+        ProductBoard board = productBoardRepository.findById(orders.getBoardIdx())
+                .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND));
+
+        return orders.toUserOrderDetailResponse(board);
     }
 }

@@ -14,7 +14,6 @@ import org.example.backend.global.common.constants.BaseResponse;
 import org.example.backend.global.common.constants.SwaggerDescription;
 import org.example.backend.global.common.constants.SwaggerExamples;
 
-
 import org.springframework.data.domain.Page;
 
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,11 +64,33 @@ public class OrdersController {
         return ResponseEntity.ok(new BaseResponse());
     }
 
-    @Operation(summary = "주문 내역 조회 API")
-    @GetMapping(value = "/history")
-    public BaseResponse list(/*@AuthenticationPrincipal CustomUserDetails customUserDetails,*/ Integer page, String status, Integer month) {
+    @Operation(summary = "판매자 주문 내역 조회 API")
+    @GetMapping(value = "/company/history")
+    public BaseResponse companyOrderlist(/*@AuthenticationPrincipal CustomUserDetails customUserDetails,*/ Integer page, String status, Integer month) {
         //User user = customUserDetails.getUser();
-        Page<OrderListResponse> boardListResponses = orderService.history(/*user,*/ page, status, month);
+        Page<CompanyOrderListResponse> boardListResponses = orderService.companyOrderList(/*user,*/ page, status, month);
         return new BaseResponse(boardListResponses);
+    }
+
+    @Operation(summary = "판매자 주문 상세 조회 API")
+    @GetMapping("/company/{idx}/detail")
+    public BaseResponse companyOrderdetail(@PathVariable Long idx){
+        CompanyOrderDetailResponse res = orderService.companyOrderDetail(idx);
+        return new BaseResponse(res);
+    }
+
+    @Operation(summary = "사용자 주문 내역 조회 API")
+    @GetMapping(value = "/user/history")
+    public BaseResponse userOrderlist(/*@AuthenticationPrincipal CustomUserDetails customUserDetails,*/ Integer page, String status, Integer month) {
+        //User user = customUserDetails.getUser();
+        Page<UserOrderListResponse> boardListResponses = orderService.userOrderList(/*user,*/ page, status, month);
+        return new BaseResponse(boardListResponses);
+    }
+
+    @Operation(summary = "사용자 주문 상세 조회 API")
+    @GetMapping("/user/{idx}/detail")
+    public BaseResponse userOrderdetail(@PathVariable Long idx){
+        UserOrderDetailResponse res = orderService.userOrderDetail(idx);
+        return new BaseResponse(res);
     }
 }

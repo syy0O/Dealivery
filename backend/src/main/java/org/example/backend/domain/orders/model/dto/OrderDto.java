@@ -7,8 +7,8 @@ import java.util.List;
 import lombok.Builder;
 
 import lombok.Getter;
+import org.example.backend.domain.orders.model.dto.OrderedProductDto.OrderedProductResponse;
 import org.example.backend.domain.orders.model.entity.Orders;
-import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.global.common.constants.OrderStatus;
 import org.example.backend.global.common.constants.PaymentType;
 import org.example.backend.global.utils.RandomCodeGenerator;
@@ -57,7 +57,7 @@ public class OrderDto {
 
     @Builder
     @Getter
-    public static class OrderListResponse {
+    public static class CompanyOrderListResponse {
         private Long orderIdx;
         private String ordersNumber;
         private String payMethod;
@@ -66,5 +66,43 @@ public class OrderDto {
         // 총 결제 금액
         private String status;
         private LocalDateTime modifiedAt;
+    }
+
+    @Builder
+    @Getter
+    public static class CompanyOrderDetailResponse {
+        private Long orderIdx;
+        private List<OrderedProductResponse> products;
+    }
+
+    @Builder
+    @Getter
+    public static class UserOrderListResponse {
+        private Long orderIdx;
+        private String ordersNumber;
+        private String status;
+
+        private LocalDateTime createdAt;
+
+        private String title;
+        private String thumnailUrl;
+        private Integer minimumPrice;
+    }
+
+    @Builder
+    @Getter
+    public static class UserOrderDetailResponse {
+        private String ordersNumber;
+        private String status;
+        private LocalDateTime createdAt;
+        // 총 결제 금액 추가
+        private String payMethod;
+        private Integer usedPoint;
+
+        private String receiverName;
+        private String receiverPhoneNumber;
+
+        private String address;
+
     }
 }
