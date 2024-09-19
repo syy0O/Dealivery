@@ -114,7 +114,8 @@ public class OrderService {
                 ORDER_FAIL_NOT_FOUND));
 
         if (order.getStatus() !=  OrderStatus.ORDER_COMPLETE) {
-            order.setStatus(OrderStatus.ORDER_FAIL); // 사용자가 결제 취소(재고도 줄어들지 않았음)
+            //order.setStatus(OrderStatus.ORDER_FAIL); // 사용자가 결제 취소(재고도 줄어들지 않았음)
+            ordersRepository.delete(order);
             return;
         }
 

@@ -1,5 +1,6 @@
 package org.example.backend.domain.orders.model.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -72,7 +73,7 @@ public class Orders {
 //    @JoinColumn(name = "user_idx")
 //    private User user;
 
-    @OneToMany(mappedBy = "orders", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "orders", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<OrderedProduct> orderedProducts;
 
 
