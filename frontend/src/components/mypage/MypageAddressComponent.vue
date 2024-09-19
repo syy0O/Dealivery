@@ -10,7 +10,7 @@
         <div v-if="isDisplayModal">
           <AddressModalComponent
             @closeModal="displayModal"
-            @saveAddress="saveAddress"
+            @saveDelivery="saveDelivery"
           ></AddressModalComponent>
         </div>
         <button @click="displayModal" class="css-1y56l81 e1ss94ng0">
@@ -23,22 +23,21 @@
       <ul>
         <div
           class="css-jxzkyr enjmmt32"
-          v-for="address in addresses"
-          :key="address.id"
+          v-for="(delivery, index) in userStore.userDetail.deliveries" :key="index"
         >
           <div class="css-1nt6ns3 enjmmt31">
             <label class="css-1xdhyk6 e1dcessg3">
               <div class="css-79hxr7 e1dcessg1">
                 <img
-                  :id="address.id"
+                  :id="index"
                   :src="
-                    selectedAddress == address.id
+                    selectedAddress == index
                       ? require('../../assets/filled-custom-radio.svg')
                       : require('../../assets/outline-custom-radio.svg')
                   "
                   width="24"
                   height="24"
-                  @click="checkRadio(address.id)"
+                  @click="checkRadio(index)"
                 />
               </div>
               <span></span>
@@ -46,22 +45,22 @@
           </div>
           <div data-testid="address-area" class="css-upe1zs e77s2kj4">
             <p class="css-zone-name e77s2kj2">
-              {{ address.name }}
+              {{ delivery.name }}
             </p>
-            <p class="css-zone-code e77s2kj2">[{{ address.zonecode }}]</p>
+            <p class="css-zone-code e77s2kj2">[{{ delivery.postNumber }}]</p>
             <p class="css-12stxlh e77s2kj2">
-              {{ address.area }} {{ address.detail }}
+              {{ delivery.address }} {{ delivery.addressDetail }}
             </p>
           </div>
           <div data-testid="update-address-button" class="css-d1hkno enjmmt30">
             <div v-if="isDisplayEditModal">
               <AddressEditModalComponent
-                :oldAddress="currentAddress"
+                :oldAddress="delivery"
                 @closeModal="displayEditModal"
-                @saveNewAddress="saveNewAddress"
+                @saveEditedAddress="saveEditedAddress"
               />
             </div>
-            <button @click="displayEditModal(address)">
+            <button @click="displayEditModal(delivery)">
               <img src="../../assets/pencil.svg" width="48" height="48" />
             </button>
           </div>
@@ -77,6 +76,8 @@
 <script>
 import AddressModalComponent from "./AddressModalComponent.vue";
 import AddressEditModalComponent from "./AddressEditModalComponent.vue";
+import { useUserStore } from '@/stores/useUserStore';
+import { mapStores } from 'pinia';
 
 export default {
   name: "MypageAddressComponent",
@@ -84,34 +85,21 @@ export default {
     AddressModalComponent,
     AddressEditModalComponent,
   },
+  computed: {
+    ...mapStores(useUserStore)
+  },
   data() {
     return {
       isDisplayModal: false,
       isDisplayEditModal: false,
       selectedAddress: null,
-      currentAddress: {
+      currentDelivery: {
         id: "1",
         name: "집",
         zonecode: "우편번호1",
         area: "서울 동작구 신대방동",
         detail: "심키즈 하우스",
       },
-      addresses: [
-        {
-          id: "1",
-          name: "집",
-          zonecode: "우편번호1",
-          area: "서울 동작구 신대방동",
-          detail: "심키즈 하우스",
-        },
-        {
-          id: "2",
-          name: "직장",
-          zonecode: "우편번호2",
-          area: "서울 광진구 자양동 648-28",
-          detail: "1004호",
-        },
-      ],
     };
   },
   methods: {
@@ -122,22 +110,18 @@ export default {
       this.isDisplayEditModal = !this.isDisplayEditModal;
       this.currentAddress = data;
     },
-    checkRadio(id) {
-      this.selectedAddress = id;
+    checkRadio(index) {
+      this.selectedAddress = index;
     },
-    saveAddress(data) {
-      this.addresses.push(data);
-    },
-    saveNewAddress(data) {
-      const index = this.addresses.findIndex(
-        (address) => address.id === data.id
-      );
-
-      if (index !== -1) {
-        this.addresses[index] = data;
-      } else {
-        this.addresses.push(data);
+    async saveDelivery(data) {
+      if(await this.userStore.createDelivery(data)){
+        await this.userStore.getDeliveryList();
       }
+      
+    },
+    saveEditedAddress(data) {
+      console.log(data);
+      alert("추가될 기능")
     },
   },
 };

@@ -15,7 +15,7 @@
                 <span class="css-oyffzd eo7pjfk2 top-menu-link" @click="logout">로그아웃</span>
                 <div class="css-1qgm48u eo7pjfk0">
                 </div>
-                <RouterLink to="/mypage" class="css-xygizb eo7pjfk2 top-menu-link">마이페이지</RouterLink>
+                <a to="#" class="css-xygizb eo7pjfk2 top-menu-link" @click="toMypage">마이페이지</a>
 
 
             </div>
@@ -78,6 +78,11 @@ export default {
                 alert("로그아웃에 실패했습니다.");
             }
             
+        },
+        async toMypage(){
+            if(await this.userStore.getDetail()){
+                this.routeTo('/mypage');
+            }
         }
     }
 }
