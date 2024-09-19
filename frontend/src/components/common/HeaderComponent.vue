@@ -1,44 +1,44 @@
 <template>
-  <div>
-    <div class="css-t79vuj e15sbxqa2">
-      <div v-show="!userStore.isLogined" class="css-1xfyvd1 eo7pjfk4">
-        <router-link to="/auth/login" class="css-oyffzd eo7pjfk2 top-menu-link"
-          >로그인</router-link
-        >
-        <div class="css-1qgm48u eo7pjfk0"></div>
-        <RouterLink
-          to="/auth/user/signup"
-          class="css-xygizb eo7pjfk2 top-menu-link"
-          >일반회원가입</RouterLink
-        >
-        <div class="css-1qgm48u eo7pjfk0"></div>
-        <RouterLink
-          to="/auth/company/signup"
-          class="css-xygizb eo7pjfk2 top-menu-link"
-          >업체회원가입</RouterLink
-        >
-      </div>
+    <div>
+        <div class="css-t79vuj e15sbxqa2">
+            <div v-show="!userStore.isLogined" class="css-1xfyvd1 eo7pjfk4">
+                <router-link to="/auth/login" class="css-oyffzd eo7pjfk2 top-menu-link">로그인</router-link>
+                <div class="css-1qgm48u eo7pjfk0">
+                </div>
+                <RouterLink to="/auth/user/signup" class="css-xygizb eo7pjfk2 top-menu-link">일반회원가입</RouterLink>
+                <div class="css-1qgm48u eo7pjfk0">
+                </div>
+                <RouterLink to="/auth/company/signup" class="css-xygizb eo7pjfk2 top-menu-link">업체회원가입</RouterLink>
+            </div>
 
-      <div v-show="userStore.isLogined" class="css-1xfyvd1 eo7pjfk4">
-        <span class="css-oyffzd eo7pjfk2 top-menu-link" @click="logout"
-          >로그아웃</span
-        >
-        <div class="css-1qgm48u eo7pjfk0"></div>
-        <RouterLink to="/mypage" class="css-xygizb eo7pjfk2 top-menu-link"
-          >마이페이지</RouterLink
-        >
-      </div>
+            <div v-show="userStore.isLogined" class="css-1xfyvd1 eo7pjfk4">
+                <span class="css-oyffzd eo7pjfk2 top-menu-link" @click="logout">로그아웃</span>
+                <div class="css-1qgm48u eo7pjfk0">
+                </div>
+                <a to="#" class="css-xygizb eo7pjfk2 top-menu-link" @click="toMypage">마이페이지</a>
 
-      <div class="css-r7wmjj e15sbxqa3">
-        <div class="css-boc80u ekdqe1a1">
-          <img
-            src="@/assets/dealivery-logo.png"
-            alt="딜리버리 로고"
-            class="css-17mnrrx e1s3pt0j0 logo"
-            @click="routeTo('/')"
-          />
-          <span class="separator">|</span>
-          <button class="css-mxd3pm ekdqe1a0">Company</button>
+
+            </div>
+
+
+            <div class="css-r7wmjj e15sbxqa3">
+                <div class="css-boc80u ekdqe1a1"><img src="@/assets/dealivery-logo.png" alt="딜리버리 로고"
+                        class="css-17mnrrx e1s3pt0j0 logo" @click="routeTo('/')">
+                    <span class="separator">|</span>
+                    <button class=" css-mxd3pm ekdqe1a0">Company</button>
+                </div>
+                <div class="css-pqw0uk e1493ofl4">
+                    <div class="css-w444a2 e1493ofl1"><input id="gnb_search" placeholder="검색어를 입력해주세요" required=""
+                            class="css-11ntk83 e1493ofl3" value=""><button id="submit" aria-label="submit"
+                            class="css-ywxmlw e1493ofl0"></button></div>
+                </div>
+                <div class="css-pqw0uk e15sbxqa1">
+                    <div class="css-c4pbxv e15sbxqa0">
+                        <button class="css-231fw3 etxxzpc0" aria-label="찜하기" type="button"></button>
+                        <div class="css-ff2aah e14oy6dx2"><button class="css-g25h97 e14oy6dx1"></button></div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="css-pqw0uk e1493ofl4">
           <div class="css-w444a2 e1493ofl1">
@@ -129,16 +129,25 @@ export default {
         query: query,
       });
     },
-    routeTo(path) {
-      this.$router.push(path);
-    },
-    logout() {
-      this.userStore.isLogined = false;
-      this.userStore.roles = [];
-      this.routeTo("/");
-    },
-  },
-};
+    methods:{
+        routeTo(path){
+            this.$router.push(path);
+        },
+        async logout(){
+            if(await this.userStore.logout()){
+                this.routeTo('/');
+            }else{
+                alert("로그아웃에 실패했습니다.");
+            }
+            
+        },
+        async toMypage(){
+            if(await this.userStore.getDetail()){
+                this.routeTo('/mypage');
+            }
+        }
+    }
+}
 </script>
 
 <style scoped>
