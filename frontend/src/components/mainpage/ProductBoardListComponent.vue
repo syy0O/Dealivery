@@ -1,31 +1,32 @@
 <template>
   <div class="css-18tunez ei8jk451">
     <div class="css-1i60c0e extobua1">
-      <h3 class="css-i804ml extobua0">{{ selectedCategory }}</h3>
-      <ul class="css-raoddi erzdokb2">
-        <li
-          v-for="(category, index) in categories"
-          :key="index"
-          class="css-1h52dri erzdokb1"
-          @click="handleClick(index)"
-        >
-          <a
-            :class="{
-              'category-selected': selectedIndex === index,
-              'category-unselected': selectedIndex !== index,
-            }"
-          >
-            {{ category }}
-          </a>
-        </li>
-      </ul>
+      <h3 class="css-i804ml extobua0">
+        {{
+          currentCategory == "undefined"
+            ? currentSearch == "undefined"
+              ? "전체"
+              : `"${currentSearch}"에 대한 검색 결과`
+            : currentCategory
+        }}
+      </h3>
+      <!-- <ul class="css-raoddi erzdokb2">
+                <li v-for="(category, index) in categories" :key="index" class="css-1h52dri erzdokb1"
+                    @click="handleClick(index)">
+                    <a
+                        :class="{ 'category-selected': selectedIndex === index, 'category-unselected': selectedIndex !== index }">
+                        {{ category }}
+                    </a>
+                </li>
+            </ul> -->
     </div>
 
     <div class="css-uh04a1 e19n19480">
       <ul class="css-6q2h7w e19n19481">
         <ProductBoardListCardComponent
-          v-for="n in num"
-          :key="n"
+          v-for="data in dataList"
+          :key="data.idx"
+          :data="data"
         ></ProductBoardListCardComponent>
       </ul>
       <div class="css-rdz8z7 e82lnfz1">
@@ -68,6 +69,8 @@
 
 <script>
 import ProductBoardListCardComponent from "./ProductBoardListCardComponent.vue";
+import { useBoardStore } from "@/stores/useBoardStore";
+import { mapStores } from "pinia";
 export default {
   name: "ProductBoardListComponent",
   data() {
@@ -76,19 +79,35 @@ export default {
       categories: ["의류", "가전제품", "가구", "식품", "스포츠", "악기"],
       selectedIndex: 0,
       selectedCategory: null,
-      currentPage: 1,
       totalPages: 100,
       pages: [],
       pagesPerGroup: 5,
+      dataList: null,
     };
   },
   components: {
     ProductBoardListCardComponent,
   },
+  watch: {
+    "$route.query.page": "getList",
+    "$route.query.category": "getList",
+    "$route.query.search": "getList",
+  },
   created() {
+    this.getList();
     this.selectedCategory = this.categories[0];
   },
   computed: {
+    ...mapStores(useBoardStore),
+    currentPage() {
+      return Number(this.$route.query.page) || 1;
+    },
+    currentCategory() {
+      return String(this.$route.query.category);
+    },
+    currentSearch() {
+      return String(this.$route.query.search);
+    },
     // 시작 페이지 번호 계산
     startPage() {
       return (
@@ -111,33 +130,42 @@ export default {
     },
   },
   methods: {
+    async getList() {
+      this.dataList = await this.boardStore.getList(
+        this.currentPage,
+        this.currentCategory,
+        this.currentSearch
+      );
+      this.totalPages = this.dataList.totalPages;
+      this.dataList = this.dataList.content;
+    },
     handleClick(index) {
       this.selectedIndex = index;
       this.selectedCategory = this.categories[index];
     },
     // 특정 페이지로 이동
     goToPage(pageNumber) {
-      if (pageNumber >= 1) {
-        this.currentPage = pageNumber;
-      } else {
+      if (pageNumber >= 1 && pageNumber <= this.totalPages) {
+        this.$router.push({
+          query: {
+            page: pageNumber,
+          },
+        });
+      } else if (pageNumber < 1) {
         alert("첫 번째 페이지입니다.");
+      } else {
+        alert("마지막 페이지입니다.");
       }
     },
     // 이전 페이지 그룹으로 이동
     prevPageGroup() {
-      if (this.startPage > 1) {
-        this.currentPage = this.startPage - 1;
-      } else {
-        alert("첫번째 페이지입니다.");
-      }
+      const newPage = this.startPage - 1;
+      this.goToPage(newPage);
     },
     // 다음 페이지 그룹으로 이동
     nextPageGroup() {
-      if (this.endPage < this.totalPages) {
-        this.currentPage = this.endPage + 1;
-      } else {
-        alert("마지막 페이지입니다.");
-      }
+      const newPage = this.endPage + 1;
+      this.goToPage(newPage);
     },
   },
 };
@@ -164,6 +192,7 @@ export default {
 
 .css-i804ml {
   margin-top: 50px;
+  margin-bottom: 50px;
   font-weight: 500;
   font-size: 28px;
   color: rgb(51, 51, 51);
