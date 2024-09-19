@@ -73,11 +73,10 @@ public class OrderService {
             if (product.getQuantity() > orderdProduct.getStock()) {
                 throw new InvalidCustomException(ORDER_CREATE_FAIL_LACK_STOCK); // 재고 수량 없을 때
             }
-            orderdProduct.decreaseStock(product.getQuantity()); // 재고 수량 변경
         });
     }
 
-    @Transactional(noRollbackFor = Throwable.class)
+    @Transactional/*(noRollbackFor = Throwable.class)*/
     public void complete(OrderCompleteRequest request) {
 
         Orders order = ordersRepository.findById(request.getOrderIdx()).orElseThrow(() -> new InvalidCustomException(
@@ -92,12 +91,12 @@ public class OrderService {
             order.setStatus(OrderStatus.ORDER_COMPLETE);
 
         } catch (IamportResponseException | IOException e) { // 해당하는 결제 정보를 찾지 못했을 때
-            rollbackStock(order);
+            //rollbackStock(order);
             order.setStatus(OrderStatus.ORDER_FAIL);
             throw new InvalidCustomException(ORDER_PAYMENT_FAIL);
 
         } catch (InvalidCustomException e) { // 결제 검증 중 발생한 예외 처리
-            rollbackStock(order);
+            //rollbackStock(order);
             order.setStatus(OrderStatus.ORDER_FAIL);
             throw e;
         }
@@ -107,14 +106,15 @@ public class OrderService {
     public void cancel(Long idx) {
         Orders order = ordersRepository.findById(idx).orElseThrow(() -> new InvalidCustomException(
                 ORDER_FAIL_NOT_FOUND));
-        rollbackStock(order);
 
         if (order.getStatus() !=  OrderStatus.ORDER_COMPLETE) {
-            order.setStatus(OrderStatus.ORDER_FAIL); // 사용자가 결제 취소
+            order.setStatus(OrderStatus.ORDER_FAIL); // 사용자가 결제 취소(재고도 줄어들지 않았음)
             return;
         }
 
-        if (order.getStatus() !=  OrderStatus.ORDER_COMPLETE) { //TODO: 주문 완료 & 게시글이 아직 종료되지 않았을 때
+        if (order.getStatus() ==  OrderStatus.ORDER_COMPLETE) { //TODO: 주문 완료 & 게시글이 아직 종료되지 않았을 때
+            rollbackStock(order);
+
             String impUid = order.getPaymentId();
             try {
                 Payment payment = paymentService.getPaymentInfo(impUid);
