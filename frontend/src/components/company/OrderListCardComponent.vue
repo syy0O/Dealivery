@@ -1,12 +1,12 @@
 <template>
   <ul class="list_order">
-    <li>
-      <div class="date">2020.12.17 (12시 29분)</div>
+    <li v-for="data in dataList" :key="data.id">
+      <div class="date">{{ data.modifiedAt }}</div>
       <div class="order_goods">
         <div class="name">
-          <a href="#none" class="order-link" @click="displayModal"
-            >[Dole] 후릇컵 3종 외 2건</a
-          >
+          <a href="#none" class="order-link" @click="displayModal">{{
+            data.title
+          }}</a>
           <div v-if="isDisplayModal">
             <CompanyOrderModalComponent @closeModal="displayModal" />
           </div>
@@ -15,7 +15,7 @@
           <div class="desc">
             <dl>
               <dt>주문번호</dt>
-              <dd>1608175672040</dd>
+              <dd>{{ data.ordersNumber }}</dd>
             </dl>
 
             <dl>
@@ -32,13 +32,13 @@
 
             <dl>
               <dt>주문방법</dt>
-              <dd>카카오페이</dd>
+              <dd>{{ data.payMethod }}</dd>
             </dl>
           </div>
         </div>
         <div class="order_status">
           <span class="inner_status">
-            <div class="order_status_box">주문 완료</div>
+            <div class="order_status_box">{{ data.status }}</div>
           </span>
         </div>
       </div>
@@ -54,7 +54,16 @@ export default {
   components: {
     CompanyOrderModalComponent,
   },
-  props: {},
+  props: {
+    noDataMsg: {
+      type: String,
+      default: "데이터가 없습니다.",
+    },
+    dataList: {
+      type: Array,
+      default: null,
+    },
+  },
   data() {
     return {
       isDisplayModal: false,

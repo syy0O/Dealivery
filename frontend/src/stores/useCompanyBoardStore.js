@@ -48,6 +48,18 @@ export const useCompanyBoardStore = defineStore("companyBoard", {
       const data = await axios.get(mockyListOptionURL);
       return data.data;
     },
+    async getOrderListWithOption(page, status, month) {
+      status = String(status);
+      status = status.includes("전체") ? null : status;
+      const response = await axios.get("/api/orders/company/history", {
+        params: {
+          page: page,
+          status: status,
+          month: month,
+        },
+      });
+      return response.data.result;
+    },
     async getProductBoardListByOrderStatus(option) {
       console.log(option);
       // 백엔드 개발 후 구현
