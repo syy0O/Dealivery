@@ -4,22 +4,24 @@
       <span class="close" @click="closeModal">&times;</span>
       <h2>상품 주문서</h2>
       <hr class="thick-line" />
-      <div v-for="data in orderedProducts" :key="data.id">
-        <hr class="thin-line" />
+      <div v-for="(data, index) in orderedProducts" :key="data.id">
+        <hr v-if="index !== 0" class="thin-line" />
         <div class="product-item">
           <div class="title"><strong>상품명: </strong> {{ data.name }}</div>
           <div class="contents">
-            <p><strong>수량:</strong> {{ data.amount }}</p>
+            <p><strong>가격:</strong> {{ data.price.toLocaleString() }} 원</p>
           </div>
           <div class="contents">
-            <p><strong>가격:</strong> {{ data.price.toLocaleString() }} 원</p>
+            <p><strong>수량:</strong> {{ data.amount }}</p>
           </div>
         </div>
       </div>
 
       <hr class="thin-line" />
       <div class="total-price">
-        <p><strong>총 결제 금액: 13,560원</strong></p>
+        <p>
+          <strong>총 결제 금액: {{ totalPaidPrice.toLocaleString() }}</strong>
+        </p>
       </div>
     </div>
   </div>
@@ -47,6 +49,11 @@ export default {
   },
   computed: {
     ...mapStores(useCompanyBoardStore),
+    totalPaidPrice() {
+      return this.orderedProducts.reduce((total, product) => {
+        return total + product.price * product.amount;
+      }, 0);
+    },
   },
   methods: {
     closeModal() {
