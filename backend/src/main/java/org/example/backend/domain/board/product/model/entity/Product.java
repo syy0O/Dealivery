@@ -42,8 +42,16 @@ public class Product {
 		this.stock += quantity;
 	}
 
-	public ProductDto.Request toDto() {
-		return ProductDto.Request.builder()
+	public ProductDto.Response toResponse() {
+		return ProductDto.Response.builder()
+			.idx(this.idx)
+			.name(this.name)
+			.price(this.price)
+			.build();
+	}
+
+	public ProductDto.CompanyResponse toCompanyResponse() {
+		return ProductDto.CompanyResponse.builder()
 			.name(this.name)
 			.stock(this.stock)
 			.price(this.price)
