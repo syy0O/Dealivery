@@ -93,6 +93,7 @@ public class Orders {
         this.status = status;
     }
 
+
     public CompanyOrderListResponse toCompanyOrderListResponse(String title) {
         return CompanyOrderListResponse.builder()
                 .orderIdx(this.idx)
