@@ -81,7 +81,8 @@ public class OrdersRepositoryCustomImpl implements OrdersRepositoryCustom{
 
     private BooleanExpression equalsStatus(String status) {
         if (status == null || status.isBlank()) {
-            return null;
+            //return null;
+            return orders.status.in(OrderStatus.ORDER_COMPLETE, OrderStatus.ORDER_CANCEL);
         }
 
         OrderStatus orderStatus = OrderStatus.of(status);
