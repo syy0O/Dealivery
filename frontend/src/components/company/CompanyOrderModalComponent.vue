@@ -4,23 +4,16 @@
       <span class="close" @click="closeModal">&times;</span>
       <h2>상품 주문서</h2>
       <hr class="thick-line" />
-      <div class="product-item">
-        <div class="title"><strong>상품명: </strong> 망고</div>
-        <div class="contents">
-          <p><strong>수량:</strong> 2</p>
-        </div>
-        <div class="contents">
-          <p><strong>가격:</strong> 4,000 원</p>
-        </div>
-      </div>
-      <hr class="thin-line" />
-      <div class="product-item">
-        <div class="title"><strong>상품명: </strong> 딸기</div>
-        <div class="contents">
-          <p><strong>수량:</strong> 3</p>
-        </div>
-        <div class="contents">
-          <p><strong>가격:</strong> 6,000 원</p>
+      <div v-for="data in orderedProducts" :key="data.id">
+        <hr class="thin-line" />
+        <div class="product-item">
+          <div class="title"><strong>상품명: </strong> {{ data.name }}</div>
+          <div class="contents">
+            <p><strong>수량:</strong> {{ data.amount }}</p>
+          </div>
+          <div class="contents">
+            <p><strong>가격:</strong> {{ data.price.toLocaleString() }} 원</p>
+          </div>
         </div>
       </div>
 
@@ -33,18 +26,39 @@
 </template>
 
 <script>
+import { mapStores } from "pinia";
+import { useCompanyBoardStore } from "@/stores/useCompanyBoardStore.js";
+
 export default {
   name: "CompanyBoardModalComponent",
   data() {
     return {
-      // productName: "",
-      // productPrice: "",
-      // productQuantity: "",
+      orderedProducts: [],
     };
+  },
+  props: {
+    orderIdx: {
+      type: Number,
+      required: true, // 필수 prop으로 설정
+    },
+  },
+  mounted() {
+    this.fetchOrderData();
+  },
+  computed: {
+    ...mapStores(useCompanyBoardStore),
   },
   methods: {
     closeModal() {
       this.$emit("closeModal");
+    },
+    async fetchOrderData() {
+      // store에서 주문 데이터를 가져오는 로직 구현
+      console.log("Fetching order data for idx:", this.orderIdx);
+      const response = await this.companyBoardStore.getOrderDetail(
+        this.orderIdx
+      );
+      this.orderedProducts = response.products;
     },
   },
 };

@@ -1,49 +1,58 @@
 <template>
-  <ul class="list_order">
-    <li v-for="data in dataList" :key="data.id">
-      <div class="date">{{ data.modifiedAt }}</div>
-      <div class="order_goods">
-        <div class="name">
-          <a href="#none" class="order-link" @click="displayModal">{{
-            data.title
-          }}</a>
-          <div v-if="isDisplayModal">
-            <CompanyOrderModalComponent @closeModal="displayModal" />
+  <div>
+    <ul class="list_order">
+      <li v-for="data in dataList" :key="data.id">
+        <div class="date">{{ data.modifiedAt }}</div>
+        <div class="order_goods">
+          <div class="name">
+            <a
+              href="#none"
+              class="order-link"
+              @click="displayModal(data.orderIdx)"
+              >{{ data.title }}</a
+            >
+          </div>
+          <div class="order_info">
+            <div class="desc">
+              <dl>
+                <dt>주문번호</dt>
+                <dd>{{ data.ordersNumber }}</dd>
+              </dl>
+
+              <dl>
+                <dt>결제금액</dt>
+                <dd>13,560원</dd>
+              </dl>
+            </div>
+
+            <div class="desc" style="margin-left: 50px">
+              <dl>
+                <dt>주문자명</dt>
+                <dd>심키즈</dd>
+              </dl>
+
+              <dl>
+                <dt>주문방법</dt>
+                <dd>{{ data.payMethod }}</dd>
+              </dl>
+            </div>
+          </div>
+          <div class="order_status">
+            <span class="inner_status">
+              <div class="order_status_box">{{ data.status }}</div>
+            </span>
           </div>
         </div>
-        <div class="order_info">
-          <div class="desc">
-            <dl>
-              <dt>주문번호</dt>
-              <dd>{{ data.ordersNumber }}</dd>
-            </dl>
-
-            <dl>
-              <dt>결제금액</dt>
-              <dd>13,560원</dd>
-            </dl>
-          </div>
-
-          <div class="desc" style="margin-left: 50px">
-            <dl>
-              <dt>주문자명</dt>
-              <dd>심키즈</dd>
-            </dl>
-
-            <dl>
-              <dt>주문방법</dt>
-              <dd>{{ data.payMethod }}</dd>
-            </dl>
-          </div>
-        </div>
-        <div class="order_status">
-          <span class="inner_status">
-            <div class="order_status_box">{{ data.status }}</div>
-          </span>
-        </div>
-      </div>
-    </li>
-  </ul>
+      </li>
+    </ul>
+    <!-- 모달 컴포넌트는 한 번만 렌더링하고, selectedOrderIdx로 해당 주문의 데이터를 불러옴 -->
+    <div v-if="isDisplayModal">
+      <CompanyOrderModalComponent
+        @closeModal="closeModal"
+        :orderIdx="selectedOrderIdx"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -67,11 +76,17 @@ export default {
   data() {
     return {
       isDisplayModal: false,
+      selectedOrderIdx: null,
     };
   },
   methods: {
-    displayModal() {
+    displayModal(orderIdx) {
       this.isDisplayModal = !this.isDisplayModal;
+      this.selectedOrderIdx = orderIdx;
+    },
+    closeModal() {
+      this.isDisplayModal = false;
+      this.selectedOrderIdx = null;
     },
   },
 };

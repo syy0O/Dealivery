@@ -60,6 +60,13 @@ export const useCompanyBoardStore = defineStore("companyBoard", {
       });
       return response.data.result;
     },
+    async getOrderDetail(orderIdx) {
+
+      const response = await axios.get(`/api/orders/company/${orderIdx}/detail`);
+      return response.data.result;
+    },
+
+
     async getProductBoardListByOrderStatus(option) {
       console.log(option);
       // 백엔드 개발 후 구현
