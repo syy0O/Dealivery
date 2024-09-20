@@ -35,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 public class OrderService {
-    private final int PAGE_SIZE = 10;
+    private final int PAGE_SIZE = 5;
     private final PaymentService paymentService;
 
     private final OrdersRepository ordersRepository;
