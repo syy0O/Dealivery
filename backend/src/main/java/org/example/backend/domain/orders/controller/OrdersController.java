@@ -1,7 +1,6 @@
 package org.example.backend.domain.orders.controller;
 
 import static org.example.backend.domain.orders.model.dto.OrderDto.*;
-import static org.example.backend.global.common.constants.BaseResponseStatus.ORDER_PAYMENT_FAIL;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,10 +13,12 @@ import org.example.backend.domain.orders.service.OrderService;
 import org.example.backend.global.common.constants.BaseResponse;
 import org.example.backend.global.common.constants.SwaggerDescription;
 import org.example.backend.global.common.constants.SwaggerExamples;
-import org.example.backend.global.exception.InvalidCustomException;
+
+import org.springframework.data.domain.Page;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
+
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,7 +45,8 @@ public class OrdersController {
     )
     public ResponseEntity<BaseResponse> registerOrder(/*@AuthenticationPrincipal CustomUserDetails customUserDetails,*/ @RequestBody OrderRegisterRequest order) {
         // TODO: 로그인한 사용자(주문자) 정보 저장
-        OrderCreateResponse res = orderService.register(order);
+        //User user = customUserDetails.getUser();
+        OrderCreateResponse res = orderService.register(/*user,*/ order);
         log.info("[SUCCESS] Order register: [POST][200][Order ID : {}]", res.getOrderIdx());
         return ResponseEntity.ok(new BaseResponse(res));
     }
@@ -62,4 +64,33 @@ public class OrdersController {
         return ResponseEntity.ok(new BaseResponse());
     }
 
+    @Operation(summary = "판매자 주문 내역 조회 API")
+    @GetMapping(value = "/company/history")
+    public BaseResponse companyOrderlist(/*@AuthenticationPrincipal CustomUserDetails customUserDetails,*/ Integer page, String status, Integer month) {
+        //User user = customUserDetails.getUser();
+        Page<CompanyOrderListResponse> boardListResponses = orderService.companyOrderList(/*user,*/ page, status, month);
+        return new BaseResponse(boardListResponses);
+    }
+
+    @Operation(summary = "판매자 주문 상세 조회 API")
+    @GetMapping("/company/{idx}/detail")
+    public BaseResponse companyOrderdetail(@PathVariable Long idx){
+        CompanyOrderDetailResponse res = orderService.companyOrderDetail(idx);
+        return new BaseResponse(res);
+    }
+
+    @Operation(summary = "사용자 주문 내역 조회 API")
+    @GetMapping(value = "/user/history")
+    public BaseResponse userOrderlist(/*@AuthenticationPrincipal CustomUserDetails customUserDetails,*/ Integer page, String status, Integer month) {
+        //User user = customUserDetails.getUser();
+        Page<UserOrderListResponse> boardListResponses = orderService.userOrderList(/*user,*/ page, status, month);
+        return new BaseResponse(boardListResponses);
+    }
+
+    @Operation(summary = "사용자 주문 상세 조회 API")
+    @GetMapping("/user/{idx}/detail")
+    public BaseResponse userOrderdetail(@PathVariable Long idx){
+        UserOrderDetailResponse res = orderService.userOrderDetail(idx);
+        return new BaseResponse(res);
+    }
 }
