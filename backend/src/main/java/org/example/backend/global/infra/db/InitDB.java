@@ -79,7 +79,7 @@ public class InitDB {
 
         productBoards = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             productBoards.add(ProductBoard.builder()
                 .title("[음성명작]500m 고랭지에서 수확한 사과1.3kg[품종:홍로] " + i)
                 .discountRate(23)
@@ -94,7 +94,7 @@ public class InitDB {
                 .build());
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             productBoards.add(ProductBoard.builder()
                 .title("[음성명작]500m 고랭지에서 수확한 사과1.3kg[품종:홍로] " + (10 + i))
                 .discountRate(23)
@@ -109,7 +109,7 @@ public class InitDB {
                 .build());
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             productBoards.add(ProductBoard.builder()
                 .title("[음성명작]500m 고랭지에서 수확한 사과1.3kg[품종:홍로] " + (20 + i))
                 .discountRate(23)
