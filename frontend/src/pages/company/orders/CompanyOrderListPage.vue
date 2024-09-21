@@ -201,7 +201,7 @@ export default {
       await this.fetchBoards();
     },
     async fetchBoards() {
-      const response = await this.companyBoardStore.getOrderListWithOption(
+      const response = await this.boardStore.getOrderListWithOption(
         this.currentPage,
         this.selectedOrderStatus,
         this.extractNumber(this.selectedDateRange)
