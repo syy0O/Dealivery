@@ -20,8 +20,8 @@ import HeaderComponent from "@/components/common/HeaderComponent.vue";
 import MypageAsideComponent from "@/components/mypage/MypageAsideComponent.vue";
 import FooterComponent from "@/components/common/FooterComponent.vue";
 import TitleComponent from "@/components/mypage/TitleComponent.vue";
-import { useUserStore } from '@/stores/useUserStore';
-import { mapStores } from 'pinia';
+import { useUserStore } from "@/stores/useUserStore";
+import { mapStores } from "pinia";
 
 export default {
   name: "MyPage",
@@ -51,26 +51,27 @@ export default {
         this.currentTitle = "배송지 관리";
         await this.getDeliveryList();
         this.$router.push("/mypage/address");
-      }else if (menu === "info"){
+      } else if (menu === "info") {
         await this.getUserInfo();
       }
-      
     },
-    async getUserInfo(){
-      if(await this.userStore.getDetail()){
+    async getUserInfo() {
+      if (await this.userStore.getDetail()) {
         alert("성공");
-      }else{
+      } else {
         alert("회원정보를 가져오는데 실패했습니다.");
       }
     },
-    async getDeliveryList(){
-      if(!await this.userStore.getDeliveryList()){
+    async getDeliveryList() {
+      if (!(await this.userStore.getDeliveryList())) {
         alert("회원정보를 가져오는데 실패했습니다.");
       }
     },
     updateTitleBasedOnRoute() {
       const currentRoute = this.$route.path;
-      if (currentRoute.includes("order")) {
+      if (currentRoute.includes("order/")) {
+        this.currentTitle = "주문 상세";
+      } else if (currentRoute.includes("order")) {
         this.currentTitle = "주문 내역";
       } else if (currentRoute.includes("qna")) {
         this.currentTitle = "My 문의";
@@ -83,7 +84,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useUserStore)
+    ...mapStores(useUserStore),
   },
   mounted() {
     this.updateTitleBasedOnRoute(); // 페이지 로드 시 현재 경로에 따라 타이틀 설정

@@ -118,6 +118,22 @@ export const useOrderStore = defineStore('order', {
 
             alert(errMsg);
             router.push(root);
-        }
+        },
+
+        async getUserOrderListWithOption(page) {
+            const response = await axios.get("/api/orders/user/history", {
+                params: {
+                    page: page
+                },
+            });
+            return response.data.result;
+        },
+
+        async getUserOrderDetail(orderIdx) {
+
+            const response = await axios.get(`/api/orders/company/${orderIdx}/detail`);
+            return response.data.result;
+        },
+
     }
 });

@@ -1,137 +1,114 @@
 <template>
-  <div class="css-heioij eug5r8l1">
-    <div
-      @click="goToOrderDetail(order.orderIdx)"
-      v-for="order in orderList"
-      :key="order.id"
-      class="order-item"
-    >
-      <MypageOrderComponent />
-    </div>
-
-    <div class="css-rdz8z7 e82lnfz1">
-      <a class="page-unselected e82lnfz0" @click="goToPage(1)"
-        ><img
-          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAHCAQAAABwkq/rAAAAHUlEQVR42mNgAIPi/8X/kWkwA8SE0UQIMJAsCKMBBzk27fqtkcYAAAAASUVORK5CYII="
-          alt="처음 페이지로 이동하기 아이콘" /></a
-      ><a class="page-unselected e82lnfz0" @click="prevPageGroup"
-        ><img
-          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAHCAQAAABqrk9lAAAAGElEQVR42mNgAIPi/8X/4QwwE5PBQJADAAKSG3cyVhtXAAAAAElFTkSuQmCC"
-          alt="이전 페이지로 이동하기 아이콘"
-      /></a>
-
-      <a
-        v-for="pageNumber in visiblePages"
-        :key="pageNumber"
-        :class="
-          pageNumber === currentPage
-            ? 'page-selected e82lnfz0'
-            : 'page-unselected e82lnfz0'
-        "
-        @click="goToPage(pageNumber)"
-      >
-        {{ pageNumber }}
-      </a>
-
-      <a class="page-unselected e82lnfz0" @click="nextPageGroup"
-        ><img
-          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAHCAQAAABqrk9lAAAAGUlEQVR42mMo/l/8nwECQEwCHEwGhAlRBgA2mht3SwgzrwAAAABJRU5ErkJggg=="
-          alt="다음 페이지로 이동하기 아이콘" /></a
-      ><a class="page-unselected e82lnfz0" @click="goToPage(totalPages)"
-        ><img
-          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAHCAQAAABwkq/rAAAAIElEQVR42mMo/l/8n4GBgQFGQ5kgDowmQZCwAMImhDkAb0k27Zcisn8AAAAASUVORK5CYII="
-          alt="마지막 페이지로 이동하기 아이콘"
-      /></a>
+  <div>
+    <div class="css-1xdhyk6 eug5r8l0">
+      <div class="css-10ekv2i e13vhfr40">
+        <div class="css-1phmj5u e190ng8o0">
+          <div class="css-2kmie e1g49j8k1">
+            <div class="css-peeqro e190ng8o1">
+              <div class="css-jyp95e e1l5ke4x0">
+                <button @click="toggleDetails" class="css-7sy6n e1rmfz7b0">
+                  <img
+                    src="@/assets/arrow.png"
+                    alt="icon"
+                    width="40"
+                    height="40"
+                    :style="{
+                      transform: arrowRotate,
+                      transition: 'transform 0.3s',
+                    }"
+                  />
+                </button>
+                <div class="css-7uztss e1rmfz7b4">
+                  <div>
+                    <p
+                      class="_97oqoup _97oqouv _97oqou5 ldmw177c _97oqou19 _97oqouj ldmw177q _97oqou12 _97oqouc ldmw177j css-wcc2f6 e1rmfz7b3"
+                    >
+                      2024.09.05
+                    </p>
+                    <div class="css-k7chvl e1rmfz7b1">
+                      <p
+                        class="_97oqoup _97oqoux _97oqou7 ldmw177a _97oqou1b _97oqoul ldmw177s _97oqou13 _97oqoud ldmw177i css-1vgapaa e1rmfz7b2"
+                      >
+                        주문번호 2307216320130
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  height="1px"
+                  width="100%"
+                  class="css-yng2ii e1ypu1ln0"
+                ></div>
+                <div class="css-1t4yb7q e1xhbacy2">
+                  <div class="css-wnosz2 e1xhbacy0">
+                    <p
+                      class="_97oqoup _97oqouv _97oqou5 ldmw177c _97oqou19 _97oqouj ldmw177q _97oqou12 _97oqouc ldmw177j css-1n1zmlq e1xhbacy1"
+                    >
+                      주문완료
+                    </p>
+                  </div>
+                </div>
+                <div class="css-vts8bc e9fxgjh2">
+                  <div class="css-1tf2711 e73mjag8">
+                    <a href="/goods/5054274" class="css-1ll9bqd e73mjag0">
+                      <img
+                        src="https://img-cf.kurly.com/hdims/resize/%5E%3E120x%3E156/cropcenter/120x156/quality/85/src/shop/data/goods/1594097581645l0.jpg"
+                        alt="[정기배송] 한 끼 보리샐러드"
+                        class="css-13pph03 e73mjag7"
+                      />
+                    </a>
+                    <div class="_17g6wc40">
+                      <a href="/goods/5054274" class="css-1ll9bqd e73mjag0">
+                        <p
+                          class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-1dl78ek e73mjag3"
+                        >
+                          [정기배송] 한 끼 보리샐러드
+                        </p>
+                      </a>
+                      <div class="css-1tf2711 e73mjag8">
+                        <p
+                          class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou11 _97oqoub ldmw177k css-1dl78ek e73mjag4"
+                        >
+                          89,900원
+                        </p>
+                        <p class="css-if5wh3 e73mjag1">145,000원</p>
+                        <div
+                          width="1px"
+                          height="10px"
+                          class="css-9ib26w e1ypu1ln0"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="css-8vtrb0 eus1fbt1"></div>
+              </div>
+            </div>
+          </div>
+          <div class="css-21ijkk e190ng8o3"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import MypageOrderComponent from "@/components/mypage/MypageOrderComponent.vue";
-import { mapStores } from "pinia";
-import { useOrderStore } from "@/stores/useOrderStore.js";
-
 export default {
   data() {
     return {
-      orderList: [],
-      pagesPerGroup: 5,
-      totalPages: 1,
+      isDetailsVisible: false,
+      arrowRotated: false,
     };
   },
-  components: {
-    MypageOrderComponent,
-  },
-
-  created() {
-    this.setOrderList();
-  },
   computed: {
-    ...mapStores(useOrderStore),
-    currentPage() {
-      return Number(this.$route.query.page) || 1;
+    arrowRotate() {
+      return this.arrowRotated ? "rotate(90deg)" : "rotate(0deg)";
     },
-    // 시작 페이지 번호 계산
-    startPage() {
-      return (
-        Math.floor((this.currentPage - 1) / this.pagesPerGroup) *
-          this.pagesPerGroup +
-        1
-      );
-    },
-    // 끝 페이지 번호 계산
-    endPage() {
-      return Math.min(this.startPage + this.pagesPerGroup - 1, this.totalPages);
-    },
-    // 현재 보여질 페이지 번호 목록
-    visiblePages() {
-      const pageNumbers = [];
-      for (let i = this.startPage; i <= this.endPage; i++) {
-        pageNumbers.push(i);
-      }
-      return pageNumbers;
-    },
-  },
-  watch: {
-    "$route.query.page": "setBoards",
-    "$route.query.dateRange": "setBoards",
-    "$route.query.orderStatus": "setBoards",
   },
   methods: {
-    async setOrderList() {
-      const response = await this.orderStore.getUserOrderListWithOption(
-        this.currentPage
-      );
-      this.orderList = response.content;
-      this.totalPages = response.totalPages;
-      console.log(response);
-    },
-    goToPage(pageNumber) {
-      if (pageNumber >= 1 && pageNumber <= this.totalPages) {
-        this.$router.push({
-          query: {
-            page: pageNumber,
-            dateRange: this.selectedDateRange,
-            orderStatus: this.selectedOrderStatus,
-          },
-        });
-      } else if (pageNumber < 1) {
-        alert("첫 번째 페이지입니다.");
-      } else {
-        alert("마지막 페이지입니다.");
-      }
-    },
-    prevPageGroup() {
-      const newPage = this.startPage - 1;
-      this.goToPage(newPage);
-    },
-    nextPageGroup() {
-      const newPage = this.endPage + 1;
-      this.goToPage(newPage);
-    },
-
-    goToOrderDetail(orderId) {
-      this.$router.push({ path: `/mypage/order/${orderId}` });
+    toggleDetails() {
+      this.isDetailsVisible = !this.isDetailsVisible;
+      this.arrowRotated = !this.arrowRotated;
     },
   },
 };
@@ -217,10 +194,6 @@ html {
   justify-content: space-between;
   margin: 0px 20px;
   padding: 25px 0px 20px;
-}
-
-.order-item {
-  margin-bottom: 10px;
 }
 
 .css-eq7f8j {
@@ -1091,52 +1064,5 @@ textarea {
   justify-content: center;
   cursor: pointer;
   border-width: 0;
-}
-
-.css-rdz8z7 {
-  display: flex;
-  -webkit-box-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.page-unselected:first-of-type {
-  border-left: 1px solid rgb(221, 221, 221);
-}
-
-.page-unselected {
-  display: flex;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-top: 1px solid rgb(221, 221, 221);
-  border-right: 1px solid rgb(221, 221, 221);
-  border-bottom: 1px solid rgb(221, 221, 221);
-  border-image: initial;
-  border-left: none;
-  cursor: pointer;
-}
-
-.page-selected {
-  display: flex;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-top: 1px solid rgb(221, 221, 221);
-  border-right: 1px solid rgb(221, 221, 221);
-  border-bottom: 1px solid rgb(221, 221, 221);
-  border-image: initial;
-  border-left: none;
-  cursor: pointer;
-  background-color: rgb(247, 247, 247);
-  color: rgb(95, 0, 128);
 }
 </style>
