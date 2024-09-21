@@ -49,8 +49,7 @@
                   <div class="css-1tf2711 e73mjag8">
                     <a href="/goods/5054274" class="css-1ll9bqd e73mjag0">
                       <img
-                        src="https://img-cf.kurly.com/hdims/resize/%5E%3E120x%3E156/cropcenter/120x156/quality/85/src/shop/data/goods/1594097581645l0.jpg"
-                        alt="[정기배송] 한 끼 보리샐러드"
+                        :src="order.thumnailUrl"
                         class="css-13pph03 e73mjag7"
                       />
                     </a>
