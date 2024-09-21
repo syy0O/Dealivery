@@ -66,9 +66,16 @@
                         <p
                           class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou11 _97oqoub ldmw177k css-1dl78ek e73mjag4"
                         >
-                          89,900원
+                          {{
+                            Math.round(
+                              order.minimumPrice *
+                                (1 - order.discountRate / 100)
+                            ).toLocaleString()
+                          }}원
                         </p>
-                        <p class="css-if5wh3 e73mjag1">145,000원</p>
+                        <p class="css-if5wh3 e73mjag1">
+                          {{ order.minimumPrice.toLocaleString() }}원
+                        </p>
                         <div
                           width="1px"
                           height="10px"
