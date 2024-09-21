@@ -87,6 +87,7 @@ public class OrderDto {
         private String title;
         private String thumnailUrl;
         private Integer minimumPrice;
+        private Integer discountRate;
     }
 
     @Builder

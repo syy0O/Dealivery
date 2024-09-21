@@ -23,6 +23,7 @@ import org.example.backend.domain.orders.repository.OrdersRepository;
 import org.example.backend.global.common.constants.BoardStatus;
 import org.example.backend.global.common.constants.OrderStatus;
 import org.example.backend.global.common.constants.PaymentType;
+import org.example.backend.global.utils.RandomCodeGenerator;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -185,6 +186,7 @@ public class InitDB {
             Orders order = Orders.builder()
                     .boardIdx(board.getIdx())
                     .receiverName("심키즈")
+                    .ordersNumber(RandomCodeGenerator.generate(10))
                     .receiverPhoneNumber("010-1234-5678")
                     .address("서울특별시 중구")
                     .addressDetail("101동 101호")

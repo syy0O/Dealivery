@@ -119,6 +119,7 @@ public class Orders {
                 .title(board.getTitle())
                 .thumnailUrl(board.getProductThumbnailUrl())
                 .minimumPrice(board.getMinimumPrice())
+                .discountRate(board.getDiscountRate())
                 .status(this.status.getStatus())
                 .createdAt(this.createdAt)
                 .build();

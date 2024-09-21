@@ -35,7 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 public class OrderService {
-    private final int PAGE_SIZE = 5;
+    private final int COMPANY_PAGE_SIZE = 5;
+    private final int USER_PAGE_SIZE = 3;
     private final PaymentService paymentService;
 
     private final OrdersRepository ordersRepository;
@@ -146,7 +147,7 @@ public class OrderService {
     }
 
     public Page<CompanyOrderListResponse> companyOrderList(/*User user,*/ Integer page, String status, Integer month) {
-        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.Direction.DESC, "idx");
+        Pageable pageable = PageRequest.of(page - 1, COMPANY_PAGE_SIZE, Sort.Direction.DESC, "idx");
 
         Page<Orders> orders = ordersRepository.historyWithPaging(pageable, /*user,*/ status, month);
         return orders.map(order -> {
@@ -172,7 +173,7 @@ public class OrderService {
     }
 
     public Page<UserOrderListResponse> userOrderList(Integer page, String status, Integer month) {
-        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.Direction.DESC, "idx");
+        Pageable pageable = PageRequest.of(page - 1, USER_PAGE_SIZE, Sort.Direction.DESC, "idx");
 
         Page<Orders> orders = ordersRepository.historyWithPaging(pageable, /*user,*/ status, month);
         return orders.map(order -> {
