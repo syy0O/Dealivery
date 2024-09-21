@@ -1,166 +1,12 @@
 <template>
   <div class="css-pculus e1ovi4141">
-    <div class="css-o5dw7d e1ovi4140">일반회원가입</div>
+    <div class="css-o5dw7d e1ovi4140">소셜회원가입</div>
     <div class="css-mhmtvt e15so55l1">
       <div class="css-rb0i47 e1yyjjij1">
         <span class="css-qq9ke6 e1yyjjij0">*</span> 필수입력사항
       </div>
       <div class="css-y8aj3r eo6ykj40">
         <form>
-          <div class="css-1pjgd36 e744wfw6">
-            <div class="css-1y8737n e744wfw5">
-              <label class="css-1obgjqh e744wfw4"
-                >아이디<span class="css-qq9ke6 e744wfw0">*</span></label
-              >
-            </div>
-            <div class="css-82a6rk e744wfw3">
-              <div class="css-jmalg e1uzxhvi6">
-                <div class="css-176lya2 e1uzxhvi3">
-                  <input
-                    v-model="signupRequest.email"
-                    data-testid="input-box"
-                    id="memberId"
-                    name="memberId"
-                    placeholder="아이디를 입력해주세요 (이메일 형식)"
-                    type="text"
-                    required=""
-                    class="css-u52dqk e1uzxhvi2"
-                    maxlength="40"
-                    value=""
-                    @keydown.enter="userSignup"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="css-1w0ksfz e744wfw2">
-              <button
-                class="css-ufulao e4nu7ef3"
-                type="button"
-                @click="doEmailAuth"
-              >
-                <span class="css-nytqmg e4nu7ef1">
-                  <img
-                    src="https://res.kurly.com/pc/service/cart/2007/ico_search.svg"
-                    alt=""
-                    class="css-1m3kac1 e4nu7ef0"
-                  />이메일 인증</span
-                >
-              </button>
-            </div>
-          </div>
-
-          <!-- 안보이다가 이메일 인증버튼 클릭시 보여지게 -->
-          <div v-if="isClickedEmailAuth" class="css-1pjgd36 e744wfw6">
-            <div class="css-1y8737n e744wfw5">
-              <label class="css-1obgjqh e744wfw4"
-                >인증코드<span class="css-qq9ke6 e744wfw0">*</span></label
-              >
-            </div>
-            <div class="css-82a6rk e744wfw3">
-              <div class="css-jmalg e1uzxhvi6">
-                <div class="css-176lya2 e1uzxhvi3">
-                  <input
-                    v-model="signupRequest.emailCode"
-                    data-testid="input-box"
-                    id="emailCode"
-                    name="emailCode"
-                    placeholder="인증코드 6자리"
-                    type="text"
-                    required=""
-                    maxlength="6"
-                    class="css-u52dqk e1uzxhvi2"
-                    value=""
-                    @keydown.enter="userSignup"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="css-1w0ksfz e744wfw2"></div>
-            <div class="css-1w0ksfz e744wfw2"></div>
-          </div>
-
-          <div class="css-1pjgd36 e744wfw6">
-            <div class="css-1y8737n e744wfw5">
-              <label class="css-1obgjqh e744wfw4"
-                >비밀번호<span class="css-qq9ke6 e744wfw0">*</span></label
-              >
-            </div>
-            <div class="css-82a6rk e744wfw3">
-              <div class="css-jmalg e1uzxhvi6">
-                <div class="css-176lya2 e1uzxhvi3">
-                  <input
-                    v-model="signupRequest.password"
-                    data-testid="input-box"
-                    id="password"
-                    name="password"
-                    placeholder="비밀번호를 입력해주세요"
-                    type="password"
-                    autocomplete="off"
-                    maxlength="20"
-                    class="css-u52dqk e1uzxhvi2"
-                    value=""
-                    @keydown.enter="userSignup"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="css-1w0ksfz e744wfw2"></div>
-          </div>
-          <div class="css-1pjgd36 e744wfw6">
-            <div class="css-1y8737n e744wfw5">
-              <label class="css-1obgjqh e744wfw4"
-                >비밀번호확인<span class="css-qq9ke6 e744wfw0">*</span></label
-              >
-            </div>
-            <div class="css-82a6rk e744wfw3">
-              <div class="css-jmalg e1uzxhvi6">
-                <div class="css-176lya2 e1uzxhvi3">
-                  <input
-                    v-model="confirmPassword"
-                    data-testid="input-box"
-                    id="passwordConfirm"
-                    name="passwordConfirm"
-                    placeholder="비밀번호를 한번 더 입력해주세요"
-                    type="password"
-                    autocomplete="off"
-                    maxlength="20"
-                    class="css-u52dqk e1uzxhvi2"
-                    value=""
-                    @keydown.enter="userSignup"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="css-1w0ksfz e744wfw2"></div>
-          </div>
-          <div class="css-1pjgd36 e744wfw6">
-            <div class="css-1y8737n e744wfw5">
-              <label class="css-1obgjqh e744wfw4"
-                >이름<span class="css-qq9ke6 e744wfw0">*</span></label
-              >
-            </div>
-            <div class="css-82a6rk e744wfw3">
-              <div class="css-jmalg e1uzxhvi6">
-                <div class="css-176lya2 e1uzxhvi3">
-                  <input
-                    v-model="signupRequest.name"
-                    data-testid="input-box"
-                    id="name"
-                    name="name"
-                    placeholder="이름을 입력해 주세요"
-                    type="text"
-                    required=""
-                    maxlength="10"
-                    class="css-u52dqk e1uzxhvi2"
-                    value=""
-                    @keydown.enter="userSignup"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="css-1w0ksfz e744wfw2"></div>
-          </div>
-
           <div class="css-1pjgd36 e744wfw6">
             <div class="css-1y8737n e744wfw5">
               <label class="css-1obgjqh e744wfw4"
@@ -171,7 +17,7 @@
               <div class="css-jmalg e1uzxhvi6">
                 <div class="css-176lya2 e1uzxhvi3">
                   <input
-                    v-model="signupRequest.phoneNumber"
+                    v-model="socialSignupRequest.phoneNumber"
                     data-testid="input-box"
                     id="phoneNumber"
                     name="phoneNumber"
@@ -181,7 +27,7 @@
                     required=""
                     class="css-u52dqk e1uzxhvi2"
                     value=""
-                    @keydown.enter="userSignup"
+                    @keydown.enter="socialSignup"
                   />
                 </div>
               </div>
@@ -207,7 +53,7 @@
                     required=""
                     class="css-u52dqk e1uzxhvi2 read-only"
                     value=""
-                    v-model="signupRequest.address"
+                    v-model="socialSignupRequest.address"
                   />
                 </div>
               </div>
@@ -247,7 +93,7 @@
                     required=""
                     class="css-u52dqk e1uzxhvi2 read-only"
                     value=""
-                    v-model="signupRequest.postNumber"
+                    v-model="socialSignupRequest.postNumber"
                   />
                 </div>
               </div>
@@ -266,7 +112,7 @@
               <div class="css-jmalg e1uzxhvi6">
                 <div class="css-176lya2 e1uzxhvi3">
                   <input
-                    v-model="signupRequest.addressDetail"
+                    v-model="socialSignupRequest.addressDetail"
                     data-testid="input-box"
                     id="addressDetail"
                     name="addressDetail"
@@ -276,7 +122,7 @@
                     required=""
                     class="css-u52dqk e1uzxhvi2"
                     value=""
-                    @keydown.enter="userSignup"
+                    @keydown.enter="socialSignup"
                   />
                 </div>
               </div>
@@ -400,7 +246,7 @@
       </div>
       <div class="css-ud3rkg e1utgeno0">
         <button
-          @click="userSignup"
+          @click="socialSignup"
           class="css-18m884r e4nu7ef3"
           type="button"
           width="240"
@@ -419,19 +265,15 @@ import { useUserStore } from "@/stores/useUserStore";
 import { mapStores } from "pinia";
 import { Validator } from "@/util/validator";
 export default {
-  name: "UserSignupComponent",
+  name: "SocialSignupComponent",
   data() {
     return {
-      isClickedEmailAuth: false,
-      confirmPassword: "",
       radioAllStatus: false,
       radioFirstStatus: false,
       radioSecondStatus: false,
       radioThirdStatus: false,
-      signupRequest: {
+      socialSignupRequest: {
         email: "",
-        password: "",
-        emailCode: "",
         name: "",
         phoneNumber: "",
         address: "",
@@ -439,10 +281,12 @@ export default {
         addressDetail: "",
         type: "",
       },
-      userEmailAuthRequest: {
-        email: "",
-      },
     };
+  },
+  mounted() {
+    this.socialSignupRequest.email = this.userStore.socialLoginResponse.email;
+    this.socialSignupRequest.name = this.userStore.socialLoginResponse.name;
+    this.socialSignupRequest.type = this.userStore.socialLoginResponse.type;
   },
   computed: {
     ...mapStores(useUserStore),
@@ -453,39 +297,19 @@ export default {
       let height = 600;
 
       // eslint가 daum을 전역변수로 인식할 수 있도록 끄는 주석
-
+      
       // eslint-disable-next-line no-undef
       new daum.Postcode({
         width: width,
         height: height,
         oncomplete: (data) => {
-          this.signupRequest.address = data.address;
-          this.signupRequest.postNumber = data.zonecode;
+          this.socialSignupRequest.address = data.address;
+          this.socialSignupRequest.postNumber = data.zonecode;
         },
       }).open({
         left: window.screen.width / 2 - width / 2,
         top: window.screen.height / 2 - height / 2,
       });
-    },
-    doEmailAuth() {
-      const idRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-      if (!this.signupRequest.email.length > 0) {
-        alert("아이디를 입력해주세요.");
-      } else if (!idRegex.test(this.signupRequest.email)) {
-        alert("아이디는 이메일 형식이어야 합니다.");
-      } else {
-        this.userEmailAuthRequest.email = this.signupRequest.email;
-        const isSuccess = this.userStore.sendUserEmailCode(
-          this.userEmailAuthRequest
-        );
-        if (isSuccess) {
-          alert("이메일이 발송되었습니다.");
-          this.isClickedEmailAuth = true;
-        } else {
-          alert("이메일 발송에 실패했습니다.");
-        }
-      }
     },
     checkRadio(target) {
       if (target === "radioAll") {
@@ -521,82 +345,44 @@ export default {
       }
     },
     validateAll() {
-      try {
-        // 이메일 검증
-        new Validator(this.signupRequest.email, "아이디를 입력해주세요.")
-          .isNotEmpty()
-          .matches(
-            /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/,
-            "아이디는 이메일 형식입니다."
-          );
+       try {
+          // 이메일 검증
+          new Validator(this.socialSignupRequest.email, "아이디를 입력해주세요.")
+            .isNotEmpty()
+            .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "아이디는 이메일 형식입니다.");
 
-        // 이메일 인증 코드 검증
-        new Validator(
-          this.signupRequest.emailCode,
-          "이메일 인증코드를 입력해주세요."
-        ).isNotEmpty();
+          // 이름 검증
+          new Validator(this.socialSignupRequest.name, "이름을 입력해주세요.").isNotEmpty();
 
-        // 비밀번호 검증
-        new Validator(this.signupRequest.password, "비밀번호를 입력해주세요.")
-          .isNotEmpty()
-          .matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-            "비밀번호는 다음의 조건을 모두 만족해야 합니다:\n\n- 최소 하나의 대문자(A-Z)를 포함해야 합니다.\n- 최소 하나의 소문자(a-z)를 포함해야 합니다.\n- 최소 하나의 숫자(0-9)를 포함해야 합니다.\n- 최소 하나의 특수문자(@$!%*?&)를 포함해야 합니다.\n- 최소 8자 이상이어야 합니다."
-          );
+          // 휴대폰 번호 검증
+          new Validator(this.socialSignupRequest.phoneNumber, "휴대폰 번호를 입력해주세요.")
+            .isNotEmpty()
+            .matches(/^\d{3}-\d{4}-\d{4}$/, "-를 포함한 휴대폰번호 11자리를 입력해주세요.");
 
-        // 비밀번호 확인
-        new Validator(this.confirmPassword, "비밀번호를 한번 더 입력해주세요.")
-          .isNotEmpty()
-          .isEqualTo(
-            this.signupRequest.password,
-            "비밀번호와 확인 비밀번호가 일치하지 않습니다."
-          );
+          // 주소 검증
+          new Validator(this.socialSignupRequest.address, "주소를 입력해주세요.").isNotEmpty();
 
-        // 이름 검증
-        new Validator(
-          this.signupRequest.name,
-          "이름을 입력해주세요."
-        ).isNotEmpty();
+          // 우편번호 검증
+          new Validator(this.socialSignupRequest.postNumber, "우편번호를 입력해주세요.").isNotEmpty();
 
-        // 휴대폰 번호 검증
-        new Validator(
-          this.signupRequest.phoneNumber,
-          "휴대폰 번호를 입력해주세요."
-        )
-          .isNotEmpty()
-          .matches(
-            /^\d{3}-\d{4}-\d{4}$/,
-            "-를 포함한 휴대폰번호 11자리를 입력해주세요."
-          );
+          // 상세주소 검증
+          new Validator(this.socialSignupRequest.addressDetail, "상세주소를 입력해주세요.").isNotEmpty();
 
-        // 주소 검증
-        new Validator(
-          this.signupRequest.address,
-          "주소를 입력해주세요."
-        ).isNotEmpty();
-        new Validator(
-          this.signupRequest.postNumber,
-          "우편번호를 입력해주세요."
-        ).isNotEmpty();
-        new Validator(
-          this.signupRequest.addressDetail,
-          "상세주소를 입력해주세요."
-        ).isNotEmpty();
+          // 약관 동의 확인
+          if (!this.radioAllStatus) {
+            alert("필수 약관에 동의해주세요");
+            return false;
+          }
 
-        // 필수 약관 체크
-        if (!this.radioAllStatus) {
-          throw new Error("필수 약관에 동의해주세요");
+          return true; // 모든 검증 통과
+        } catch (error) {
+          alert(error.message);
+          return false;
         }
-
-        return true; // 모든 검증 통과
-      } catch (error) {
-        return false;
-      }
     },
-    async userSignup() {
+    async socialSignup() {
       if (this.validateAll()) {
-        this.signupRequest.type = "inapp";
-        if (await this.userStore.userSignup(this.signupRequest)) {
+        if (await this.userStore.socialSignup(this.socialSignupRequest)) {
           alert("회원가입에 성공했습니다. 로그인 후 서비스를 이용해주세요.");
           this.$router.push("/auth/login");
         }

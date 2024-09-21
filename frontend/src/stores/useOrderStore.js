@@ -100,8 +100,8 @@ export const useOrderStore = defineStore('order', {
                 console.log("Response : " + response.data);
 
                 if (response.data.code !== 1000) {
-                    alert("결제에 실패했습니다\n\n반복적인 문제 발생시 고객센터로 문의바랍니다.");
-                    router.push('/');
+                    alert(`결제에 실패했습니다\n\n반복적인 문제 발생시 고객센터로 문의바랍니다.\n\n${response.data.message}`);
+                    return router.push('/');
                 }
 
                 alert("결제가 성공적으로 완료되었습니다.");

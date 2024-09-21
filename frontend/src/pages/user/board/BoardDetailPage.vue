@@ -7,7 +7,11 @@
           <BoardDetailThumnailComponent :thumbnails="thumbnails" />
           <BoardDetailProductInfoComponent @submitOrder="submitOrder" />
         </main>
-        <BoardDetailNavComponent :tableData="tableData" />
+        <BoardDetailNavComponent
+          :thumbnails="thumbnails"
+          :productBoardIdx="productBoardIdx"
+          :productTitle="productTitle"
+        />
       </div>
     </div>
   </div>
@@ -20,12 +24,11 @@ import FooterComponent from "@/components/common/FooterComponent.vue";
 import BoardDetailThumnailComponent from "@/components/board/BoardDetailThumnailComponent.vue";
 import BoardDetailProductInfoComponent from "@/components/board/BoardDetailProductInfoComponent.vue";
 import BoardDetailNavComponent from "@/components/board/BoardDetailNavComponent.vue";
-
 import { useOrderStore } from "@/stores/useOrderStore";
 import { mapStores } from "pinia";
 
 export default {
-  name: "OrdersPage",
+  name: "BoardDetailPage",
   components: {
     HeaderComponent,
     FooterComponent,
@@ -47,20 +50,8 @@ export default {
           src: "https://pbs.twimg.com/media/EE0R8XcU0AAlbth.jpg",
         },
       ],
-      tableData: [
-        {
-          title: "아이도",
-          author: "엄*희",
-          date: "2022.04.20",
-          status: "답변완료",
-        },
-        {
-          title: "아이도",
-          author: "엄*희",
-          date: "2022.04.20",
-          status: "답변완료",
-        },
-      ],
+      productBoardIdx: 1, // 추후에 실제 상품의 boardIdx로 변경
+      productTitle: "[음성명작]500m 고랭지에서 수확한 사과1.3kg[품종: 홍로]",
     };
   },
   methods: {
@@ -72,9 +63,13 @@ export default {
         this.$router.push("/orders");
       }
     },
+    addNewInquiry(registeredInquiry) {
+      this.qnaStore.addNewInquiry(registeredInquiry);
+    },
   },
 };
 </script>
+
 <style scoped>
 /*공통 부분*/
 * {
