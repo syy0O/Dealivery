@@ -88,9 +88,9 @@ export default {
     },
   },
   watch: {
-    "$route.query.page": "setBoards",
-    "$route.query.dateRange": "setBoards",
-    "$route.query.orderStatus": "setBoards",
+    "$route.query.page": "setOrderList",
+    "$route.query.dateRange": "setOrderList",
+    "$route.query.orderStatus": "setOrderList",
   },
   methods: {
     async setOrderList() {
@@ -106,8 +106,6 @@ export default {
         this.$router.push({
           query: {
             page: pageNumber,
-            dateRange: this.selectedDateRange,
-            orderStatus: this.selectedOrderStatus,
           },
         });
       } else if (pageNumber < 1) {
