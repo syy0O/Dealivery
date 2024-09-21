@@ -1,12 +1,7 @@
 <template>
   <div class="css-heioij eug5r8l1">
-    <div
-      @click="goToOrderDetail(order.orderIdx)"
-      v-for="order in orderList"
-      :key="order.id"
-      class="order-item"
-    >
-      <MypageOrderComponent />
+    <div v-for="order in orderList" :key="order.id" class="order-item">
+      <MypageOrderComponent :order="order" />
     </div>
 
     <div class="css-rdz8z7 e82lnfz1">
@@ -128,10 +123,6 @@ export default {
     nextPageGroup() {
       const newPage = this.endPage + 1;
       this.goToPage(newPage);
-    },
-
-    goToOrderDetail(orderId) {
-      this.$router.push({ path: `/mypage/order/${orderId}` });
     },
   },
 };

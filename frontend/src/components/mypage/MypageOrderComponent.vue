@@ -6,16 +6,13 @@
           <div class="css-2kmie e1g49j8k1">
             <div class="css-peeqro e190ng8o1">
               <div class="css-jyp95e e1l5ke4x0">
-                <button @click="toggleDetails" class="css-7sy6n e1rmfz7b0">
+                <button @click="showOrderDetail" class="css-7sy6n e1rmfz7b0">
                   <img
                     src="@/assets/arrow.png"
                     alt="icon"
                     width="40"
                     height="40"
-                    :style="{
-                      transform: arrowRotate,
-                      transition: 'transform 0.3s',
-                    }"
+                    style="transition: 'transform 0.3s'"
                   />
                 </button>
                 <div class="css-7uztss e1rmfz7b4">
@@ -23,13 +20,13 @@
                     <p
                       class="_97oqoup _97oqouv _97oqou5 ldmw177c _97oqou19 _97oqouj ldmw177q _97oqou12 _97oqouc ldmw177j css-wcc2f6 e1rmfz7b3"
                     >
-                      2024.09.05
+                      {{ formattedDate(order.createdAt) }}
                     </p>
                     <div class="css-k7chvl e1rmfz7b1">
                       <p
                         class="_97oqoup _97oqoux _97oqou7 ldmw177a _97oqou1b _97oqoul ldmw177s _97oqou13 _97oqoud ldmw177i css-1vgapaa e1rmfz7b2"
                       >
-                        주문번호 2307216320130
+                        주문번호 {{ order.ordersNumber }}
                       </p>
                     </div>
                   </div>
@@ -44,7 +41,7 @@
                     <p
                       class="_97oqoup _97oqouv _97oqou5 ldmw177c _97oqou19 _97oqouj ldmw177q _97oqou12 _97oqouc ldmw177j css-1n1zmlq e1xhbacy1"
                     >
-                      주문완료
+                      {{ order.status }}
                     </p>
                   </div>
                 </div>
@@ -62,7 +59,7 @@
                         <p
                           class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-1dl78ek e73mjag3"
                         >
-                          [정기배송] 한 끼 보리샐러드
+                          {{ order.title }}
                         </p>
                       </a>
                       <div class="css-1tf2711 e73mjag8">
@@ -100,15 +97,23 @@ export default {
       arrowRotated: false,
     };
   },
-  computed: {
-    arrowRotate() {
-      return this.arrowRotated ? "rotate(90deg)" : "rotate(0deg)";
+  props: {
+    order: {
+      type: Object,
+      required: true,
     },
   },
   methods: {
-    toggleDetails() {
-      this.isDetailsVisible = !this.isDetailsVisible;
-      this.arrowRotated = !this.arrowRotated;
+    showOrderDetail() {
+      this.$router.push({ path: `/mypage/order/${this.order.orderIdx}` });
+    },
+    formattedDate(dateString) {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = ("0" + (date.getMonth() + 1)).slice(-2);
+      const day = ("0" + date.getDate()).slice(-2);
+
+      return `${year}.${month}.${day}`;
     },
   },
 };
