@@ -47,6 +47,7 @@ public class OrderDto {
 
         private String paymentId;
         private Long totalPaidAmount;
+        private Long originalPaidAmount;
         private PaymentType payMethod;
         private Integer usedPoint;
     }
@@ -100,6 +101,7 @@ public class OrderDto {
         private LocalDateTime createdAt;
 
         private Long totalPaidAmount;
+        private Long originalPaidAmount;
         private String payMethod;
         private Integer usedPoint;
 

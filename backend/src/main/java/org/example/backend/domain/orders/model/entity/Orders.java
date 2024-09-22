@@ -72,6 +72,8 @@ public class Orders {
 
     private Long totalPaidAmount;
 
+    private Long originalPaidAmount;
+
     @ManyToOne
     @JoinColumn(name = "user_idx")
     private User user;
@@ -86,6 +88,7 @@ public class Orders {
         this.postNumber = dto.getPostNumber();
         this.paymentId = dto.getPaymentId();
         this.totalPaidAmount = dto.getTotalPaidAmount();
+        this.originalPaidAmount = dto.getOriginalPaidAmount();
         this.payMethod = dto.getPayMethod();
         this.usedPoint = dto.getUsedPoint();
         this.receiverName = dto.getReceiverName();
@@ -138,6 +141,7 @@ public class Orders {
                 .payMethod(this.payMethod.getType())
                 .usedPoint(this.usedPoint)
                 .totalPaidAmount(this.totalPaidAmount)
+                .originalPaidAmount(this.originalPaidAmount)
                 .receiverName(receiverName)
                 .receiverPhoneNumber(this.receiverPhoneNumber)
                 .address(this.address)
