@@ -168,6 +168,7 @@
                 </p>
                 <div class="css-iqoq9n e17yjk9v0">
                   <button
+                    @click="displayModal"
                     class="css-1xky6jf e4nu7ef3"
                     type="button"
                     width="60"
@@ -382,6 +383,12 @@
         </div>
       </div>
     </div>
+    <div v-if="isDisplayModal">
+      <OrdersModalComponent
+        @closeModal="closeModal"
+        :preSelected="ordererInfo.selectedAddress"
+      />
+    </div>
   </div>
 </template>
 
@@ -389,13 +396,18 @@
 import { useOrderStore } from "@/stores/useOrderStore";
 import { useUserStore } from "@/stores/useUserStore";
 import { mapStores } from "pinia";
+import OrdersModalComponent from "@/components/orders/OrdersModalComponent.vue";
 
 export default {
   name: "OrdersPage",
+  components: {
+    OrdersModalComponent,
+  },
   data() {
     return {
       isLoading: true, // 로딩 상태
       isIconRotated: false,
+      isDisplayModal: false,
       isToggleContentVisible: false,
       isDeliveryNotiVisible: false,
       selectedPaymentMethod: null, // 선택된 결제 수단
@@ -592,6 +604,13 @@ export default {
       } else {
         this.usedPoint = this.maximumAvailablePoint;
       }
+    },
+    displayModal() {
+      console.log("불린다!");
+      this.isDisplayModal = !this.isDisplayModal;
+    },
+    closeModal() {
+      this.isDisplayModal = false;
     },
   },
 };
