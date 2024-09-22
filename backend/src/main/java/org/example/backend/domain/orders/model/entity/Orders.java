@@ -104,6 +104,7 @@ public class Orders {
                 .ordersNumber(this.ordersNumber)
                 .title(title)
                 .status(this.status.getStatus())
+                .totalPaidAmount(this.totalPaidAmount)
                 .payMethod(this.payMethod.getType())
                 .modifiedAt(this.modifiedAt)
                 .build();
@@ -136,10 +137,10 @@ public class Orders {
                 .createdAt(this.createdAt)
                 .payMethod(this.payMethod.getType())
                 .usedPoint(this.usedPoint)
+                .totalPaidAmount(this.totalPaidAmount)
                 .receiverName(receiverName)
                 .receiverPhoneNumber(this.receiverPhoneNumber)
                 .address(this.address)
                 .build();
     }
-
 }

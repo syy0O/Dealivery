@@ -64,8 +64,8 @@ public class OrderDto {
         private String ordersNumber;
         private String payMethod;
         private String title;
-        //private String ordererName;
-        // 총 결제 금액
+        private String ordererName;
+        private Long totalPaidAmount;
         private String status;
         private LocalDateTime modifiedAt;
     }
@@ -98,7 +98,8 @@ public class OrderDto {
         private String ordersNumber;
         private String status;
         private LocalDateTime createdAt;
-        // 총 결제 금액 추가
+
+        private Long totalPaidAmount;
         private String payMethod;
         private Integer usedPoint;
 
