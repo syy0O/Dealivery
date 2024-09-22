@@ -8,7 +8,6 @@ import java.util.List;
 import org.example.backend.domain.board.model.entity.QProductBoard;
 import org.example.backend.domain.orders.model.entity.Orders;
 import org.example.backend.domain.orders.model.entity.QOrders;
-import org.example.backend.domain.user.model.entity.QUser;
 import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.global.common.constants.OrderStatus;
 import org.example.backend.global.common.constants.Role;
