@@ -17,14 +17,15 @@ export const useUserStore = defineStore("user", {
       password: "",
     },
     userDetail: {
-      name: "",
-      email: "",
-      address: "",
-      addressDetail: "",
-      postNumber: "",
-      phoneNumber: "",
-      deliveries: [],
-    },
+      "name": "",
+      "email": "",
+      "address": "",
+      "addressDetail": "",
+      "postNumber": "",
+      "phoneNumber": "",
+      "deliveries": [],
+      "point": null
+    }
   }),
   persist: {
     storage: sessionStorage,
@@ -301,5 +302,23 @@ export const useUserStore = defineStore("user", {
         return false;
       }
     },
+
+    async editDetail(request){
+      try {
+        let response = await axios.put(backend + "/user/edit", request, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        if(response.data.code !== 1000){
+          return false;
+        }
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+
   },
 });
