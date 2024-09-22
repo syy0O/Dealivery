@@ -90,7 +90,7 @@ public class OrderService {
         Orders order = ordersRepository.findById(request.getOrderIdx()).orElseThrow(() -> new InvalidCustomException(
                 ORDER_FAIL_NOT_FOUND));
 
-        if (order.getUser() != user) {
+        if (order.getUser().getIdx() != user.getIdx()) {
             throw new InvalidCustomException(ORDER_PAYMENT_FAIL);
         }
 
@@ -118,7 +118,7 @@ public class OrderService {
         Orders order = ordersRepository.findById(idx).orElseThrow(() -> new InvalidCustomException(
                 ORDER_FAIL_NOT_FOUND));
 
-        if (order.getUser() != user) { // 해당하는 사용자의 주문이 아닐 때
+        if (order.getUser().getIdx() != user.getIdx())  { // 해당하는 사용자의 주문이 아닐 때
             throw new InvalidCustomException(ORDER_CANCEL_FAIL);
         }
 

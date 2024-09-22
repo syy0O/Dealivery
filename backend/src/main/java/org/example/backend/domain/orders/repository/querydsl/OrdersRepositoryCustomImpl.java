@@ -42,7 +42,7 @@ public class OrdersRepositoryCustomImpl implements OrdersRepositoryCustom{
                 .fetch();
 
         Long total = queryFactory.selectFrom(orders)
-                .where(equalsStatus(status), isWithinMonths(month))
+                .where(equalsStatus(status), isWithinMonths(month), filterByUserRole(user))
                 .fetchCount();
 
         return new PageImpl<>(result, pageable, total);
@@ -58,8 +58,7 @@ public class OrdersRepositoryCustomImpl implements OrdersRepositoryCustom{
             return checkBoardOwner(user);
         }
 
-       // return orders.user.idx.eq(user.getIdx());
-        return null;
+        return orders.user.idx.eq(user.getIdx());
     }
 
     private BooleanExpression checkBoardOwner(User user) {
@@ -76,13 +75,12 @@ public class OrdersRepositoryCustomImpl implements OrdersRepositoryCustom{
         return queryFactory
                 .select(productBoard.idx)
                 .from(productBoard)
-                //.where(productBoard.company.eq(user))  // 게시글의 작성자(owner)가 현재 사용자(user)인 경우
+                .where(productBoard.company.idx.eq(user.getIdx()))  // 게시글의 작성자(owner)가 현재 사용자(user)인 경우
                 .fetch();
     }
 
     private BooleanExpression equalsStatus(String status) {
         if (status == null || status.isBlank()) {
-            //return null;
             return orders.status.in(OrderStatus.ORDER_COMPLETE, OrderStatus.ORDER_CANCEL);
         }
 
