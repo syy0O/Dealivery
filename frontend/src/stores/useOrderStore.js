@@ -94,9 +94,7 @@ export const useOrderStore = defineStore('order', {
 
             let request = {
                 orderIdx: this.orderInfo.orderIdx,
-                address: this.paymentInfo.address,
-                adderessDetail: "4층 강의실",
-                postNumber: "01677",
+                deliveryIdx: this.paymentInfo.deliveryIdx,
                 paymentId: this.paymentInfo.impUid,
                 originalPaidAmount: this.paymentInfo.originalPaidAmount,
                 totalPaidAmount: this.paymentInfo.totalAmount,
