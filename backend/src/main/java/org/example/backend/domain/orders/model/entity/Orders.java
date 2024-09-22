@@ -20,6 +20,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import org.example.backend.domain.delivery.model.entity.Delivery;
 import org.example.backend.domain.orders.model.dto.OrderDto.OrderCompleteRequest;
 import org.example.backend.domain.board.model.entity.ProductBoard;
 import org.example.backend.domain.orders.model.dto.OrderDto.CompanyOrderDetailResponse;
@@ -61,9 +62,9 @@ public class Orders {
     private String receiverName;
     private String receiverPhoneNumber;
 
-    private String address;
-    private String addressDetail;
-    private String postNumber;
+//    private String address;
+//    private String addressDetail;
+//    private String postNumber;
 
     private String paymentId;
     @Enumerated(EnumType.STRING)
@@ -81,11 +82,11 @@ public class Orders {
     @OneToMany(mappedBy = "orders", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<OrderedProduct> orderedProducts;
 
+    @ManyToOne
+    @JoinColumn(name="delivery_idx")
+    private Delivery delivery;
 
     public void update(OrderCompleteRequest dto) {
-        this.address = dto.getAddress();
-        this.addressDetail = dto.getAddressDetail();
-        this.postNumber = dto.getPostNumber();
         this.paymentId = dto.getPaymentId();
         this.totalPaidAmount = dto.getTotalPaidAmount();
         this.originalPaidAmount = dto.getOriginalPaidAmount();
@@ -94,6 +95,7 @@ public class Orders {
         this.receiverName = dto.getReceiverName();
         this.receiverPhoneNumber = dto.getReceiverPhoneNumber();
         this.modifiedAt = LocalDateTime.now();
+        this.delivery = Delivery.builder().idx(dto.getDeliveryIdx()).build();
     }
 
     public void setStatus(OrderStatus status) {
@@ -144,7 +146,7 @@ public class Orders {
                 .originalPaidAmount(this.originalPaidAmount)
                 .receiverName(receiverName)
                 .receiverPhoneNumber(this.receiverPhoneNumber)
-                .address(this.address)
+                .address(this.delivery.getAddress())
                 .build();
     }
 }

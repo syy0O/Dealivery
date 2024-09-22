@@ -188,9 +188,6 @@ public class InitDB {
                     .receiverName("심키즈")
                     .ordersNumber(RandomCodeGenerator.generate(10))
                     .receiverPhoneNumber("010-1234-5678")
-                    .address("서울특별시 중구")
-                    .addressDetail("101동 101호")
-                    .postNumber("04567")
                     .paymentId("PAY-" + (i + 1))
                     .status(orderStatus) // 설정한 orderStatus 적용
                     .payMethod(paymentType) // 설정한 paymentType 적용

@@ -41,9 +41,7 @@ public class OrderDto {
         private String receiverName;
         private String receiverPhoneNumber;
 
-        private String address;
-        private String addressDetail;
-        private String postNumber;
+        private Long deliveryIdx;
 
         private String paymentId;
         private Long totalPaidAmount;
