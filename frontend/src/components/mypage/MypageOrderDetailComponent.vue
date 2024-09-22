@@ -177,6 +177,7 @@
           :disabled="order.status !== '주문 완료'"
           class="tew5wjw tew5wj0 ldmw1780 tew5wjy tew5wj19 tew5wj1b tew5wj14 tew5wj3 ldmw1717i ldmw17183 ldmw1715v ldmw177b tew5wj17 tew5wj1c tew5wj5 ldmw177j tew5wj1l tew5wje ldmw17y6 ldmw17ok ldmw178w tew5wjp ldmw171du css-jz9jxv ecvmg6w2"
           :class="{ 'able-cancel': order.status === '주문 완료' }"
+          @click="cancelOrder"
         >
           <p
             class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou12 _97oqouc ldmw177j"
@@ -223,6 +224,15 @@ export default {
       const minutes = ("0" + date.getMinutes()).slice(-2);
 
       return `${year}.${month}.${day} ${hours}:${minutes}`;
+    },
+    async cancelOrder() {
+      const confirmed = confirm("주문을 취소하시겠습니까?");
+      if (confirmed) {
+        await this.orderStore.cancelOrder(this.$route.params.orderId);
+
+        alert("주문이 성공적으로 취소되었습니다.");
+        this.$router.push("/mypage/order"); // 주문 목록 페이지로 이동 등
+      }
     },
   },
 };
