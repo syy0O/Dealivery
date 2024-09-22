@@ -8,22 +8,22 @@
         <ul>
           <div
             class="css-jxzkyr enjmmt32"
-            v-for="(delivery, index) in userStore.userDetail.deliveries"
-            :key="index"
+            v-for="delivery in userStore.userDetail.deliveries"
+            :key="delivery.idx"
           >
             <div class="css-1nt6ns3 enjmmt31">
               <label class="css-1xdhyk6 e1dcessg3">
                 <div class="css-79hxr7 e1dcessg1">
                   <img
-                    :id="index"
+                    :id="delivery.idx"
                     :src="
-                      selectedAddress == index
+                      selected.idx == delivery.idx
                         ? require('../../assets/filled-custom-radio.svg')
                         : require('../../assets/outline-custom-radio.svg')
                     "
                     width="24"
                     height="24"
-                    @click="checkRadio(delivery, index)"
+                    @click="checkRadio(delivery)"
                   />
                 </div>
                 <span></span>
@@ -49,12 +49,21 @@
             </div>
           </div>
         </ul>
+        <!-- 변경하기 버튼 -->
+        <div class="save-address-container">
+          <button class="save-address" @click="confirmSelection">
+            변경하기
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { useUserStore } from "@/stores/useUserStore";
+import { mapStores } from "pinia";
+
 export default {
   name: "OrdersModalComponent",
   props: {
@@ -63,11 +72,15 @@ export default {
       required: true,
     },
   },
-
+  computed: {
+    ...mapStores(useUserStore),
+  },
+  created() {
+    this.selected = this.preSelected;
+  },
   data() {
     return {
       selected: null,
-      selectedAddress: null,
     };
   },
 
@@ -75,9 +88,12 @@ export default {
     closeModal() {
       this.$emit("closeModal");
     },
-    checkRadio(delivery, index) {
+    checkRadio(delivery) {
       this.selected = delivery;
-      this.selectedAddress = index;
+    },
+    confirmSelection() {
+      this.$emit("confirmSelection", this.selected);
+      this.closeModal();
     },
   },
 };
@@ -292,5 +308,27 @@ ul {
   line-height: 20px;
   letter-spacing: -0.2px;
   color: rgb(153, 153, 153);
+}
+
+.save-address-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.save-address {
+  background: #5f0080;
+  border: 1px solid #5f0080;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.save-address:hover {
+  background-color: #4a0069;
 }
 </style>
