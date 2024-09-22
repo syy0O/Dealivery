@@ -32,10 +32,10 @@ public class OrdersRepositoryCustomImpl implements OrdersRepositoryCustom{
     }
 
     @Override
-    public Page<Orders> historyWithPaging(Pageable pageable, /*User user,*/ String status, Integer month) {
+    public Page<Orders> historyWithPaging( User user,Pageable pageable, String status, Integer month) {
         List<Orders> result = queryFactory
                 .selectFrom(orders)
-                .where(equalsStatus(status),isWithinMonths(month)/*, filterByUserRole(user)*/)
+                .where(equalsStatus(status),isWithinMonths(month), filterByUserRole(user))
                 .orderBy(orders.idx.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -49,35 +49,36 @@ public class OrdersRepositoryCustomImpl implements OrdersRepositoryCustom{
     }
 
 
-//    private BooleanExpression filterByUserRole(User user) {  // 역할에 따른 필터링 조건을 정의
-//        if (user == null || user.getRole() == null) {
-//            return null;
-//        }
-//
-//        if (user.getRole().equals(Role.ROLE_COMPANY)) {
-//            return checkBoardOwner(user);
-//        }
-//
-//        return orders.user.idx.eq(user.getIdx());
-//    }
+    private BooleanExpression filterByUserRole(User user) {  // 역할에 따른 필터링 조건을 정의
+        if (user == null || user.getRole() == null) {
+            return null;
+        }
 
-//    private BooleanExpression checkBoardOwner(User user) {
-//        List<Long> boardIdxList = fetchBoardIdxListByOwner(user);
-//
-//        if (boardIdxList.isEmpty()) {
-//            return null;
-//        }
-//        return orders.boardIdx.in(boardIdxList);
-//    }
-//
-//
-//    private List<Long> fetchBoardIdxListByOwner(User user) {
-//        return queryFactory
-//                .select(productBoard.idx)
-//                .from(productBoard)
-//                .where(productBoard.owner.eq(user))  // 게시글의 작성자(owner)가 현재 사용자(user)인 경우
-//                .fetch();
-//    }
+        if (user.getRole().equals(Role.ROLE_COMPANY)) {
+            return checkBoardOwner(user);
+        }
+
+       // return orders.user.idx.eq(user.getIdx());
+        return null;
+    }
+
+    private BooleanExpression checkBoardOwner(User user) {
+        List<Long> boardIdxList = fetchBoardIdxListByOwner(user);
+
+        if (boardIdxList.isEmpty()) {
+            return null;
+        }
+        return orders.boardIdx.in(boardIdxList);
+    }
+
+
+    private List<Long> fetchBoardIdxListByOwner(User user) {
+        return queryFactory
+                .select(productBoard.idx)
+                .from(productBoard)
+                //.where(productBoard.company.eq(user))  // 게시글의 작성자(owner)가 현재 사용자(user)인 경우
+                .fetch();
+    }
 
     private BooleanExpression equalsStatus(String status) {
         if (status == null || status.isBlank()) {

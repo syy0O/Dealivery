@@ -10,6 +10,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,6 +27,7 @@ import org.example.backend.domain.orders.model.dto.OrderDto.CompanyOrderListResp
 import org.example.backend.domain.orders.model.dto.OrderDto.UserOrderDetailResponse;
 import org.example.backend.domain.orders.model.dto.OrderDto.UserOrderListResponse;
 import org.example.backend.domain.orders.model.dto.OrderedProductDto.OrderedProductResponse;
+import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.global.common.constants.OrderStatus;
 import org.example.backend.global.common.constants.PaymentType;
 import org.springframework.data.annotation.CreatedDate;
@@ -67,11 +70,11 @@ public class Orders {
     private PaymentType payMethod;
     private Integer usedPoint;
 
-   // private Long totalPaidAmount;
+    private Long totalPaidAmount;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_idx")
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_idx")
+    private User user;
 
     @OneToMany(mappedBy = "orders", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<OrderedProduct> orderedProducts;

@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.example.backend.domain.orders.model.dto.OrderedProductDto.OrderedProductResponse;
 import org.example.backend.domain.orders.model.entity.Orders;
+import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.global.common.constants.OrderStatus;
 import org.example.backend.global.common.constants.PaymentType;
 import org.example.backend.global.utils.RandomCodeGenerator;
@@ -22,10 +23,10 @@ public class OrderDto {
 
         @ArraySchema(arraySchema = @Schema(description = "주문한 상품들"), schema = @Schema(implementation = OrderedProductDto.Request.class))
         private List<OrderedProductDto.Request> orderedProducts;
-        public static Orders toEntity(Long boardIdx/*, User user*/) {
+        public static Orders toEntity(Long boardIdx, User user) {
             return Orders.builder()
                     .boardIdx(boardIdx)
-//                    .user(user)
+                    .user(user)
                     .ordersNumber(RandomCodeGenerator.generate(10))
                     .status(OrderStatus.PAYMENT_WAIT)
                     .build();
@@ -45,6 +46,7 @@ public class OrderDto {
         private String postNumber;
 
         private String paymentId;
+        private Long totalPaidAmount;
         private PaymentType payMethod;
         private Integer usedPoint;
     }

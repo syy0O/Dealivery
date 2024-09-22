@@ -21,6 +21,7 @@ import org.example.backend.domain.orders.model.entity.OrderedProduct;
 import org.example.backend.domain.orders.model.entity.Orders;
 import org.example.backend.domain.orders.repository.OrderedProductRepository;
 import org.example.backend.domain.orders.repository.OrdersRepository;
+import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.global.common.constants.OrderStatus;
 import org.example.backend.global.exception.InvalidCustomException;
 import org.springframework.data.domain.Page;
@@ -45,11 +46,11 @@ public class OrderService {
     private final ProductBoardRepository productBoardRepository;
 
     @Transactional
-    public OrderCreateResponse register(/*User user,*/ OrderRegisterRequest request) {
+    public OrderCreateResponse register(User user, OrderRegisterRequest request) {
 
         validateOrder(request);
 
-        Orders order = OrderRegisterRequest.toEntity(request.getBoardIdx()/*, user*/);
+        Orders order = OrderRegisterRequest.toEntity(request.getBoardIdx(), user);
         ordersRepository.save(order);
 
         List<OrderedProduct> orderedProducts = request.getOrderedProducts().stream()
@@ -83,11 +84,16 @@ public class OrderService {
         });
     }
 
-    @Transactional/*(noRollbackFor = Throwable.class)*/
-    public void complete(OrderCompleteRequest request) {
+    @Transactional
+    public void complete(User user, OrderCompleteRequest request) {
 
         Orders order = ordersRepository.findById(request.getOrderIdx()).orElseThrow(() -> new InvalidCustomException(
                 ORDER_FAIL_NOT_FOUND));
+
+        if (order.getUser() != user) {
+            throw new InvalidCustomException(ORDER_PAYMENT_FAIL);
+        }
+
         order.update(request); // 주문 추가 정보 업데이트
 
         String paymentId = request.getPaymentId();
@@ -98,29 +104,32 @@ public class OrderService {
             order.setStatus(OrderStatus.ORDER_COMPLETE);
 
         } catch (IamportResponseException | IOException e) { // 해당하는 결제 정보를 찾지 못했을 때
-            //rollbackStock(order);
             order.setStatus(OrderStatus.ORDER_FAIL);
             throw new InvalidCustomException(ORDER_PAYMENT_FAIL);
 
         } catch (InvalidCustomException e) { // 결제 검증 중 발생한 예외 처리
-            //rollbackStock(order);
             order.setStatus(OrderStatus.ORDER_FAIL);
             throw e;
         }
     }
 
     @Transactional
-    public void cancel(Long idx) {
+    public void cancel(User user, Long idx) {
         Orders order = ordersRepository.findById(idx).orElseThrow(() -> new InvalidCustomException(
                 ORDER_FAIL_NOT_FOUND));
 
+        if (order.getUser() != user) { // 해당하는 사용자의 주문이 아닐 때
+            throw new InvalidCustomException(ORDER_CANCEL_FAIL);
+        }
+
         if (order.getStatus() !=  OrderStatus.ORDER_COMPLETE) {
-            //order.setStatus(OrderStatus.ORDER_FAIL); // 사용자가 결제 취소(재고도 줄어들지 않았음)
             ordersRepository.delete(order);
             return;
         }
 
-        if (order.getStatus() ==  OrderStatus.ORDER_COMPLETE) { //TODO: 주문 완료 & 게시글이 아직 종료되지 않았을 때
+        ProductBoard board = productBoardRepository.findById(order.getBoardIdx()).orElseThrow(() -> new InvalidCustomException(ORDER_CANCEL_FAIL));
+
+        if (order.getStatus() ==  OrderStatus.ORDER_COMPLETE && board.getEndedAt().isAfter(LocalDateTime.now())) {
             rollbackStock(order);
 
             String impUid = order.getPaymentId();
@@ -141,15 +150,15 @@ public class OrderService {
 
         orderedProducts.forEach((product) -> {
             Product orderdProduct = productRepository.findByIdWithLock(product.getIdx())
-                    .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_PRODUCT_NOT_FOUND)); // 해당하는 상품을 찾을 수가 없을 때
-            orderdProduct.increaseStock(product.getQuantity()); // 재고 수량 변경
+                    .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_PRODUCT_NOT_FOUND));
+            orderdProduct.increaseStock(product.getQuantity());
         });
     }
 
-    public Page<CompanyOrderListResponse> companyOrderList(/*User user,*/ Integer page, String status, Integer month) {
+    public Page<CompanyOrderListResponse> companyOrderList(User user,Integer page, String status, Integer month) {
         Pageable pageable = PageRequest.of(page - 1, COMPANY_PAGE_SIZE, Sort.Direction.DESC, "idx");
 
-        Page<Orders> orders = ordersRepository.historyWithPaging(pageable, /*user,*/ status, month);
+        Page<Orders> orders = ordersRepository.historyWithPaging(user, pageable, status, month);
         return orders.map(order -> {
             String title = productBoardRepository.findById(order.getBoardIdx())
                     .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND)).getTitle();
@@ -157,9 +166,13 @@ public class OrderService {
         });
     }
 
-    public CompanyOrderDetailResponse companyOrderDetail(Long orderIdx) {
+    public CompanyOrderDetailResponse companyOrderDetail(User user, Long orderIdx) {
         Orders order = ordersRepository.findById(orderIdx)
                 .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_DETAIL));
+
+        if (user.getIdx() != order.getUser().getIdx()) {
+            throw new InvalidCustomException(ORDER_FAIL_DETAIL);
+        }
 
         ProductBoard board = productBoardRepository.findById(order.getBoardIdx())
                 .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND));
@@ -172,10 +185,10 @@ public class OrderService {
         return order.toCompanyOrderDetailResponse(products);
     }
 
-    public Page<UserOrderListResponse> userOrderList(Integer page, String status, Integer month) {
+    public Page<UserOrderListResponse> userOrderList(User user, Integer page, String status, Integer month) {
         Pageable pageable = PageRequest.of(page - 1, USER_PAGE_SIZE, Sort.Direction.DESC, "idx");
 
-        Page<Orders> orders = ordersRepository.historyWithPaging(pageable, /*user,*/ status, month);
+        Page<Orders> orders = ordersRepository.historyWithPaging(user, pageable, status, month);
         return orders.map(order -> {
             ProductBoard board = productBoardRepository.findById(order.getBoardIdx())
                     .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND));
@@ -183,13 +196,17 @@ public class OrderService {
         });
     }
 
-    public UserOrderDetailResponse userOrderDetail(Long orderIdx) {
-        Orders orders = ordersRepository.findById(orderIdx)
+    public UserOrderDetailResponse userOrderDetail(User user, Long orderIdx) {
+        Orders order = ordersRepository.findById(orderIdx)
                 .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_DETAIL));
 
-        ProductBoard board = productBoardRepository.findById(orders.getBoardIdx())
+        if (user.getIdx() != order.getUser().getIdx()) {
+            throw new InvalidCustomException(ORDER_FAIL_DETAIL);
+        }
+
+        ProductBoard board = productBoardRepository.findById(order.getBoardIdx())
                 .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND));
 
-        return orders.toUserOrderDetailResponse(board);
+        return order.toUserOrderDetailResponse(board);
     }
 }
