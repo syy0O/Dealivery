@@ -108,6 +108,7 @@ public class Orders {
                 .orderIdx(this.idx)
                 .ordersNumber(this.ordersNumber)
                 .title(title)
+                .ordererName(this.user.getName())
                 .status(this.status.getStatus())
                 .totalPaidAmount(this.totalPaidAmount)
                 .payMethod(this.payMethod.getType())
