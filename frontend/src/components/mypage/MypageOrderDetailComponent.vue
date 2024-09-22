@@ -19,7 +19,7 @@
             <p
               class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou12 _97oqouc ldmw177j"
             >
-              2307216320130
+              {{ order.ordersNumber }}
             </p>
           </div>
           <div class="css-1aim50k e2upnqp1">
@@ -32,7 +32,7 @@
               <p
                 class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-uwqhso e2upnqp0"
               >
-                2024.09.05 16:33:45
+                {{ formattedDate(order.createdAt) }}
               </p>
             </div>
           </div>
@@ -83,7 +83,7 @@
               <p
                 class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-uwqhso e2upnqp0"
               >
-                -2,000원
+                -{{ order.usedPoint }}원
               </p>
             </div>
           </div>
@@ -97,7 +97,7 @@
               <p
                 class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-uwqhso e2upnqp0"
               >
-                카카오페이
+                {{ order.payMethod == "kakaopay" ? "카카오페이" : "토스페이" }}
               </p>
             </div>
           </div>
@@ -129,17 +129,17 @@
           <p
             class="_97oqoup _97oqouv _97oqou5 ldmw177c _97oqou19 _97oqouj ldmw177q _97oqou12 _97oqouc ldmw177j css-luewyl e1n2ou001"
           >
-            심키즈
+            {{ order.receiverName }}
           </p>
           <p
             class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-4qwok1 e1n2ou001"
           >
-            010-1234-****
+            {{ order.receiverPhoneNumber }}
           </p>
           <p
             class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-303o8l e1n2ou001"
           >
-            서울특별시 광진구 군자로0길 50-2
+            {{ order.address }}
           </p>
         </div>
       </div>
@@ -156,8 +156,9 @@
           불가능할 수 있습니다.
         </p>
         <button
-          disabled
+          :disabled="order.status !== '주문 완료'"
           class="tew5wjw tew5wj0 ldmw1780 tew5wjy tew5wj19 tew5wj1b tew5wj14 tew5wj3 ldmw1717i ldmw17183 ldmw1715v ldmw177b tew5wj17 tew5wj1c tew5wj5 ldmw177j tew5wj1l tew5wje ldmw17y6 ldmw17ok ldmw178w tew5wjp ldmw171du css-jz9jxv ecvmg6w2"
+          :class="{ 'able-cancel': order.status === '주문 완료' }"
         >
           <p
             class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou12 _97oqouc ldmw177j"
@@ -171,22 +172,39 @@
 </template>
 
 <script>
+import { mapStores } from "pinia";
+import { useOrderStore } from "@/stores/useOrderStore.js";
+
 export default {
+  created() {
+    this.setDetail();
+  },
   data() {
     return {
       isDetailsVisible: true,
       arrowRotated: false,
+      order: {},
     };
   },
   computed: {
-    arrowRotate() {
-      return this.arrowRotated ? "rotate(90deg)" : "rotate(0deg)";
-    },
+    ...mapStores(useOrderStore),
   },
   methods: {
-    toggleDetails() {
-      this.isDetailsVisible = !this.isDetailsVisible;
-      this.arrowRotated = !this.arrowRotated;
+    async setDetail() {
+      const response = await this.orderStore.getUserOrderDetail(
+        this.$route.params.orderId
+      );
+      this.order = response;
+    },
+    formattedDate(dateString) {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = ("0" + (date.getMonth() + 1)).slice(-2);
+      const day = ("0" + date.getDate()).slice(-2);
+      const hours = ("0" + date.getHours()).slice(-2);
+      const minutes = ("0" + date.getMinutes()).slice(-2);
+
+      return `${year}.${month}.${day} ${hours}:${minutes}`;
     },
   },
 };
@@ -1070,11 +1088,17 @@ input {
 .tew5wj1l:disabled {
   color: #222;
   background-color: #eceff3;
+  cursor: not-allowed;
 }
 
 button[disabled],
 input[disabled] {
   cursor: pointer;
+}
+
+.able-cancel {
+  color: rgb(255, 255, 255);
+  background-color: rgb(95, 0, 128);
 }
 
 .css-jz9jxv {

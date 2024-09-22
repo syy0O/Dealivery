@@ -131,7 +131,7 @@ export const useOrderStore = defineStore('order', {
 
         async getUserOrderDetail(orderIdx) {
 
-            const response = await axios.get(`/api/orders/company/${orderIdx}/detail`);
+            const response = await axios.get(`/api/orders/user/${orderIdx}/detail`);
             return response.data.result;
         },
 
