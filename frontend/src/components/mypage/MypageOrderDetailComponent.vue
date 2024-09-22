@@ -26,6 +26,20 @@
             <p
               class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-15bah7q e2upnqp0"
             >
+              주문 상태
+            </p>
+            <div class="css-8yre18 e2upnqp1">
+              <p
+                class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-uwqhso e2upnqp0"
+              >
+                {{ order.status }}
+              </p>
+            </div>
+          </div>
+          <div class="css-1aim50k e2upnqp1">
+            <p
+              class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-15bah7q e2upnqp0"
+            >
               결제 일시
             </p>
             <div class="css-8yre18 e2upnqp1">
@@ -56,7 +70,7 @@
             <p
               class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou12 _97oqouc ldmw177j"
             >
-              145,000원
+              {{ order.originalPaidAmount }}원
             </p>
           </div>
           <div class="css-1aim50k e2upnqp1">
@@ -69,7 +83,11 @@
               <p
                 class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-uwqhso e2upnqp0"
               >
-                -55,100원
+                -{{
+                  order.originalPaidAmount -
+                  order.usedPoint -
+                  order.totalPaidAmount
+                }}원
               </p>
             </div>
           </div>
@@ -111,7 +129,7 @@
               <p
                 class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou12 _97oqouc ldmw177j"
               >
-                90,900원
+                {{ order.totalPaidAmount }}원
               </p>
             </div>
           </div>

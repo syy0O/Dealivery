@@ -89,6 +89,8 @@ export const useOrderStore = defineStore('order', {
                 adderessDetail: "4층 강의실",
                 postNumber: "01677",
                 paymentId: this.paymentInfo.impUid,
+                originalPaidAmount: this.paymentInfo.originalPaidAmount,
+                totalPaidAmount: this.paymentInfo.totalAmount,
                 payMethod: this.paymentInfo.paymentMethod,
                 usedPoint: this.paymentInfo.usedPoint,
                 receiverName: this.paymentInfo.receiverName,
@@ -125,13 +127,14 @@ export const useOrderStore = defineStore('order', {
                 params: {
                     page: page
                 },
-            });
+
+            }, { withCredentials: true });
             return response.data.result;
         },
 
         async getUserOrderDetail(orderIdx) {
 
-            const response = await axios.get(`/api/orders/user/${orderIdx}/detail`);
+            const response = await axios.get(`/api/orders/user/${orderIdx}/detail`, { withCredentials: true });
             return response.data.result;
         },
 

@@ -3,8 +3,11 @@
     <div v-for="order in orderList" :key="order.id" class="order-item">
       <MypageOrderComponent :order="order" />
     </div>
+    <div v-if="orderList.length === 0" class="empty-notice">
+      <p>주문 내역이 없습니다.</p>
+    </div>
 
-    <div class="css-rdz8z7 e82lnfz1">
+    <div class="css-rdz8z7 e82lnfz1" v-if="orderList.length !== 0">
       <a class="page-unselected e82lnfz0" @click="goToPage(1)"
         ><img
           src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAHCAQAAABwkq/rAAAAHUlEQVR42mNgAIPi/8X/kWkwA8SE0UQIMJAsCKMBBzk27fqtkcYAAAAASUVORK5CYII="
@@ -99,7 +102,7 @@ export default {
       );
       this.orderList = response.content;
       this.totalPages = response.totalPages;
-      console.log(response);
+      console.log("요기!!!" + response + "  totalpage ==> " + this.totalPages);
     },
     goToPage(pageNumber) {
       if (pageNumber >= 1 && pageNumber <= this.totalPages) {
@@ -181,6 +184,23 @@ html {
   min-width: 1050px;
   background-color: rgb(242, 245, 248);
   padding: 20px 0;
+}
+
+.empty-notice {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px;
+  margin-top: 20px;
+  line-height: 20px;
+  letter-spacing: -0.2px;
+  background-color: rgb(255, 255, 255);
+  color: rgb(153, 153, 153);
+  border-radius: 16px;
+  font-size: 20px;
+  width: 100%;
+  height: 200px;
 }
 
 .css-72lz6z {

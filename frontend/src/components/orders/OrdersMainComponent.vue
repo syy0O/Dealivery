@@ -138,8 +138,6 @@
                 </div>
               </div>
             </div>
-
-            <!--츄가아ㅏㅏㅏㅏ-->
             <div class="css-1gshg9u e150alo82">
               <span class="css-qq9ke6 e744wfw0">*</span>
               <span class="css-ln1csn e150alo81">전화번호</span>
@@ -525,6 +523,7 @@ export default {
           address: this.ordererInfo.defaultAddress, // 배송지 정보 가져오기
           usedPoint: this.usedPoint, // 사용한 포인트
           totalAmount: this.totalAmount, // 전체 결제금액에서 포인트 차감
+          originalPaidAmount: this.originalTotalAmount,
           receiverName: this.receiverName, // 사용자가 입력한 받는 사람 이름
           receiverPhoneNumber: this.receiverPhoneNumber, // 사용자가 입력한 전화번호
         };
