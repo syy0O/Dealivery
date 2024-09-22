@@ -85,6 +85,7 @@ public class Orders {
         this.addressDetail = dto.getAddressDetail();
         this.postNumber = dto.getPostNumber();
         this.paymentId = dto.getPaymentId();
+        this.totalPaidAmount = dto.getTotalPaidAmount();
         this.payMethod = dto.getPayMethod();
         this.usedPoint = dto.getUsedPoint();
         this.receiverName = dto.getReceiverName();
