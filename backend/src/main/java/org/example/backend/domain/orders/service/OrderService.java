@@ -15,6 +15,7 @@ import org.example.backend.domain.board.model.entity.ProductBoard;
 import org.example.backend.domain.board.product.model.entity.Product;
 import org.example.backend.domain.board.product.repository.ProductRepository;
 import org.example.backend.domain.board.repository.ProductBoardRepository;
+import org.example.backend.domain.company.model.entity.Company;
 import org.example.backend.domain.orders.model.dto.OrderedProductDto;
 import org.example.backend.domain.orders.model.dto.OrderedProductDto.OrderedProductResponse;
 import org.example.backend.domain.orders.model.entity.OrderedProduct;
@@ -155,10 +156,10 @@ public class OrderService {
         });
     }
 
-    public Page<CompanyOrderListResponse> companyOrderList(User user,Integer page, String status, Integer month) {
+    public Page<CompanyOrderListResponse> companyOrderList(Company company, Integer page, String status, Integer month) {
         Pageable pageable = PageRequest.of(page - 1, COMPANY_PAGE_SIZE, Sort.Direction.DESC, "idx");
 
-        Page<Orders> orders = ordersRepository.historyWithPaging(user, pageable, status, month);
+        Page<Orders> orders = ordersRepository.historyWithPaging(company, pageable, status, month);
         return orders.map(order -> {
             String title = productBoardRepository.findById(order.getBoardIdx())
                     .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND)).getTitle();
@@ -166,16 +167,16 @@ public class OrderService {
         });
     }
 
-    public CompanyOrderDetailResponse companyOrderDetail(User user, Long orderIdx) {
+    public CompanyOrderDetailResponse companyOrderDetail(Company company, Long orderIdx) {
         Orders order = ordersRepository.findById(orderIdx)
                 .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_DETAIL));
 
-        if (user.getIdx() != order.getUser().getIdx()) {
-            throw new InvalidCustomException(ORDER_FAIL_DETAIL);
-        }
-
         ProductBoard board = productBoardRepository.findById(order.getBoardIdx())
                 .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND));
+
+        if (company.getIdx() != board.getCompany().getIdx()) {
+            throw new InvalidCustomException(ORDER_FAIL_DETAIL);
+        }
 
         List<OrderedProduct> orederdProducts = order.getOrderedProducts();
         List<OrderedProductResponse> products = orederdProducts.stream().map(orderdProduct ->

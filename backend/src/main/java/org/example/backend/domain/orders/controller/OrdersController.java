@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.domain.company.model.entity.Company;
 import org.example.backend.domain.orders.service.OrderService;
 
 import org.example.backend.domain.user.model.entity.User;
@@ -15,6 +16,7 @@ import org.example.backend.global.common.constants.BaseResponse;
 import org.example.backend.global.common.constants.SwaggerDescription;
 import org.example.backend.global.common.constants.SwaggerExamples;
 
+import org.example.backend.global.security.custom.model.dto.CustomCompanyDetails;
 import org.example.backend.global.security.custom.model.dto.CustomUserDetails;
 import org.springframework.data.domain.Page;
 
@@ -70,17 +72,17 @@ public class OrdersController {
 
     @Operation(summary = "판매자 주문 내역 조회 API")
     @GetMapping(value = "/company/history")
-    public BaseResponse companyOrderlist(@AuthenticationPrincipal CustomUserDetails customUserDetails, Integer page, String status, Integer month) {
-        User user = customUserDetails.getUser();
-        Page<CompanyOrderListResponse> boardListResponses = orderService.companyOrderList(user, page, status, month);
+    public BaseResponse companyOrderlist(@AuthenticationPrincipal CustomCompanyDetails customUserDetails, Integer page, String status, Integer month) {
+        Company company = customUserDetails.getCompany();
+        Page<CompanyOrderListResponse> boardListResponses = orderService.companyOrderList(company, page, status, month);
         return new BaseResponse(boardListResponses);
     }
 
     @Operation(summary = "판매자 주문 상세 조회 API")
     @GetMapping("/company/{idx}/detail")
-    public BaseResponse companyOrderdetail(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long idx){
-        User user = customUserDetails.getUser();
-        CompanyOrderDetailResponse res = orderService.companyOrderDetail(user, idx);
+    public BaseResponse companyOrderdetail(@AuthenticationPrincipal CustomCompanyDetails customUserDetails, @PathVariable Long idx){
+        Company company = customUserDetails.getCompany();
+        CompanyOrderDetailResponse res = orderService.companyOrderDetail(company, idx);
         return new BaseResponse(res);
     }
 
