@@ -114,26 +114,13 @@
                     <span>{{ row.content }}<br /></span>
                   </div>
                 </div>
-                <div
-                  class="css-1j49yxi e11ufodi1"
-                  v-if="row.answerStatus !== '답변완료'"
-                >
-                  <button type=" button" @click="openEditModal(index)">
-                    수정
-                  </button>
-                  <button
-                    type="button"
-                    class="css-1ankuif e11ufodi0"
-                    @click="deleteInquiry(index)"
-                  >
-                    삭제
-                  </button>
+                <div class="css-1j49yxi e11ufodi1"
+                  v-if="row.answerStatus !== '답변완료' && row.email === this.userEmail">
+                  <button type="button" @click="openEditModal(index)">수정</button>
+                  <button type="button" class="css-1ankuif e11ufodi0" @click="deleteInquiry(row.idx, index)">삭제</button>
                 </div>
               </div>
-              <div
-                class="css-tnubsz e1ptpt003"
-                v-if="row.answerStatus !== '답변대기'"
-              >
+              <div class="css-tnubsz e1ptpt003" v-if="row.answerStatus !== '답변대기'">
                 <div class="css-1n83etr e1ptpt002">
                   <div class="css-m1wgq7 e1ptpt001">
                     <span class="css-1non6l6 ey0f1wv0"></span>
@@ -177,11 +164,15 @@
 import { useQnaStore } from "@/stores/useQnaStore";
 import QnaRegisterModalComponent from "../qna/QnaRegisterModalComponent.vue";
 import { mapStores } from "pinia";
+import { useUserStore } from "@/stores/useUserStore";
 
 export default {
   name: "BoardDetailNavComponent",
   computed: {
-    ...mapStores(useQnaStore),
+    ...mapStores(useQnaStore, useUserStore),
+    userEmail() {
+      return this.userStore.userDetail.email || "email 세팅 안 됨";
+    },
   },
   props: {
     thumbnails: {
@@ -216,8 +207,14 @@ export default {
   methods: {
     loadInquiries() {
       this.activeTab = "inquiries"; // 문의 탭 활성화
-      this.qnaStore.fetchInquiries().then(() => {
-        this.localTableData = this.qnaStore.inquiries;
+
+      this.userStore.getDetail().then(() => {
+        const userEmail = this.userStore.userDetail.email;
+        console.log("로그인된 사용자의 이메일:", userEmail);
+
+        this.qnaStore.fetchInquiries().then(() => {
+          this.localTableData = this.qnaStore.inquiries;
+        });
       });
     },
     formatDate(dateString) {
@@ -260,8 +257,7 @@ export default {
       el.style.maxHeight = "0px";
     },
     addNewInquiry(newInquiry) {
-      newInquiry.created_at = new Date().toISOString().split("T")[0];
-      this.localTableData.push(newInquiry);
+      newInquiry.email = this.userEmail;  // 로그인된 사용자의 이메일을 새 문의에 추가
       this.closeModal();
     },
     updateInquiry(updatedInquiry) {
@@ -276,9 +272,9 @@ export default {
         this.closeModal();
       }
     },
-    deleteInquiry(index) {
-      // 문의를 삭제할 때, 현재 토글된 인덱스를 초기화
-      this.localTableData.splice(index, 1); // 해당 인덱스의 문의 삭제
+    deleteInquiry(idx, index) {
+      this.qnaStore.deleteInquiry(idx, index);
+
       if (this.expandedInquiryIndex === index) {
         // 삭제된 인덱스가 현재 토글된 인덱스라면 초기화
         this.expandedInquiryIndex = null;
