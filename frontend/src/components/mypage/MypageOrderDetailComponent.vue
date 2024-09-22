@@ -228,10 +228,11 @@ export default {
     async cancelOrder() {
       const confirmed = confirm("주문을 취소하시겠습니까?");
       if (confirmed) {
-        await this.orderStore.cancelOrder(this.$route.params.orderId);
-
-        alert("주문이 성공적으로 취소되었습니다.");
-        this.$router.push("/mypage/order"); // 주문 목록 페이지로 이동 등
+        await this.orderStore.cancelOrder(
+          this.$route.params.orderId,
+          "/mypage/order",
+          "주문이 성공적으로 취소되었습니다."
+        );
       }
     },
   },
