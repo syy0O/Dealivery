@@ -495,7 +495,6 @@ export default {
 
         this.ordererInfo = {
           ...this.userStore.userDetail,
-          point: 0,
           selectedAddress: defaultDelivery,
         };
 
