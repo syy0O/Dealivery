@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -72,23 +73,23 @@ public class ProductBoardService {
 	}
 
 	@Transactional
-	public void create(ProductBoardDto.BoardCreateRequest boardCreateRequest, MultipartFile[] productThumbnails, MultipartFile productDetail) {
+	public void create(Long companyIdx, ProductBoardDto.BoardCreateRequest boardCreateRequest, MultipartFile[] productThumbnails, MultipartFile productDetail) {
 		List<String> thumbnailUrls = uploadImage(productThumbnails);
 		String productDetailUrl = uploadImage(productDetail);
 
-		ProductBoard savedProductBoard = saveProductBoard(boardCreateRequest, thumbnailUrls.get(0), productDetailUrl);
+		ProductBoard savedProductBoard = saveProductBoard(companyIdx, boardCreateRequest, thumbnailUrls.get(0), productDetailUrl);
 		List<Product> savedProducts = saveProduct(boardCreateRequest, savedProductBoard);
 		List<ProductThumbnailImage> productThumbnailImages = saveProductThumbnailImage(boardCreateRequest, thumbnailUrls, savedProductBoard);
 	}
 
 	// 판매자 게시글 조회
-	public Page<ProductBoardDto.CompanyBoardListResponse> companyList(String status, Integer month, Pageable pageable) {
-		Page<ProductBoard> productBoards = productBoardRepository.companySearch(status, month, pageable);
+	public Page<ProductBoardDto.CompanyBoardListResponse> companyList(Long companyIdx, String status, Integer month, Pageable pageable) {
+		Page<ProductBoard> productBoards = productBoardRepository.companySearch(companyIdx, status, month, pageable);
 		return productBoards.map(ProductBoard::toCompanyBoardListResponse);
 	}
 
-	public ProductBoardDto.CompanyBoardDetailResponse getCompanyDetail(Long idx) {
-		ProductBoard productBoard = productBoardRepository.findByIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
+	public ProductBoardDto.CompanyBoardDetailResponse getCompanyDetail(Long companyIdx, Long idx) {
+		ProductBoard productBoard = productBoardRepository.findByCompanyIdxAndIdx(companyIdx, idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
 		List<ProductThumbnailImage> productThumbnailImages = productThumbnailImageRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
 		List<Product> products = productRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
 
@@ -101,9 +102,9 @@ public class ProductBoardService {
 		return productBoard.toCompanyBoardDetailResponse(productThumbnailUrls, productCompanyResponse);
 	}
 
-	private ProductBoard saveProductBoard(ProductBoardDto.BoardCreateRequest boardCreateRequest, String productThumbnailUrl, String productDetailUrl) {
+	private ProductBoard saveProductBoard(Long companyIdx, ProductBoardDto.BoardCreateRequest boardCreateRequest, String productThumbnailUrl, String productDetailUrl) {
 		Category category = categoryRepository.findByName(boardCreateRequest.getCategory().getType());
-		ProductBoard productBoard = boardCreateRequest.toEntity(productThumbnailUrl, productDetailUrl, category);
+		ProductBoard productBoard = boardCreateRequest.toEntity(companyIdx, productThumbnailUrl, productDetailUrl, category);
 		return productBoardRepository.save(productBoard);
 	}
 
@@ -158,5 +159,15 @@ public class ProductBoardService {
 		} catch (IOException e) {
 			throw new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_REGISTER_FAIL_UPLOAD_IMAGE);
 		}
+	}
+
+	@Scheduled(cron = "0 0/30 * * * ?") // 매 30분마다 정각 또는 30분에 실행
+	public void updateStatus() {
+		List<ProductBoard> productBoards = productBoardRepository.findAll();
+		for (ProductBoard productBoard : productBoards) {
+			BoardStatus status = BoardStatus.calculateStatus(productBoard.getStartedAt(), productBoard.getEndedAt());
+			productBoard.updateStatus(status);
+		}
+		productBoardRepository.saveAll(productBoards);
 	}
 }
