@@ -39,9 +39,7 @@
               <div class="goods_note">
                 <div class="context">
                   <div class="pic">
-                    <img
-                      src="https://img-cf.kurly.com/hdims/resize/%3E1010x/quality/90/src/shop/data/goodsview/20240829/gv10001551896_1.jpg"
-                    />
+                    <img :src="detail" class="responsive-image" />
                   </div>
                   <p class="words"></p>
                 </div>
@@ -114,13 +112,29 @@
                     <span>{{ row.content }}<br /></span>
                   </div>
                 </div>
-                <div class="css-1j49yxi e11ufodi1"
-                  v-if="row.answerStatus !== '답변완료' && row.email === this.userEmail">
-                  <button type="button" @click="openEditModal(index)">수정</button>
-                  <button type="button" class="css-1ankuif e11ufodi0" @click="deleteInquiry(row.idx, index)">삭제</button>
+                <div
+                  class="css-1j49yxi e11ufodi1"
+                  v-if="
+                    row.answerStatus !== '답변완료' &&
+                    row.email === this.userEmail
+                  "
+                >
+                  <button type="button" @click="openEditModal(index)">
+                    수정
+                  </button>
+                  <button
+                    type="button"
+                    class="css-1ankuif e11ufodi0"
+                    @click="deleteInquiry(row.idx, index)"
+                  >
+                    삭제
+                  </button>
                 </div>
               </div>
-              <div class="css-tnubsz e1ptpt003" v-if="row.answerStatus !== '답변대기'">
+              <div
+                class="css-tnubsz e1ptpt003"
+                v-if="row.answerStatus !== '답변대기'"
+              >
                 <div class="css-1n83etr e1ptpt002">
                   <div class="css-m1wgq7 e1ptpt001">
                     <span class="css-1non6l6 ey0f1wv0"></span>
@@ -145,7 +159,7 @@
       @close="closeModal"
       @submit="addNewInquiry"
       :productBoardIdx="productBoardIdx"
-      :thumbnail="thumbnails[0].src"
+      :thumbnail="thumbnails[0]"
       :title="productTitle"
     />
 
@@ -177,6 +191,10 @@ export default {
   props: {
     thumbnails: {
       type: Array,
+      required: true,
+    },
+    detail: {
+      type: String,
       required: true,
     },
     productBoardIdx: {
@@ -257,7 +275,7 @@ export default {
       el.style.maxHeight = "0px";
     },
     addNewInquiry(newInquiry) {
-      newInquiry.email = this.userEmail;  // 로그인된 사용자의 이메일을 새 문의에 추가
+      newInquiry.email = this.userEmail; // 로그인된 사용자의 이메일을 새 문의에 추가
       this.closeModal();
     },
     updateInquiry(updatedInquiry) {
@@ -710,5 +728,11 @@ div {
   background: rgb(238, 238, 238);
   vertical-align: top;
   content: "";
+}
+
+.responsive-image {
+  width: 1050px;
+  height: auto; /* 이미지 비율에 맞게 자동으로 높이 설정 */
+  object-fit: contain; /* 비율을 유지하면서 영역에 맞게 이미지 표시 */
 }
 </style>

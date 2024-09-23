@@ -38,6 +38,11 @@ export const useBoardStore = defineStore("board", {
       });
       return response.data.result;
     },
+    async getDetail(idx) {
+      const data = await axios.get(backend + `/${idx}/detail`);
+      this.boardData = data.data.result;
+      return data.data.result;
+    },
 
     // --------- 판매자 ---------
     async getProductBoardList(page) {
@@ -60,7 +65,6 @@ export const useBoardStore = defineStore("board", {
       });
       return response.data.result;
     },
-
     async getOrderListWithOption(page, status, month) {
       status = String(status);
       status = status.includes("전체") ? null : status;
@@ -74,8 +78,9 @@ export const useBoardStore = defineStore("board", {
       return response.data.result;
     },
     async getOrderDetail(orderIdx) {
-
-      const response = await axios.get(`/api/orders/company/${orderIdx}/detail`);
+      const response = await axios.get(
+        `/api/orders/company/${orderIdx}/detail`
+      );
       return response.data.result;
     },
 
@@ -83,7 +88,6 @@ export const useBoardStore = defineStore("board", {
       const data = await axios.get(backend + `/company/${idx}/detail`);
       this.boardData = data.data.result;
       return data.data.result;
-
     },
     async createProductBoard(req) {
       const formData = new FormData();
