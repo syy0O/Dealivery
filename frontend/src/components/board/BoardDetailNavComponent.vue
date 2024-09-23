@@ -22,11 +22,7 @@
     </nav>
     <!-- 상품 상세 설명 section -->
     <div class="css-0 el27cq1">
-      <div
-        id="description"
-        class="css-18eozqj el27cq0"
-        v-show="activeTab === 'description'"
-      >
+      <div id="description" class="css-18eozqj el27cq0" v-show="activeTab === 'description'">
         <div class="css-1d3w5wq e1d86arr0">
           <div class="css-1lyi66c">
             <div class="goods_wrap">
@@ -48,13 +44,7 @@
     <!-- 문의 하기 리스트 section -->
     <div class="css-30tvht eewa3w91" v-show="activeTab === 'inquiries'">
       <div class="css-17juoyc eewa3w90">
-        <button
-          class="css-mhrz8m e4nu7ef3"
-          type="button"
-          width="120"
-          height="40"
-          @click="openNewInquiryModal"
-        >
+        <button class="css-mhrz8m e4nu7ef3" type="button" width="120" height="40" @click="openNewInquiryModal">
           <span class="css-nytqmg e4nu7ef1">문의하기</span>
         </button>
       </div>
@@ -85,17 +75,14 @@
             </td>
             <td class="css-1pkqelu e1l5ky7y6">
               {{
-                row.modifiedAt
-                  ? formatDate(row.modifiedAt)
-                  : formatDate(row.createdAt)
+              row.modifiedAt
+              ? formatDate(row.modifiedAt)
+              : formatDate(row.createdAt)
               }}
             </td>
             <td class="css-bhr3cq e1l5ky7y5">{{ row.answerStatus }}</td>
           </tr>
-          <tr
-            v-show="expandedInquiryIndex === index"
-            class="css-1mvq381 e61d7mt0"
-          >
+          <tr v-show="expandedInquiryIndex === index" class="css-1mvq381 e61d7mt0">
             <td colspan="4">
               <div class="css-tnubsz e1ptpt003">
                 <div class="css-1n83etr e1ptpt002">
@@ -131,23 +118,13 @@
     </div>
 
     <!-- 새 문의 작성 모달 -->
-    <QnaRegisterModalComponent
-      v-if="showNewInquiryModal"
-      @close="closeModal"
-      @submit="addNewInquiry"
-      :productBoardIdx="productBoardIdx"
-      :thumbnail="thumbnails[0]"
-      :title="productTitle"
-    />
+    <QnaRegisterModalComponent v-if="showNewInquiryModal" @close="closeModal" @submit="addNewInquiry"
+      :isEditMode="false" :productBoardIdx="productBoardIdx" :thumbnail="thumbnails[0]" :title="productTitle" />
 
     <!-- 수정 모달 -->
-    <QnaRegisterModalComponent
-      v-if="showEditInquiryModal"
-      :initialSubject="selectedInquiry.title"
-      :initialContent="selectedInquiry.content"
-      @close="closeModal"
-      @submit="updateInquiry"
-    />
+    <QnaRegisterModalComponent v-if="showEditInquiryModal" :initialSubject="selectedInquiry.title"
+      :initialContent="selectedInquiry.content" @close="closeModal" @submit="updateInquiry" :isEditMode="true"
+      :productBoardIdx="productBoardIdx" :thumbnail="thumbnails[0]" :title="productTitle" />
   </div>
 </template>
 
