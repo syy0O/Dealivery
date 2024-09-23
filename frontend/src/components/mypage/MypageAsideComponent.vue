@@ -19,7 +19,7 @@
                             </button>
                         </div>
                     </div>
-                    <a href="/member/membership" class="pc css-1d9zl68 e5rtjnl0"></a>
+                    <a href="#" class="pc css-1d9zl68 e5rtjnl0"></a>
                 </div>
             </div>
             <div id="menu">

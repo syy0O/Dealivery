@@ -140,6 +140,14 @@ export default {
       }
     },
     async toMypage() {
+      if(!this.userStore.isLogined){
+        alert("로그인이 필요한 서비스입니다.");
+        return
+      }
+      if(this.userStore.roles.includes('ROLE_COMPANY')){
+        this.$router.push('/product-boards/company/list');
+        return
+      }
       if (await this.userStore.getDetail()) {
         this.routeTo("/mypage");
       }

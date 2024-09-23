@@ -321,6 +321,10 @@ export const useUserStore = defineStore("user", {
       }
     },
     async like(request){
+      console.log(this.roles.includes('ROLE_COMPANY'));
+      if(this.roles.includes('ROLE_COMPANY')){
+        return false;
+      }
       try {
         let response = await axios.post(backend+"/likes",request,{withCredentials:true});
         if(response.data.code !== 1000){
