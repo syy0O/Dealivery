@@ -12,6 +12,7 @@ import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.global.common.constants.AnswerStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class QuestionDto {
 
@@ -44,11 +45,15 @@ public class QuestionDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class QuestionCreateResponse{
+        private Long idx;
         private String title;
         private String content;
         private String userName;
         private String answerStatus;
         private LocalDateTime createdAt;
+
+        private String answerContent;
+        private LocalDateTime answerCreatedAt;
     }
 
     @Getter
@@ -56,10 +61,14 @@ public class QuestionDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class QuestionListResponse {
+        private Long idx;
         private String title;
         private String content;
         private String userName;
         private String answerStatus;
         private LocalDateTime createdAt;
+        private String email;
+        private Long productBoardIdx;
+        private List<AnswerDto.AnswerResponse> answers;
     }
 }

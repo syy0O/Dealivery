@@ -23,6 +23,7 @@ import org.example.backend.domain.orders.repository.OrdersRepository;
 import org.example.backend.global.common.constants.BoardStatus;
 import org.example.backend.global.common.constants.OrderStatus;
 import org.example.backend.global.common.constants.PaymentType;
+import org.example.backend.global.utils.RandomCodeGenerator;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -48,8 +49,6 @@ public class InitDB {
         insertBoard();
         insertProduct();
         insertProductThumbnailImage();
-        insertOrders();
-        insertOrderedProducts();
     }
     private void insertCategory(){
         List<String> categoryNames = List.of("식품", "의류", "뷰티", "라이프");
@@ -161,65 +160,5 @@ public class InitDB {
             }
         }
         productThumbnailImageRepository.saveAll(productThumbnailImages);
-    }
-
-    private void insertOrders() {
-        if (productBoards.isEmpty()) {
-            return;
-        }
-
-        ordersList = new ArrayList<>();
-
-        for (int i = 0; i < productBoards.size(); i++) {
-            ProductBoard board = productBoards.get(i);
-
-            // PaymentType을 번갈아 설정 (짝수: KAKAO_PAY, 홀수: TOSS_PAY)
-            PaymentType paymentType = (i % 2 == 0) ? PaymentType.KAKAO_PAY : PaymentType.TOSS_PAY;
-
-            // OrderStatus를 번갈아 설정 (짝수: ORDER_COMPLETE, 홀수: ORDER_CANCEL)
-            OrderStatus orderStatus = (i % 2 == 0) ? OrderStatus.ORDER_COMPLETE : OrderStatus.ORDER_CANCEL;
-
-            // createdAt을 1, 3, 6, 9, 12개월 전으로 설정
-            LocalDateTime createdAt = LocalDateTime.now().minusMonths((i % 5 + 1) * 3); // 1, 3, 6, 9, 12개월
-
-            Orders order = Orders.builder()
-                    .boardIdx(board.getIdx())
-                    .receiverName("심키즈")
-                    .receiverPhoneNumber("010-1234-5678")
-                    .address("서울특별시 중구")
-                    .addressDetail("101동 101호")
-                    .postNumber("04567")
-                    .paymentId("PAY-" + (i + 1))
-                    .status(orderStatus) // 설정한 orderStatus 적용
-                    .payMethod(paymentType) // 설정한 paymentType 적용
-                    .usedPoint(4444)
-                    .build();
-
-            ordersList.add(order);
-        }
-
-        ordersRepository.saveAll(ordersList);
-    }
-
-    private void insertOrderedProducts() {
-        if (ordersList.isEmpty()) {
-            return;
-        }
-
-        List<OrderedProduct> orderedProductsList = new ArrayList<>();
-        for (Orders order : ordersList) {
-            Product product = productRepository.findById(order.getBoardIdx()).orElse(null);
-            if (product == null) {
-                continue;
-            }
-
-            orderedProductsList.add(OrderedProduct.builder()
-                    .quantity(2)
-                    .orders(order)
-                    .product(product)
-                    .build());
-        }
-
-        orderedProductRepository.saveAll(orderedProductsList);
     }
 }

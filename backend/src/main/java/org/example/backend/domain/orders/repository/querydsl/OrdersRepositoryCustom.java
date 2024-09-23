@@ -6,5 +6,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface OrdersRepositoryCustom {
-    Page<Orders> historyWithPaging(Pageable pageable, /*User user,*/ String status, Integer month);
+    Page<Orders> historyWithPaging(Object user, Pageable pageable,  String status, Integer month);
 }

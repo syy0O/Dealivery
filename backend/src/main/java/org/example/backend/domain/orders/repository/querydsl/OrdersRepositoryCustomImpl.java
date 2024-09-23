@@ -6,12 +6,11 @@ import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.example.backend.domain.board.model.entity.QProductBoard;
+import org.example.backend.domain.company.model.entity.Company;
 import org.example.backend.domain.orders.model.entity.Orders;
 import org.example.backend.domain.orders.model.entity.QOrders;
-import org.example.backend.domain.user.model.entity.QUser;
 import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.global.common.constants.OrderStatus;
-import org.example.backend.global.common.constants.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -32,56 +31,56 @@ public class OrdersRepositoryCustomImpl implements OrdersRepositoryCustom{
     }
 
     @Override
-    public Page<Orders> historyWithPaging(Pageable pageable, /*User user,*/ String status, Integer month) {
+    public Page<Orders> historyWithPaging(Object user, Pageable pageable, String status, Integer month) {
         List<Orders> result = queryFactory
                 .selectFrom(orders)
-                .where(equalsStatus(status),isWithinMonths(month)/*, filterByUserRole(user)*/)
+                .where(equalsStatus(status),isWithinMonths(month), filterByUserRole(user))
                 .orderBy(orders.idx.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         Long total = queryFactory.selectFrom(orders)
-                .where(equalsStatus(status), isWithinMonths(month))
+                .where(equalsStatus(status), isWithinMonths(month), filterByUserRole(user))
                 .fetchCount();
 
         return new PageImpl<>(result, pageable, total);
     }
 
 
-//    private BooleanExpression filterByUserRole(User user) {  // 역할에 따른 필터링 조건을 정의
-//        if (user == null || user.getRole() == null) {
-//            return null;
-//        }
-//
-//        if (user.getRole().equals(Role.ROLE_COMPANY)) {
-//            return checkBoardOwner(user);
-//        }
-//
-//        return orders.user.idx.eq(user.getIdx());
-//    }
+    private BooleanExpression filterByUserRole(Object user) {  // 역할에 따른 필터링 조건을 정의
+        if (user == null) {
+            return null;
+        }
 
-//    private BooleanExpression checkBoardOwner(User user) {
-//        List<Long> boardIdxList = fetchBoardIdxListByOwner(user);
-//
-//        if (boardIdxList.isEmpty()) {
-//            return null;
-//        }
-//        return orders.boardIdx.in(boardIdxList);
-//    }
-//
-//
-//    private List<Long> fetchBoardIdxListByOwner(User user) {
-//        return queryFactory
-//                .select(productBoard.idx)
-//                .from(productBoard)
-//                .where(productBoard.owner.eq(user))  // 게시글의 작성자(owner)가 현재 사용자(user)인 경우
-//                .fetch();
-//    }
+        if (user instanceof Company) {
+            return checkBoardOwner((Company) user);
+        }
+
+        return orders.user.idx.eq(((User)user).getIdx());
+    }
+
+    private BooleanExpression checkBoardOwner(Company user) {
+        List<Long> boardIdxList = fetchBoardIdxListByOwner(user);
+
+        if (boardIdxList.isEmpty()) {
+            return null;
+        }
+
+        return orders.boardIdx.in(boardIdxList);
+    }
+
+
+    private List<Long> fetchBoardIdxListByOwner(Company user) {
+        return queryFactory
+                .select(productBoard.idx)
+                .from(productBoard)
+                .where(productBoard.company.idx.eq(user.getIdx()))  // 게시글의 작성자(owner)가 현재 사용자(user)인 경우
+                .fetch();
+    }
 
     private BooleanExpression equalsStatus(String status) {
         if (status == null || status.isBlank()) {
-            //return null;
             return orders.status.in(OrderStatus.ORDER_COMPLETE, OrderStatus.ORDER_CANCEL);
         }
 
