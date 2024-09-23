@@ -1,5 +1,5 @@
 <template>
-  <div class="css-1ykiyus">
+  <div class="css-1ykiyus" v-if="!isLoading">
     <div class="css-1uom1od">
       <h2 class="css-10owlr">주문서</h2>
       <div class="css-ixlb9s">
@@ -85,7 +85,7 @@
           <div class="css-yazyg9">
             <span class="css-ln1csn">휴대폰</span>
             <div class="css-82a6rk">
-              <div class="css-t6o2y8">{{ ordererInfo.phone }}</div>
+              <div class="css-t6o2y8">{{ ordererInfo.phoneNumber }}</div>
             </div>
           </div>
           <div class="css-yazyg9">
@@ -138,8 +138,6 @@
                 </div>
               </div>
             </div>
-
-            <!--츄가아ㅏㅏㅏㅏ-->
             <div class="css-1gshg9u e150alo82">
               <span class="css-qq9ke6 e744wfw0">*</span>
               <span class="css-ln1csn e150alo81">전화번호</span>
@@ -160,9 +158,13 @@
               <span class="css-qq9ke6 e744wfw0">*</span>
               <span class="css-ln1csn e150alo81">배송지</span>
               <div class="css-82a6rk e150alo80">
-                <span class="css-3uygi7 e17yjk9v3">기본배송지</span>
+                <span
+                  class="css-3uygi7 e17yjk9v3"
+                  :v-if="ordererInfo.selectedAddress.isDefault"
+                  >기본배송지</span
+                >
                 <p class="css-36j4vu e17yjk9v2">
-                  {{ ordererInfo.defaultAddress }}
+                  {{ ordererInfo.selectedAddress.address }}
                 </p>
                 <div class="css-iqoq9n e17yjk9v0">
                   <button
@@ -195,12 +197,11 @@
                   >
                     <span class="css-cp6cch e1gm2j0y4"
                       >최대 사용 가능 포인트 :
-                      {{ maximumAvailablePoint.toLocaleString() }}
+                      {{ maximumAvailablePoint }}
                       <span class="css-o5boot e1gm2j0y5">p</span></span
                     >
                     <span class="css-o5boot e1gm2j0y5"
-                      >보유 포인트 :
-                      {{ ordererInfo.point.toLocaleString() }} p</span
+                      >보유 포인트 : {{ ordererInfo.point }} p</span
                     >
                   </div>
                 </div>
@@ -393,6 +394,7 @@ export default {
   name: "OrdersPage",
   data() {
     return {
+      isLoading: true, // 로딩 상태
       isIconRotated: false,
       isToggleContentVisible: false,
       isDeliveryNotiVisible: false,
@@ -429,42 +431,57 @@ export default {
     },
   },
   created() {
-    if (
-      this.orderStore.boardInfo == null ||
-      /*this.orderStore.orderedProducts == null*/
-      this.orderStore.orderInfo.orderedProducts == null
-    ) {
-      return this.$router.push("/");
-    }
-
-    this.boardInfo = this.orderStore.boardInfo;
-    this.orderedProducts = this.orderStore.orderInfo.orderedProducts; //this.orderStore.orderedProducts;
-
-    this.ordererInfo = {
-      // this.ordererInfo = this.userStore.
-      name: "유송연",
-      phone: "010-1111-1111",
-      email: "simkids@gmail.com",
-      point: 24890,
-      defaultAddress:
-        " 서울 동작구 상도로 지하 76 (7호선 신대방삼거리역) Beyond SW 캠프",
-    };
-
-    let tenPercentOfPrice = Math.round(this.totalAmount * (10 / 100));
-
-    this.maximumAvailablePoint =
-      this.ordererInfo.point < tenPercentOfPrice
-        ? this.ordererInfo.point
-        : tenPercentOfPrice;
-
-    history.pushState(null, null, location.href);
-    window.addEventListener("popstate", this.handlePopState);
+    this.init();
   },
   beforeUnmount() {
     window.removeEventListener("popstate", this.handlePopState);
   },
 
   methods: {
+    async init() {
+      if (
+        this.orderStore.boardInfo == null ||
+        this.orderStore.orderInfo.orderedProducts == null
+      ) {
+        return this.$router.push("/");
+      }
+
+      this.boardInfo = this.orderStore.boardInfo;
+      this.orderedProducts = this.orderStore.orderInfo.orderedProducts;
+
+      const result = await this.userStore.getDetail();
+
+      if (result == true) {
+        const defaultDelivery = this.userStore.userDetail.deliveries.find(
+          (delivery) => delivery.isDefault
+        );
+
+        this.ordererInfo = {
+          ...this.userStore.userDetail,
+          point: 0,
+          selectedAddress: defaultDelivery,
+        };
+
+        console.log(
+          "===============>" + this.ordererInfo.selectedAddress.isDefault
+        );
+
+        let tenPercentOfPrice = Math.round(this.totalAmount * (10 / 100));
+
+        this.maximumAvailablePoint =
+          this.ordererInfo.point < tenPercentOfPrice
+            ? this.ordererInfo.point
+            : tenPercentOfPrice;
+
+        history.pushState(null, null, location.href);
+        window.addEventListener("popstate", this.handlePopState);
+
+        this.isLoading = false; // 데이터 로딩 완료 후 로딩 상태 해제
+      } else {
+        alert("로그인 후 이용해주세요.");
+        return this.$router.push("/");
+      }
+    },
     async handlePopState() {
       this.orderStore.cancelOrder(
         this.orderStore.orderInfo.orderIdx,
@@ -522,9 +539,10 @@ export default {
       if (this.validateAll()) {
         const paymentData = {
           paymentMethod: this.selectedPaymentMethod,
-          address: this.ordererInfo.defaultAddress, // 배송지 정보 가져오기
+          deliveryIdx: this.ordererInfo.selectedAddress.idx, // 배송지 정보 가져오기
           usedPoint: this.usedPoint, // 사용한 포인트
           totalAmount: this.totalAmount, // 전체 결제금액에서 포인트 차감
+          originalPaidAmount: this.originalTotalAmount,
           receiverName: this.receiverName, // 사용자가 입력한 받는 사람 이름
           receiverPhoneNumber: this.receiverPhoneNumber, // 사용자가 입력한 전화번호
         };
