@@ -131,10 +131,11 @@
                         <div class="css-t4macj e12wapb62">
                           <div class="css-1fvrsoi e12wapb60">
                             {{
-                              Math.round(
-                                option.originalPrice *
-                                  (1 - this.discountPercentage / 100)
-                              )
+                              option.originalPrice *
+                              (
+                                1 -
+                                this.data.discountRate / 100
+                              ).toLocaleString()
                             }}원
                           </div>
                           <span class="css-1s0al7f e17q5gas1"
@@ -274,10 +275,9 @@ export default {
         "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0yNS44MDcgNy44NjNhNS43NzcgNS43NzcgMCAwIDAtOC4xNzIgMEwxNiA5LjQ5N2wtMS42MzUtMS42MzRhNS43NzkgNS43NzkgMCAxIDAtOC4xNzMgOC4xNzJsMS42MzQgMS42MzQgNy40NjYgNy40NjdhMSAxIDAgMCAwIDEuNDE1IDBzMCAwIDAgMGw3LjQ2Ni03LjQ2N2gwbDEuNjM0LTEuNjM0YTUuNzc3IDUuNzc3IDAgMCAwIDAtOC4xNzJ6IiBmaWxsPSIjRkY1QTVBIiBzdHJva2U9IiNGRjVBNUEiIHN0cm9rZS13aWR0aD0iMS42IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K",
       emptyHeartImage:
         "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0yNS44MDcgNy44NjNhNS43NzcgNS43NzcgMCAwIDAtOC4xNzIgMEwxNiA5LjQ5N2wtMS42MzUtMS42MzRhNS43NzkgNS43NzkgMCAxIDAtOC4xNzMgOC4xNzJsMS42MzQgMS42MzQgNy40NjYgNy40NjdhMSAxIDAgMCAwIDEuNDE1IDBzMCAwIDAgMGw3LjQ2Ni03LjQ2N2gwbDEuNjM0LTEuNjM0YTUuNzc3IDUuNzc3IDAgMCAwIDAtOC4xNzJ6IiBzdHJva2U9IiM1RjAwODAiIHN0cm9rZS13aWR0aD0iMS42IiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K",
-      discountPercentage: 23,
       request: {
-        productBoardIdx: null
-      }
+        productBoardIdx: null,
+      },
     };
   },
   created() {
@@ -293,7 +293,7 @@ export default {
     isAnySelected() {
       return this.cartItems.length > 0;
     },
-    ...mapStores(useUserStore)
+    ...mapStores(useUserStore),
   },
   methods: {
     mapProductsToOptions() {
@@ -318,9 +318,7 @@ export default {
         this.cartItems.push({
           idx: option.idx,
           name: option.label,
-          price: Math.round(
-            option.originalPrice * (1 - this.discountPercentage / 100)
-          ),
+          price: option.originalPrice * (1 - this.data.discountRate / 100),
           originalPrice: option.originalPrice,
           quantity: 1,
         });
@@ -345,27 +343,32 @@ export default {
 
     async toggleHeart() {
       this.request.productBoardIdx = 1;
-      if(!this.userStore.isLogined){
+      if (!this.userStore.isLogined) {
         alert("로그인이 필요한 서비스입니다.");
-        this.$router.push({ path: '/auth/login', query: { redirect: this.$route.fullPath } });
-        return
+        this.$router.push({
+          path: "/auth/login",
+          query: { redirect: this.$route.fullPath },
+        });
+        return;
       }
-      if(await this.userStore.like(this.request)){
+      if (await this.userStore.like(this.request)) {
         this.isHeartFilled = !this.isHeartFilled;
         this.heartImage = this.isHeartFilled
           ? this.filledHeartImage
           : this.emptyHeartImage;
-      }else{
+      } else {
         alert("관심 등록에 실패했습니다.");
       }
-      
     },
 
     emitSubmitOrder() {
-      if(!this.userStore.isLogined){
+      if (!this.userStore.isLogined) {
         alert("로그인이 필요한 서비스입니다.");
-        this.$router.push({ path: '/auth/login', query: { redirect: this.$route.fullPath } });
-        return
+        this.$router.push({
+          path: "/auth/login",
+          query: { redirect: this.$route.fullPath },
+        });
+        return;
       }
       if (!this.isAnySelected) {
         alert("상품을 선택하세요.");
@@ -374,9 +377,9 @@ export default {
 
       let orderRequest = {
         boardInfo: {
-          idx: 1,
-          title: "[음성명작]500m 고랭지에서 수확한 사과1.3kg[품종:홍로]",
-          discountRate: "23",
+          idx: this.$route.params.idx,
+          title: this.data.title,
+          discountRate: this.data.discountRate,
         },
         cartItems: this.cartItems,
       };
