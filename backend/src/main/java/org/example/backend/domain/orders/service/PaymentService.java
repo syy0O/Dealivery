@@ -43,7 +43,8 @@ public class PaymentService {
         Map<String, Object> data = gson.fromJson(customData, Map.class);
 
         Integer usedPoint = (Double.valueOf(data.get("usedPoint").toString())).intValue();
-        Integer discountRate = Integer.parseInt(String.valueOf(data.get("discountRate")));
+        Integer discountRate = (Double.valueOf(data.get("discountRate").toString())).intValue();
+        //Integer discountRate = Integer.parseInt(String.valueOf(data.get("discountRate")));
         Integer amount = payment.getAmount().intValue(); // 결제된 금액
 
         AtomicLong totalPrice = validateAndDecreaseStock(payment, usedPoint, order, discountRate);
@@ -78,7 +79,7 @@ public class PaymentService {
 
             long originalPrice = product.getPrice();
             int quantity = orderdProduct.getQuantity();
-            totalPrice.updateAndGet(v -> v + Math.round(originalPrice * quantity * (1 - discountRate / 100.0)));
+            totalPrice.updateAndGet(v -> (long) (v + (originalPrice * quantity * (1 - discountRate / 100.0))));
         });
 
         return totalPrice;
