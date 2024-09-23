@@ -576,7 +576,9 @@ export default {
       if (this.validateAll()) {
         const paymentData = {
           paymentMethod: this.selectedPaymentMethod,
-          deliveryIdx: this.ordererInfo.selectedAddress.idx, // 배송지 정보 가져오기
+          address: this.ordererInfo.selectedAddress.address,
+          addressDetail: this.ordererInfo.selectedAddress.addressDetail,
+          postNumber: this.ordererInfo.selectedAddress.postNumber,
           usedPoint: this.usedPoint, // 사용한 포인트
           totalAmount: this.totalAmount, // 전체 결제금액에서 포인트 차감
           originalPaidAmount: this.originalTotalAmount,
