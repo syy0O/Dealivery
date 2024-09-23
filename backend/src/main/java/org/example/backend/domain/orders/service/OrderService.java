@@ -102,6 +102,7 @@ public class OrderService {
         try {
             Payment payment = paymentService.getPaymentInfo(paymentId);
             paymentService.validatePayment(payment, order);
+            order.getUser().deductPoints(order.getUsedPoint());
             order.setStatus(OrderStatus.ORDER_COMPLETE);
 
         } catch (IamportResponseException | IOException e) { // 해당하는 결제 정보를 찾지 못했을 때
@@ -137,6 +138,7 @@ public class OrderService {
             try {
                 Payment payment = paymentService.getPaymentInfo(impUid);
                 paymentService.refund(impUid, payment);
+                order.getUser().earnPoints(order.getUsedPoint());
                 order.setStatus(OrderStatus.ORDER_CANCEL);
 
             } catch (IamportResponseException | IOException  e) {
