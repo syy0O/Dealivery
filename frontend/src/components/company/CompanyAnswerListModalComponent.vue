@@ -5,7 +5,6 @@
             <div class="answer-list-modal">
                 <h3>답변 목록</h3>
                 <ul>
-                    <!-- selectedInquiry.answers가 있을 때만 v-for 실행 -->
                     <li v-for="answer in selectedInquiry.answers || []" :key="answer.idx">
                         <div class="answer-item">
                             <p class="answer-content">{{ answer.content }}</p>
@@ -58,7 +57,6 @@ export default {
     },
 };
 </script>
-
 
 <style scoped>
 .modal {
