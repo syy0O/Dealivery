@@ -125,16 +125,25 @@
           <div class="css-5d6nlw e17yjk9v4">
             <div class="css-1gshg9u e150alo82">
               <span class="css-qq9ke6 e744wfw0">*</span>
-              <span class="css-ln1csn e150alo81">받는 사람</span>
+              <span class="css-ln1csn e150alo81">수령인</span>
               <div class="css-82a6rk e150alo80">
                 <div class="css-input-container">
                   <input
                     type="text"
                     v-model="receiverName"
                     class="css-input"
-                    placeholder="받는 사람 이름을 입력하세요"
+                    placeholder="수령인 이름을 입력하세요"
                     maxlength="10"
                   />
+                  <div class="css-check-wrapper">
+                    <input
+                      type="checkbox"
+                      id="same-as-orderer-name"
+                      v-model="isSameAsOrdererName"
+                      @change="copyOrdererName()"
+                    />
+                    <label for="same-as-orderer-name">주문자와 동일</label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -149,6 +158,15 @@
                     class="css-input"
                     placeholder="전화번호를 입력하세요"
                   />
+                  <div class="css-check-wrapper">
+                    <input
+                      type="checkbox"
+                      id="same-as-orderer-name"
+                      v-model="isSameAsOrdererPhone"
+                      @change="copyOrdererPhone('')"
+                    />
+                    <label for="same-as-orderer-name">주문자와 동일</label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -160,14 +178,19 @@
               <div class="css-82a6rk e150alo80">
                 <span
                   class="css-3uygi7 e17yjk9v3"
-                  :v-if="ordererInfo.selectedAddress.isDefault"
+                  v-if="ordererInfo.selectedAddress.isDefault == true"
                   >기본배송지</span
                 >
                 <p class="css-36j4vu e17yjk9v2">
                   {{ ordererInfo.selectedAddress.address }}
+                  {{ ordererInfo.selectedAddress.addressDetail }}
+                </p>
+                <p class="css-36j4vu e17yjk9v2">
+                  [{{ ordererInfo.selectedAddress.postNumber }}]
                 </p>
                 <div class="css-iqoq9n e17yjk9v0">
                   <button
+                    @click="displayModal"
                     class="css-1xky6jf e4nu7ef3"
                     type="button"
                     width="60"
@@ -382,6 +405,13 @@
         </div>
       </div>
     </div>
+    <div v-if="isDisplayModal">
+      <OrdersModalComponent
+        @closeModal="closeModal"
+        @confirmSelection="handleDeliveryChange"
+        :preSelected="ordererInfo.selectedAddress"
+      />
+    </div>
   </div>
 </template>
 
@@ -389,15 +419,22 @@
 import { useOrderStore } from "@/stores/useOrderStore";
 import { useUserStore } from "@/stores/useUserStore";
 import { mapStores } from "pinia";
+import OrdersModalComponent from "@/components/orders/OrdersModalComponent.vue";
 
 export default {
   name: "OrdersPage",
+  components: {
+    OrdersModalComponent,
+  },
   data() {
     return {
       isLoading: true, // 로딩 상태
       isIconRotated: false,
+      isDisplayModal: false,
       isToggleContentVisible: false,
       isDeliveryNotiVisible: false,
+      isSameAsOrdererName: false,
+      isSameAsOrdererPhone: false,
       selectedPaymentMethod: null, // 선택된 결제 수단
       boardInfo: {},
       ordererInfo: {},
@@ -517,7 +554,7 @@ export default {
         },
         {
           value: this.receiverName,
-          message: "받는 사람의 이름을 입력해주세요.",
+          message: "수령인 이름을 입력해주세요.",
         },
       ];
 
@@ -552,38 +589,31 @@ export default {
     },
     isNumber(event) {
       const char = event.key;
-
-      // 한글 입력 차단
-      const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(char);
+      const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(char); // 한글 입력 차단
       if (isKorean) {
         event.preventDefault();
         return;
       }
-
-      // 숫자가 아닌 문자 차단
       if (!/[0-9]/.test(char)) {
         event.preventDefault();
       }
     },
     onPointInput(event) {
-      // 입력값에서 숫자가 아닌 문자를 모두 제거
       let inputValue = event.target.value.replace(/[^0-9]/g, "");
 
-      // 0으로 시작하는 경우 제거
       if (inputValue.length > 1 && inputValue[0] === "0") {
         inputValue = inputValue.replace(/^0+/, "");
       }
 
-      // 최대 사용 가능 포인트 초과 방지
       const availableMax = Math.min(
         this.ordererInfo.point,
         this.maximumAvailablePoint
       );
+
       this.usedPoint = inputValue
         ? Math.min(Number(inputValue), availableMax)
         : 0;
 
-      // 필터링된 값을 다시 input에 반영
       event.target.value = this.usedPoint;
     },
     useAllPoints() {
@@ -592,6 +622,35 @@ export default {
       } else {
         this.usedPoint = this.maximumAvailablePoint;
       }
+    },
+
+    displayModal() {
+      this.isDisplayModal = !this.isDisplayModal;
+    },
+
+    closeModal() {
+      this.isDisplayModal = false;
+    },
+
+    handleDeliveryChange(newDelivery) {
+      this.ordererInfo.selectedAddress = newDelivery;
+    },
+
+    copyOrdererName() {
+      if (!this.isSameAsOrdererName) {
+        this.receiverName = "";
+        return;
+      }
+
+      this.receiverName = this.ordererInfo.name;
+    },
+
+    copyOrdererPhone() {
+      if (!this.isSameAsOrdererPhone) {
+        this.receiverPhoneNumber = "";
+        return;
+      }
+      this.receiverPhoneNumber = this.ordererInfo.phoneNumber;
     },
   },
 };
@@ -810,8 +869,8 @@ export default {
   font-weight: 500;
   font-size: 12px;
   line-height: 22px;
-  color: rgb(102, 102, 102);
   background-color: rgb(247, 247, 247);
+  color: rgb(95, 0, 128);
   vertical-align: top;
 }
 
@@ -1566,5 +1625,29 @@ ul {
 
 .css-qq9ke6 {
   color: rgb(238, 106, 123);
+}
+
+.css-check-wrapper {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.css-check-wrapper input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.css-input {
+  width: 300px;
+  height: 40px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.css-1gshg9u {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
 }
 </style>
