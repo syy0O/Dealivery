@@ -45,7 +45,8 @@ export const useOrderStore = defineStore('order', {
 
                 this.orderInfo.orderIdx = response.data.result.orderIdx;
                 this.customData.products = customData
-                this.customData.discountRate = this.boardInfo.discountRate
+                this.customData.discountRate = this.boardInfo.discountRate;
+
 
                 return true;
 
@@ -126,8 +127,9 @@ export const useOrderStore = defineStore('order', {
         },
 
         async cancelOrder(orderIdx, root, msg) {
-            await axios.patch(backend + `/${orderIdx}/cancel`, { withCredentials: true });
-
+            const response = await axios.patch(backend + `/${orderIdx}/cancel`, { withCredentials: true });
+            console.log(response.code)
+            console.log(response.data)
             alert(msg);
             router.push(root);
         },
