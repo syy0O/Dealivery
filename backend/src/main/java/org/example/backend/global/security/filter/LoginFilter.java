@@ -29,6 +29,8 @@ import org.springframework.util.StreamUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -168,8 +170,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json; charset=UTF-8");
         response.setStatus(HttpStatus.OK.value());
 
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("role", message);
+
         PrintWriter out = response.getWriter();
-        BaseResponse<String> baseResponse = new BaseResponse<>(message);
+        BaseResponse<Map<String,Object>> baseResponse = new BaseResponse<>(responseData);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonResponse = objectMapper.writeValueAsString(baseResponse);
         out.print(jsonResponse);
