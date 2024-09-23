@@ -57,6 +57,13 @@ export default {
       totalPages: 1,
     };
   },
+  mounted(){
+    window.scrollTo({
+            top: 100,
+            left: 0,
+            behavior: 'smooth'
+        });
+    }
   components: {
     MypageOrderComponent,
   },

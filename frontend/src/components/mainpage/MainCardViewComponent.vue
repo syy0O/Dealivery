@@ -126,12 +126,16 @@
 <script>
 import heartIcon from "@/assets/heart-icon.svg";
 import heartIconActive from "@/assets/heart-icon-active.svg";
-
+import { useUserStore } from "@/stores/useUserStore";
+import { mapStores } from "pinia";
 export default {
   data() {
     return {
       isActive: false,
       heartIcon: heartIcon,
+      request:{
+        productBoardIdx: null
+      },
       hours: "00",
       minutes: "00",
       seconds: "00",
@@ -143,8 +147,12 @@ export default {
       type: Object,
     },
   },
+  computed: {
+    ...mapStores(useUserStore),
+  },  
   mounted() {
     this.startTimer();
+    this.isActive = this.data.likes;
   },
   beforeUnmount() {
     clearInterval(this.intervalId);
@@ -188,9 +196,20 @@ export default {
       this.seconds = "00";
     },
   },
-  toggleHeart() {
-    this.isActive = !this.isActive;
-    this.heartIcon = this.isActive ? heartIconActive : heartIcon;
+  async toggleHeart() {
+    this.request.productBoardIdx = this.data.idx;
+      console.log(this.data.likes);
+      if(!this.userStore.isLogined){
+        alert("로그인이 필요한 서비스입니다.");
+        this.$router.push("/auth/login");
+        return
+      }
+      if(await this.userStore.like(this.request)){
+        this.isActive = !this.isActive;
+        this.heartIcon = this.isActive ? heartIconActive : heartIcon;
+      }else{
+        alert("관심 등록에 실패했습니다.");
+      }
   },
 };
 </script>
