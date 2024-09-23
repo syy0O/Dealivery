@@ -149,6 +149,8 @@ export default {
         this.$router.push({
           query: {
             page: pageNumber,
+            category: this.currentCategory,
+            search: this.currentSearch,
           },
         });
       } else if (pageNumber < 1) {
