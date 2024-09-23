@@ -13,6 +13,7 @@ import org.example.backend.global.exception.InvalidCustomException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,9 +28,17 @@ public class LikesService {
         //존재하는 회원인지 체크
         User user = userRepository.findByIdx(userIdx).orElseThrow(
                 () -> new InvalidCustomException(BaseResponseStatus.LIKES_REGISTER_FAIL));
+        //회원의 관심목록 전부 조회
+        List<Likes> likesList = likesRepository.findAllByUserIdx(userIdx);
+
+        //좋아요 갯수가 100이상이면 등록 불가
+        if (likesList.size() >= 100){
+            throw new InvalidCustomException(BaseResponseStatus.LIKES_CANCLE_FAIL_EXCEED_MAX_LIKES);
+        }
         //존재하는 게시글인지 체크
         ProductBoard productBoard = productBoardRepository.findByIdx(request.getProductBoardIdx()).orElseThrow(
-                () -> new InvalidCustomException(BaseResponseStatus.LIKES_REGISTER_FAIL_NO_MATCH_PRODUCT_BOARD));
+                () -> new InvalidCustomException(BaseResponseStatus.LIKES_CANCLE_FAIL_NO_MATCH_PRODUCT_BOARD)
+        );
         //좋아요 내역이 있는지 확인
         Optional<Likes> optionalLikes = likesRepository.findByProductBoardIdxAndUserIdx(request.getProductBoardIdx(),userIdx);
         //이미 존재하면 삭제
@@ -40,6 +49,5 @@ public class LikesService {
         }else {
             likesRepository.save(request.toEntity(productBoard, user));
         }
-
     }
 }

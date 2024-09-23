@@ -130,6 +130,7 @@ public enum BaseResponseStatus {
     LIKES_REGISTER_FAIL_NO_MATCH_PRODUCT_BOARD(false, 5001, "관심게시글 등록에 실패했습니다. 해당 상품게시글이 존재하지 않습니다."),
     LIKES_CANCLE_FAIL(false, 5002, "관심게시글 취소에 실패했습니다."),
     LIKES_CANCLE_FAIL_NO_MATCH_PRODUCT_BOARD(false, 5003, "관심게시글 취소에 실패했습니다. 해당 상품게시글이 존재하지 않습니다."),
+    LIKES_CANCLE_FAIL_EXCEED_MAX_LIKES(false, 5004, "관심게시글 등록/취소에 실패했습니다. 최대 100개까지 등록 가능합니다."),
 
     // 문의 기능 6000
     QNA_QUESTION_FAIL(false, 6000, "문의 등록에 실패했습니다."),
