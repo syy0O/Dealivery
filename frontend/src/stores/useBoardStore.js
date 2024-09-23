@@ -28,9 +28,13 @@ export const useBoardStore = defineStore("board", {
     },
     async getList(page, category, search) {
       const params = { page: page };
-      if (category != "undefined" && category != null && category != "전체") {
+      if (category != "undefined" && category != "null" && category != "전체") {
         params.search = category;
-      } else if (search != "undefined" && search != null && search != "전체") {
+      } else if (
+        search != "undefined" &&
+        search != "null" &&
+        search != "전체"
+      ) {
         params.search = search;
       }
       const response = await axios.get(backend + "/list", {
