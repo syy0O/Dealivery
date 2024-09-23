@@ -3,8 +3,11 @@ package org.example.backend.domain.qna.service;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.domain.board.model.entity.ProductBoard;
 import org.example.backend.domain.board.repository.ProductBoardRepository;
+import org.example.backend.domain.qna.model.dto.AnswerDto;
 import org.example.backend.domain.qna.model.dto.QuestionDto;
+import org.example.backend.domain.qna.model.entity.Answer;
 import org.example.backend.domain.qna.model.entity.Question;
+import org.example.backend.domain.qna.repository.AnswerRepository;
 import org.example.backend.domain.qna.repository.QuestionRepository;
 import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.domain.user.repository.UserRepository;
@@ -23,6 +26,7 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final ProductBoardRepository productBoardRepository;
     private final UserRepository userRepository;
+    private final AnswerRepository answerRepository;
 
     public QuestionDto.QuestionCreateResponse createQuestion(QuestionDto.QuestionCreateRequest request, String email, Long productBoardIdx) {
         // 사용자 조회
@@ -37,17 +41,16 @@ public class QuestionService {
         Question question = request.toEntity(user, productBoard);
         questionRepository.save(question);
 
-        // 엔티티의 변환 메서드를 호출하여 DTO 반환
-        return question.toQuestionCreateResponse();
+        return question.toCreateResponse();  // 엔티티의 변환 메서드 사용
     }
 
     public List<QuestionDto.QuestionListResponse> getQuestions() {
         return questionRepository.findAll().stream()
-                .map(Question::toQuestionListResponse)  // 엔티티의 변환 메서드 사용
+                .map(Question::toListResponse)  // 엔티티의 변환 메서드 사용
                 .collect(Collectors.toList());
     }
 
-    public void deleteQuestion(Long questionId, String email) {
+    public void deleteQuestion(Long questionId, String email){
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.QNA_ANSWER_DELETE_FAIL_NOT_FOUND));
 
@@ -63,5 +66,13 @@ public class QuestionService {
 
         // 삭제 처리
         questionRepository.delete(question);
+    }
+
+    public List<QuestionDto.QuestionListResponse> getQuestionsByCompanyEmail(String companyEmail) {
+        List<ProductBoard> productBoards = productBoardRepository.findByCompanyEmail(companyEmail);
+
+        return questionRepository.findByProductBoardIn(productBoards).stream()
+                .map(Question::toListResponse)  // 엔티티의 변환 메서드 사용
+                .collect(Collectors.toList());
     }
 }

@@ -34,20 +34,11 @@ public class QuestionController {
                     )
             ))
     @PostMapping("/create")
-    public BaseResponse create(@RequestBody QuestionDto.QuestionCreateRequest request,
-                               @AuthenticationPrincipal UserDetails userDetails) {
+    public BaseResponse create(@RequestBody QuestionDto.QuestionCreateRequest request, @AuthenticationPrincipal UserDetails userDetails) {
         String email = userDetails.getUsername(); // 인증된 사용자의 이메일 가져오기
-
-        if (request.getTitle() == null || request.getTitle().trim().isEmpty()) {
-            throw new InvalidCustomException(BaseResponseStatus.QNA_QUESTION_FAIL_EMPTY_TITLE);
-        }
-        if (request.getContent() == null || request.getContent().trim().isEmpty()) {
-            throw new InvalidCustomException(BaseResponseStatus.QNA_QUESTION_FAIL_EMPTY_CONTENT);
-        }
-
         Long productBoardIdx = request.getProductBoardIdx();  // Request Body로 전달받은 productBoardIdx 사용
-        QuestionDto.QuestionCreateResponse response = questionService.createQuestion(request, email, productBoardIdx);
 
+        QuestionDto.QuestionCreateResponse response = questionService.createQuestion(request, email, productBoardIdx);
         return new BaseResponse<>(response);
     }
 
@@ -59,10 +50,17 @@ public class QuestionController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public BaseResponse deleteQuestion(@PathVariable Long id,
-                                       @AuthenticationPrincipal UserDetails userDetails) {
+    public BaseResponse deleteQuestion(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
         String email = userDetails.getUsername();
         questionService.deleteQuestion(id, email);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @Operation(summary = "문의 목록 조회 API", description = "로그인된 기업 회원이 자신의 게시글에 달린 문의만 조회합니다.")
+    @GetMapping("/list/company")
+    public BaseResponse<List<QuestionDto.QuestionListResponse>> getCompanyQuestions(@AuthenticationPrincipal UserDetails userDetails) {
+        String companyEmail = userDetails.getUsername();  // 인증된 기업 회원의 이메일 가져오기
+        List<QuestionDto.QuestionListResponse> questionList = questionService.getQuestionsByCompanyEmail(companyEmail);
+        return new BaseResponse<>(questionList);
     }
 }
