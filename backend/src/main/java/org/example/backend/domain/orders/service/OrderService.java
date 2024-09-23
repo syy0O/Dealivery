@@ -149,10 +149,10 @@ public class OrderService {
     public void rollbackStock(Orders order) {
         List<OrderedProduct> orderedProducts = order.getOrderedProducts();
 
-        orderedProducts.forEach((product) -> {
-            Product orderdProduct = productRepository.findByIdWithLock(product.getIdx())
+        orderedProducts.forEach((orderedProduct) -> {
+            Product product = productRepository.findByIdWithLock(orderedProduct.getProduct().getIdx())
                     .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_PRODUCT_NOT_FOUND));
-            orderdProduct.increaseStock(product.getQuantity());
+            product.increaseStock(orderedProduct.getQuantity());
         });
     }
 
