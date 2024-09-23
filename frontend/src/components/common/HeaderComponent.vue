@@ -32,13 +32,18 @@
       <div class="css-r7wmjj e15sbxqa3">
         <div class="css-boc80u ekdqe1a1">
           <img
-            src="@/assets/dealivery-logo.png"
+            src="@/assets/dealivery-logo2.png"
             alt="딜리버리 로고"
             class="css-17mnrrx e1s3pt0j0 logo"
             @click="routeTo('/')"
           />
           <span class="separator">|</span>
-          <button class="css-mxd3pm ekdqe1a0" @click="routeTo('/product-boards/company/list')">Company</button>
+          <button
+            class="css-mxd3pm ekdqe1a0"
+            @click="routeTo('/product-boards/company/list')"
+          >
+            Company
+          </button>
         </div>
         <div class="css-pqw0uk e1493ofl4">
           <div class="css-w444a2 e1493ofl1">
@@ -62,10 +67,14 @@
             <button
               class="css-231fw3 etxxzpc0"
               aria-label="찜하기"
-              type="button" @click="routeTo('/mypage/likes')"
+              type="button"
+              @click="routeTo('/mypage/likes')"
             ></button>
             <div class="css-ff2aah e14oy6dx2">
-              <button class="css-g25h97 e14oy6dx1" @click="routeTo('/mypage/address')"></button>
+              <button
+                class="css-g25h97 e14oy6dx1"
+                @click="routeTo('/mypage/address')"
+              ></button>
             </div>
           </div>
         </div>

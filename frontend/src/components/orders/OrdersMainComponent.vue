@@ -445,6 +445,7 @@ export default {
       receiverPhoneNumber: "",
     };
   },
+
   computed: {
     ...mapStores(useOrderStore, useUserStore),
     totalAmount() {
@@ -469,8 +470,10 @@ export default {
   },
   created() {
     this.init();
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
   },
   beforeUnmount() {
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
     window.removeEventListener("popstate", this.handlePopState);
   },
 
@@ -509,7 +512,7 @@ export default {
             ? this.ordererInfo.point
             : tenPercentOfPrice;
 
-        history.pushState(null, null, location.href);
+        history.pushState({ ...history.state }, "", location.href);
         window.addEventListener("popstate", this.handlePopState);
 
         this.isLoading = false; // 데이터 로딩 완료 후 로딩 상태 해제
@@ -524,6 +527,18 @@ export default {
         "/",
         "주문이 취소되었습니다."
       );
+    },
+    handleBeforeUnload(event) {
+      if (!this.paymentCompleted) {
+        // 결제가 완료되지 않은 경우에만
+        event.preventDefault();
+        event.returnValue = ""; // 브라우저가 사용자에게 경고를 표시하도록 함
+        this.orderStore.cancelOrder(
+          this.orderStore.orderInfo.orderIdx,
+          "/",
+          "결제가 취소되었습니다."
+        );
+      }
     },
 
     toggleContent() {
