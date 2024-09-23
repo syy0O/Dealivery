@@ -2,26 +2,20 @@
   <div class="css-16c0d8l">
     <nav class="css-1le17tz en4zazl1">
       <ul class="css-tse2s2 en4zazl0">
-        <li
-          :class="[
-            'css-1tzhzcg',
-            'efe6b6j1',
-            'tab',
-            { active: activeTab === 'description' },
-          ]"
-          @click.prevent="activeTab = 'description'"
-        >
+        <li :class="[
+          'css-1tzhzcg',
+          'efe6b6j1',
+          'tab',
+          { active: activeTab === 'description' },
+        ]" @click.prevent="activeTab = 'description'">
           <a class="css-1t0ft7s efe6b6j0"><span class="name">상품설명</span></a>
         </li>
-        <li
-          :class="[
-            'css-1tzhzcg',
-            'efe6b6j1',
-            'tab',
-            { active: activeTab === 'inquiries' },
-          ]"
-          @click.prevent="activeTab = 'inquiries'"
-        >
+        <li :class="[
+          'css-1tzhzcg',
+          'efe6b6j1',
+          'tab',
+          { active: activeTab === 'inquiries' },
+        ]" @click.prevent="loadInquiries">
           <a class="css-1t0ft7s efe6b6j0"><span class="name">문의</span></a>
         </li>
       </ul>
@@ -39,9 +33,7 @@
               <div class="goods_note">
                 <div class="context">
                   <div class="pic">
-                    <img
-                      src="https://img-cf.kurly.com/hdims/resize/%3E1010x/quality/90/src/shop/data/goodsview/20240829/gv10001551896_1.jpg"
-                    />
+                    <img :src="detail" class="responsive-image" />
                   </div>
                   <p class="words"></p>
                 </div>
@@ -88,8 +80,16 @@
         <tbody v-for="(row, index) in localTableData" :key="index">
           <tr @click="toggleInquiry(index)" class="css-atz965 e1l5ky7y9">
             <td class="css-1brd6ns e1l5ky7y8">{{ row.title }}</td>
-            <td class="css-1pkqelu e1l5ky7y7">{{ maskAuthorName(row.userName) }}</td>
-            <td class="css-1pkqelu e1l5ky7y6">{{ row.modifiedAt ? formatDate(row.modifiedAt) : formatDate(row.createdAt) }}</td>
+            <td class="css-1pkqelu e1l5ky7y7">
+              {{ maskAuthorName(row.userName) }}
+            </td>
+            <td class="css-1pkqelu e1l5ky7y6">
+              {{
+                row.modifiedAt
+                  ? formatDate(row.modifiedAt)
+                  : formatDate(row.createdAt)
+              }}
+            </td>
             <td class="css-bhr3cq e1l5ky7y5">{{ row.answerStatus }}</td>
           </tr>
           <tr
@@ -106,22 +106,22 @@
                     <span>{{ row.content }}<br /></span>
                   </div>
                 </div>
-                <div class="css-1j49yxi e11ufodi1" v-if="row.answerStatus !== '답변완료'">
+                <div class="css-1j49yxi e11ufodi1" v-if="row.answerStatus !== '답변완료' && row.email === this.userEmail">
                   <button type=" button" @click="openEditModal(index)">수정</button>
-                  <button type="button" class="css-1ankuif e11ufodi0" @click="deleteInquiry(index)">삭제</button>
+                  <button type="button" class="css-1ankuif e11ufodi0" @click="deleteInquiry(row.idx, index)">삭제</button>
                 </div>
               </div>
-              <div class=" css-tnubsz e1ptpt003" v-if="row.answerStatus !== '답변대기'">
-                <div class="css-1n83etr e1ptpt002">
+              <div class="css-tnubsz e1ptpt003" v-if="row.answerStatus !== '답변대기'">
+                <div class="css-1n83etr e1ptpt002" v-for="(answer, answerIndex) in row.answers" :key="answerIndex">
                   <div class="css-m1wgq7 e1ptpt001">
                     <span class="css-1non6l6 ey0f1wv0"></span>
                   </div>
                   <div class="css-1bv2zte e1ptpt000">
-                    <div>{{ row.answer_content }}</div>
+                    <div>{{ answer.content }}</div>
                   </div>
-                </div>
-                <div class="css-17g9jzg e1gk8zam0">
-                  {{ row.answer_modified_at || row.answer_created_at }}
+                  <div class="css-17g9jzg e1gk8zam0">
+                    {{ answer.createdAt ? formatDate(answer.createdAt) : '작성 시간 없음' }}
+                  </div>
                 </div>
               </div>
             </td>
@@ -135,6 +135,9 @@
       v-if="showNewInquiryModal"
       @close="closeModal"
       @submit="addNewInquiry"
+      :productBoardIdx="productBoardIdx"
+      :thumbnail="thumbnails[0]"
+      :title="productTitle"
     />
 
     <!-- 수정 모달 -->
@@ -149,17 +152,38 @@
 </template>
 
 <script>
+import { useQnaStore } from "@/stores/useQnaStore";
 import QnaRegisterModalComponent from "../qna/QnaRegisterModalComponent.vue";
+import { mapStores } from "pinia";
+import { useUserStore } from "@/stores/useUserStore";
+import axios from "axios";
 
 export default {
   name: "BoardDetailNavComponent",
+  computed: {
+    ...mapStores(useQnaStore, useUserStore),
+    userEmail() {
+      return this.userStore.userDetail.email || "email 세팅 안 됨";
+    },
+  },
   props: {
-    tableData: {
+    thumbnails: {
       type: Array,
       required: true,
     },
+    detail: {
+      type: String,
+      required: true,
+    },
+    productBoardIdx: {
+      type: Number,
+      required: true,
+    },
+    productTitle: {
+      type: String,
+      required: true,
+    },
   },
-
   data() {
     return {
       activeTab: "description",
@@ -171,18 +195,42 @@ export default {
         title: "",
         content: "",
       },
-      localTableData: [...this.tableData],
+      localTableData: [],
       expandedInquiryIndex: null,
       editingIndex: null, // 수정할 문의 인덱스
     };
   },
   methods: {
+    loadInquiries() {
+      this.activeTab = "inquiries"; // 문의 탭 활성화
+      
+      axios.get('/api/user/detail', { withCredentials: true })
+        .then((response) => {
+          if (response.data.code === 1000) {
+            const userEmail = response.data.result.email;
+            console.log("로그인된 사용자의 이메일:", userEmail);
+            this.userStore.userDetail = response.data.result;
+          } else {
+            console.log("회원 정보를 가져오는 데 실패했습니다.");
+          }
+        })
+        .catch((error) => {
+          // 에러가 발생해도 alert 대신 로그만 출력
+          console.error("회원 정보 조회 중 오류 발생:", error);
+        })
+        .finally(() => {
+          // 회원정보 조회에 성공하든 실패하든 문의 목록은 조회하도록
+          this.qnaStore.fetchInquiries().then(() => {
+            this.localTableData = this.qnaStore.inquiries;
+          });
+        });
+    },
     formatDate(dateString) {
       const date = new Date(dateString);
       return date.toLocaleDateString("ko-KR", {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
       });
     },
     openNewInquiryModal() {
@@ -203,7 +251,7 @@ export default {
     },
     maskAuthorName(name) {
       if (!name) {
-        return "익명";  // name이 undefined나 null일 경우 기본값을 반환
+        return "익명"; // name이 undefined나 null일 경우 기본값을 반환
       }
       if (name.length <= 2) {
         return name[0] + "*";
@@ -217,8 +265,7 @@ export default {
       el.style.maxHeight = "0px";
     },
     addNewInquiry(newInquiry) {
-      newInquiry.created_at = new Date().toISOString().split("T")[0];
-      this.localTableData.push(newInquiry);
+      newInquiry.email = this.userEmail;  // 로그인된 사용자의 이메일을 새 문의에 추가
       this.closeModal();
     },
     updateInquiry(updatedInquiry) {
@@ -233,9 +280,9 @@ export default {
         this.closeModal();
       }
     },
-    deleteInquiry(index) {
-      // 문의를 삭제할 때, 현재 토글된 인덱스를 초기화
-      this.localTableData.splice(index, 1); // 해당 인덱스의 문의 삭제
+    deleteInquiry(idx, index) {
+      this.qnaStore.deleteInquiry(idx, index);
+
       if (this.expandedInquiryIndex === index) {
         // 삭제된 인덱스가 현재 토글된 인덱스라면 초기화
         this.expandedInquiryIndex = null;
@@ -438,8 +485,7 @@ table {
   display: block;
   width: 14px;
   height: 14px;
-  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxMiAxNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxnIGZpbGw9IiNCNUI1QjUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPHBhdGggZD0iTTExLjA0MyAxMi41NzVhLjI1OS4yNTkgMCAwIDEtLjI1OC4yNTdIMS4yMTRhLjI1OS4yNTkgMCAwIDEtLjI1OC0uMjU3VjUuNDJjMC0uMTQyLjExNy0uMjU4LjI1OC0uMjU4aDkuNTdjLjE0NCAwIC4yNi4xMTYuMjYuMjU4djcuMTU1ek0zLjY4NSAzLjIzN0EyLjI4MyAyLjI4MyAwIDAgMSA1Ljk2Ni45NTdhMi4yODIgMi4yODIgMCAwIDEgMi4yODEgMi4yOHYuOTY4SDMuNjg1di0uOTY4em03LjEuOTY4aC0xLjU4di0uOTY4QTMuMjQxIDMuMjQxIDAgMCAwIDUuOTY1IDAgMy4yNCAzLjI0IDAgMCAwIDIuNzMgMy4yMzd2Ljk2OEgxLjIxNEMuNTQ0IDQuMjA1IDAgNC43NSAwIDUuNDJ2Ny4xNTVjMCAuNjY5LjU0NSAxLjIxNCAxLjIxNCAxLjIxNGg5LjU3Yy42NzEgMCAxLjIxNi0uNTQ1IDEuMjE2LTEuMjE0VjUuNDJjMC0uNjctLjU0NS0xLjIxNS0xLjIxNS0xLjIxNXoiLz4KICAgICAgICA8cGF0aCBkPSJNNSA4LjJjMCAuMzQzLjE4NC42MzIuNDQ4LjgxMnYxLjMzaDEuMTAzdi0xLjMzQS45ODYuOTg2IDAgMCAwIDcgOC4yYTEgMSAwIDAgMC0yIDB6Ii8+CiAgICA8L2c+Cjwvc3ZnPgo=)
-    no-repeat;
+  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxMiAxNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxnIGZpbGw9IiNCNUI1QjUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPHBhdGggZD0iTTExLjA0MyAxMi41NzVhLjI1OS4yNTkgMCAwIDEtLjI1OC4yNTdIMS4yMTRhLjI1OS4yNTkgMCAwIDEtLjI1OC0uMjU3VjUuNDJjMC0uMTQyLjExNy0uMjU4LjI1OC0uMjU4aDkuNTdjLjE0NCAwIC4yNi4xMTYuMjYuMjU4djcuMTU1ek0zLjY4NSAzLjIzN0EyLjI4MyAyLjI4MyAwIDAgMSA1Ljk2Ni45NTdhMi4yODIgMi4yODIgMCAwIDEgMi4yODEgMi4yOHYuOTY4SDMuNjg1di0uOTY4em03LjEuOTY4aC0xLjU4di0uOTY4QTMuMjQxIDMuMjQxIDAgMCAwIDUuOTY1IDAgMy4yNCAzLjI0IDAgMCAwIDIuNzMgMy4yMzd2Ljk2OEgxLjIxNEMuNTQ0IDQuMjA1IDAgNC43NSAwIDUuNDJ2Ny4xNTVjMCAuNjY5LjU0NSAxLjIxNCAxLjIxNCAxLjIxNGg5LjU3Yy42NzEgMCAxLjIxNi0uNTQ1IDEuMjE2LTEuMjE0VjUuNDJjMC0uNjctLjU0NS0xLjIxNS0xLjIxNS0xLjIxNXoiLz4KICAgICAgICA8cGF0aCBkPSJNNSA4LjJjMCAuMzQzLjE4NC42MzIuNDQ4LjgxMnYxLjMzaDEuMTAzdi0xLjMzQS45ODYuOTg2IDAgMCAwIDcgOC4yYTEgMSAwIDAgMC0yIDB6Ii8+CiAgICA8L2c+Cjwvc3ZnPgo=) no-repeat;
   margin-left: 6px;
 }
 
@@ -491,7 +537,7 @@ table {
   cursor: default;
 }
 
-.css-sxxs1g button + button {
+.css-sxxs1g button+button {
   margin-left: 12px;
 }
 
@@ -600,7 +646,7 @@ div {
 
 .css-1n83etr {
   display: flex;
-  padding: 22px 20px 10px;
+  padding: 22px 20px 25px;
   align-items: flex-start;
 }
 
@@ -671,5 +717,11 @@ div {
   background: rgb(238, 238, 238);
   vertical-align: top;
   content: "";
+}
+
+.responsive-image {
+  width: 1050px;
+  height: auto; /* 이미지 비율에 맞게 자동으로 높이 설정 */
+  object-fit: contain; /* 비율을 유지하면서 영역에 맞게 이미지 표시 */
 }
 </style>
