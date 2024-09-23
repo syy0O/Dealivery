@@ -72,6 +72,11 @@ export default {
     },
     mounted() {
         this.loadMyInquiries();  // 컴포넌트가 마운트될 때 로그인된 사용자의 문의 목록을 불러옴
+        window.scrollTo({
+            top: 100,
+            left: 0,
+            behavior: 'smooth'
+        });
     },
     methods: {
         async loadMyInquiries() {
@@ -103,13 +108,7 @@ export default {
             return inquiry.productImageUrl || "https://via.placeholder.com/150";  // 기본 이미지 제공
         }
     },
-    mounted(){
-    window.scrollTo({
-            top: 100,
-            left: 0,
-            behavior: 'smooth'
-        });
-  },
+
 }
 </script>
 
