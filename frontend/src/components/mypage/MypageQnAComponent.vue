@@ -1,4 +1,5 @@
 <template>
+    
     <div class="css-heioij eug5r8l1">
         <div class="css-1xdhyk6 eug5r8l0">
             <ul>
@@ -101,7 +102,14 @@ export default {
         getProductImage(inquiry) {
             return inquiry.productImageUrl || "https://via.placeholder.com/150";  // 기본 이미지 제공
         }
-    }
+    },
+    mounted(){
+    window.scrollTo({
+            top: 100,
+            left: 0,
+            behavior: 'smooth'
+        });
+  },
 }
 </script>
 
