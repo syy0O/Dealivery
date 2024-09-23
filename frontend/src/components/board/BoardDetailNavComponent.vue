@@ -123,8 +123,9 @@
 
     <!-- 수정 모달 -->
     <QnaRegisterModalComponent v-if="showEditInquiryModal" :initialSubject="selectedInquiry.title"
-      :initialContent="selectedInquiry.content" @close="closeModal" @submit="updateInquiry" :isEditMode="true"
-      :productBoardIdx="productBoardIdx" :thumbnail="thumbnails[0]" :title="productTitle" />
+      :initialContent="selectedInquiry.content" :inquiryId="selectedInquiry.idx" @close="closeModal"
+      @submit="updateInquiry" :isEditMode="true" :productBoardIdx="productBoardIdx" :thumbnail="thumbnails[0]"
+      :title="productTitle" />
   </div>
 </template>
 
@@ -214,8 +215,9 @@ export default {
       this.showNewInquiryModal = true;
     },
     openEditModal(index) {
-      this.selectedInquiry = { ...this.localTableData[index] }; // 선택한 문의 데이터를 저장
-      this.editingIndex = index; // 수정할 문의의 인덱스를 저장
+      const selectedInquiry = { ...this.localTableData[index] }; // 선택한 문의 데이터를 저장
+      this.selectedInquiry = selectedInquiry;
+      this.editingIndex = index;
       this.showEditInquiryModal = true;
     },
     closeModal() {
@@ -683,6 +685,7 @@ div {
   border: 0px;
   background: none;
   color: rgb(153, 153, 153);
+  margin-bottom: 5px;
 }
 
 .css-1ankuif::before {

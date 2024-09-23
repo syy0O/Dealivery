@@ -108,6 +108,10 @@ export default {
             type: String,
             default: ""
         },
+        inquiryId: {
+            type: Number, // 수정 모드일 때 사용할 문의 ID
+            default: null
+        },
         thumbnail: {
             type: String,
             required: true
@@ -151,27 +155,32 @@ export default {
             this.$emit("close");
         },
         async submitForm() {
-            const newInquiry = {
+            // 문의 수정 또는 등록 로직
+            const inquiryData = {
                 title: this.subject,
                 content: this.content,
-                userIdx: this.userStore.userDetail.idx,  // Pinia에서 userStore로부터 userIdx 가져오기
-                productBoardIdx: this.productBoardIdx, // 추후 해당 게시글 IDX 사용
+                productBoardIdx: this.productBoardIdx,
             };
 
             try {
-                const response = await axios.post('/api/qna/question/create', newInquiry);
-
-                if (response.data.isSuccess) {
-                    const registeredInquiry = response.data.result; // 응답으로 받은 데이터를 registeredInquiry에 저장
-                    this.qnaStore.addInquiry(registeredInquiry); // 등록된 문의를 스토어에 추가
-                    // 부모 컴포넌트에 데이터 전달
-                    this.$emit("submit", registeredInquiry);
-                    this.closeModal();
+                if (this.isEditMode && this.inquiryId) {
+                    // 수정 모드일 때 PUT 요청
+                    const response = await axios.put(`/api/qna/question/update/${this.inquiryId}`, inquiryData);
+                    if (response.data.isSuccess) {
+                        this.qnaStore.updateInquiry(response.data.result);
+                        this.$emit("submit", response.data.result); // 부모 컴포넌트에 수정된 데이터를 전달
+                    }
                 } else {
-                    console.error("문의 등록 실패:", response.data.message);
+                    // 등록 모드일 때 POST 요청
+                    const response = await axios.post('/api/qna/question/create', inquiryData);
+                    if (response.data.isSuccess) {
+                        this.qnaStore.addInquiry(response.data.result);
+                        this.$emit("submit", response.data.result); // 부모 컴포넌트에 등록된 데이터를 전달
+                    }
                 }
+                this.closeModal();
             } catch (error) {
-                console.error("문의 등록 중 오류 발생:", error);
+                console.error(this.isEditMode ? "문의 수정 중 오류 발생" : "문의 등록 중 오류 발생", error);
             }
         },
         limitContentLength() {
