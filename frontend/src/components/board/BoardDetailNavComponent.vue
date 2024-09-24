@@ -75,9 +75,9 @@
             </td>
             <td class="css-1pkqelu e1l5ky7y6">
               {{
-              row.modifiedAt
-              ? formatDate(row.modifiedAt)
-              : formatDate(row.createdAt)
+                row.modifiedAt
+                  ? formatDate(row.modifiedAt)
+                  : formatDate(row.createdAt)
               }}
             </td>
             <td class="css-bhr3cq e1l5ky7y5">{{ row.answerStatus }}</td>
@@ -93,7 +93,7 @@
                     <span>{{ row.content }}<br /></span>
                   </div>
                 </div>
-                <div class="css-1j49yxi e11ufodi1" v-if="row.answerStatus !== '답변완료' && row.email === this.userEmail">
+                <div class="css-1j49yxi e11ufodi1" v-if="row.answerStatus === '답변대기' && row.email === this.userEmail">
                   <button type=" button" @click="openEditModal(index)">수정</button>
                   <button type="button" class="css-1ankuif e11ufodi0" @click="deleteInquiry(row.idx, index)">삭제</button>
                 </div>
@@ -181,12 +181,10 @@ export default {
   methods: {
     loadInquiries() {
       this.activeTab = "inquiries"; // 문의 탭 활성화
-      
+
       axios.get('/api/user/detail', { withCredentials: true })
         .then((response) => {
           if (response.data.code === 1000) {
-            const userEmail = response.data.result.email;
-            console.log("로그인된 사용자의 이메일:", userEmail);
             this.userStore.userDetail = response.data.result;
           } else {
             console.log("회원 정보를 가져오는 데 실패했습니다.");
@@ -199,17 +197,13 @@ export default {
         .finally(() => {
           // 회원정보 조회에 성공하든 실패하든 문의 목록은 조회하도록
           this.qnaStore.fetchInquiries().then(() => {
-          this.localTableData = this.qnaStore.inquiries.filter(inquiry => inquiry.productBoardIdx === this.productBoardIdx);
+            this.localTableData = [...this.qnaStore.inquiries.filter(inquiry => inquiry.productBoardIdx === this.productBoardIdx)];
           });
         });
     },
     formatDate(dateString) {
       const date = new Date(dateString);
-      return date.toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      });
+      return date.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" });
     },
     openNewInquiryModal() {
       this.showNewInquiryModal = true;
@@ -244,50 +238,43 @@ export default {
       el.style.maxHeight = "0px";
     },
     addNewInquiry(newInquiry) {
-      newInquiry.email = this.userEmail;  // 로그인된 사용자의 이메일을 새 문의에 추가
+      this.qnaStore.addInquiry(newInquiry);
+      this.localTableData = [...this.localTableData, newInquiry]; // 화면에 바로 반영
       this.closeModal();
     },
     updateInquiry(updatedInquiry) {
       if (this.editingIndex !== null) {
-        // 수정된 데이터를 배열에 직접 반영
-        this.localTableData[this.editingIndex] = {
-          ...this.localTableData[this.editingIndex],
-          ...updatedInquiry,
-          created_at: new Date().toISOString().split("T")[0], // 수정 날짜로 갱신
-        };
+        this.qnaStore.updateInquiry(this.editingIndex, updatedInquiry);
+        this.localTableData[this.editingIndex] = { ...this.localTableData[this.editingIndex], ...updatedInquiry };  // 바로 반영
         this.editingIndex = null;
         this.closeModal();
       }
+      this.qnaStore.fetchInquiries().then(() => {
+            this.localTableData = [...this.qnaStore.inquiries.filter(inquiry => inquiry.productBoardIdx === this.productBoardIdx)];
+          });
     },
     deleteInquiry(idx, index) {
       this.qnaStore.deleteInquiry(idx, index);
-
+      this.localTableData = [...this.localTableData.slice(0, index), ...this.localTableData.slice(index + 1)];
       if (this.expandedInquiryIndex === index) {
-        // 삭제된 인덱스가 현재 토글된 인덱스라면 초기화
         this.expandedInquiryIndex = null;
       } else if (this.expandedInquiryIndex > index) {
-        // 삭제된 인덱스가 현재 토글된 인덱스보다 앞에 있을 경우, 인덱스 보정
         this.expandedInquiryIndex -= 1;
       }
     },
   },
   watch: {
-    tableData(newData) {
-      if (Array.isArray(newData)) {
-        this.localTableData = newData.map((item) => ({
-          ...item,
-          content: item.content || "내용이 없습니다.",
-        }));
-      } else {
-        console.error("tableData is not an array:", newData);
-      }
-    },
+    localTableData: {
+      handler() { this.$forceUpdate(); },
+      deep: true
+    }
   },
   components: {
     QnaRegisterModalComponent,
   },
 };
 </script>
+
 
 <style scoped>
 button {
@@ -704,3 +691,4 @@ div {
   object-fit: contain; /* 비율을 유지하면서 영역에 맞게 이미지 표시 */
 }
 </style>
+

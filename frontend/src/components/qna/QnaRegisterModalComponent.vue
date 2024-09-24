@@ -18,7 +18,7 @@
                                 <img :src="thumbnail" class="css-1vpfo16 eell72m1">
                             </div>
                             <div class="css-1mysn55 eell72m0">
-                                <span>{{title}}</span>
+                                <span>{{ title }}</span>
                             </div>
                         </div>
                         <div class="css-4qu8li e43j10r2">
