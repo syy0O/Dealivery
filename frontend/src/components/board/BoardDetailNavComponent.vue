@@ -199,7 +199,7 @@ export default {
         .finally(() => {
           // 회원정보 조회에 성공하든 실패하든 문의 목록은 조회하도록
           this.qnaStore.fetchInquiries().then(() => {
-            this.localTableData = this.qnaStore.inquiries;
+          this.localTableData = this.qnaStore.inquiries.filter(inquiry => inquiry.productBoardIdx === this.productBoardIdx);
           });
         });
     },
@@ -685,7 +685,6 @@ div {
   border: 0px;
   background: none;
   color: rgb(153, 153, 153);
-  margin-bottom: 5px;
 }
 
 .css-1ankuif::before {
