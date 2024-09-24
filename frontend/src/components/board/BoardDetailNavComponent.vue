@@ -206,7 +206,11 @@ export default {
       return date.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" });
     },
     openNewInquiryModal() {
-      this.showNewInquiryModal = true;
+      if (this.userStore.isLogined) {
+        this.showNewInquiryModal = true;
+      } else {
+        alert("로그인 후 이용해주세요.");
+      }
     },
     openEditModal(index) {
       const selectedInquiry = { ...this.localTableData[index] }; // 선택한 문의 데이터를 저장
@@ -239,8 +243,11 @@ export default {
     },
     addNewInquiry(newInquiry) {
       this.qnaStore.addInquiry(newInquiry);
-      this.localTableData = [...this.localTableData, newInquiry]; // 화면에 바로 반영
+      //this.localTableData = [...this.localTableData, newInquiry]; // 화면에 바로 반영
       this.closeModal();
+      this.qnaStore.fetchInquiries().then(() => {
+            this.localTableData = [...this.qnaStore.inquiries.filter(inquiry => inquiry.productBoardIdx === this.productBoardIdx)];
+          });
     },
     updateInquiry(updatedInquiry) {
       if (this.editingIndex !== null) {
