@@ -16,9 +16,9 @@
                                 <span class="created-at-text">{{ formatDate(inquiry.createdAt) }}</span>
                             </div>
                         </div>
-                        <a :href="'/product/' + inquiry.productBoardIdx" class="product-image-wrap">
+                        <a :href="'/board/detail/' + inquiry.productBoardIdx" class="product-image-wrap">
                             <!-- 이미지가 없는 경우 대비하여 기본 이미지를 제공 -->
-                            <img :src="getProductImage(inquiry)" :alt="inquiry.title">
+                            <img :src="inquiry.productImageUrl || 'https://via.placeholder.com/150'" :alt="inquiry.title">
                         </a>
                     </button>
                     <div name="fade" @after-enter="afterEnter" @after-leave="afterLeave">
@@ -61,6 +61,8 @@
 </template>
 
 <script>
+import { useBoardStore } from "@/stores/useBoardStore";
+import { mapStores } from "pinia";
 import axios from "axios";
 
 export default {
@@ -72,18 +74,23 @@ export default {
     },
     mounted() {
         this.loadMyInquiries();  // 컴포넌트가 마운트될 때 로그인된 사용자의 문의 목록을 불러옴
-        window.scrollTo({
-            top: 100,
-            left: 0,
-            behavior: 'smooth'
-        });
+    },
+    computed:{
+        ...mapStores(useBoardStore),
     },
     methods: {
         async loadMyInquiries() {
             try {
                 const response = await axios.get('/api/qna/question/list/my');
-                this.inquiries = response.data.result;  // 문의 목록을 데이터에 저장
-                console.log(this.inquiries);
+                this.inquiries = response.data.result;
+
+                // 각 문의에 대한 상품 이미지 URL을 추가로 불러옴
+                for (const inquiry of this.inquiries) {
+                    const product = await this.boardStore.getDetail(inquiry.productBoardIdx);
+                    inquiry.productImageUrl = product?.productThumbnailUrls?.[0] || null;
+                }
+
+                console.log(this.inquiries);  // 문의 목록 확인
             } catch (error) {
                 console.error("로그인된 사용자의 문의 목록을 불러오는 데 실패했습니다.", error);
             }
@@ -99,14 +106,14 @@ export default {
         },
         formatDate(dateString) {
             const date = new Date(dateString);
-            if (isNaN(date.getTime())) {
-                return 'Invalid Date';
-            }
-            return date.toLocaleDateString(); // 원하는 형식으로 변환
+            return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleDateString(); 
         },
-        getProductImage(inquiry) {
-            return inquiry.productImageUrl || "https://via.placeholder.com/150";  // 기본 이미지 제공
-        }
+        async getProductImage(inquiry) {
+            // 상품 게시물 ID를 사용해 상품 정보를 가져옴
+            const product = await this.boardStore.getDetail(inquiry.productBoardIdx);
+            console.log(product)
+            return product?.productThumbnailUrls?.[0] || "https://via.placeholder.com/150";
+        },
     },
 
 }
