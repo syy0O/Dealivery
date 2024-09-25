@@ -139,10 +139,18 @@ import axios from "axios";
 export default {
   name: "BoardDetailNavComponent",
   computed: {
-    ...mapStores(useQnaStore, useUserStore),
-    userEmail() {
-      return this.userStore.userDetail.email || "email 세팅 안 됨";
-    },
+  ...mapStores(useQnaStore, useUserStore),
+  userEmail() {
+    return this.userStore.userDetail.email || "email 세팅 안 됨";
+  },
+  userType() {
+    if (this.userStore.roles.includes("ROLE_USER")) {
+      return "ROLE_USER";
+    } else if (this.userStore.roles.includes("ROLE_COMPANY")) {
+      return "ROLE_COMPANY";
+    }
+    return null; // roles 값이 없으면 null 반환
+    }
   },
   props: {
     thumbnails: {
@@ -206,10 +214,12 @@ export default {
       return date.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" });
     },
     openNewInquiryModal() {
-      if (this.userStore.isLogined) {
-        this.showNewInquiryModal = true;
-      } else {
+      if (!this.userStore.isLogined) {
         alert("로그인 후 이용해주세요.");
+      } else if (this.userType === "ROLE_COMPANY") {
+        alert("일반회원만 문의 가능합니다.");
+      } else if (this.userType === "ROLE_USER") {
+        this.showNewInquiryModal = true;
       }
     },
     openEditModal(index) {
@@ -698,4 +708,5 @@ div {
   object-fit: contain; /* 비율을 유지하면서 영역에 맞게 이미지 표시 */
 }
 </style>
+
 
