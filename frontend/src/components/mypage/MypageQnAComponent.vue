@@ -530,7 +530,7 @@ img {
 
 /* Flex 속성으로 답변을 가로로 나열 */
 .horizontal-answers {
-    display: flex;
+    display: block;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 20px;
@@ -538,8 +538,7 @@ img {
 }
 
 .answer-section {
-    flex: 1 1 auto;
-    min-width: 200px;
+    width: 100%; /* 한 줄에 하나씩 답변이 나열되도록 설정 */
 }
 
 .answer-content {

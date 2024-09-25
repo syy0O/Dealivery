@@ -41,7 +41,7 @@
           </td>
           <td class="delete_position">
             <button name="delete" value="" class="product_delete" @click="openAnswerListModal(inquiry)">
-              삭제
+              답변확인
             </button>
           </td>
         </tr>
@@ -51,10 +51,10 @@
     <!-- 기존의 답변 등록 모달 -->
     <CompanyQnAModalComponent v-if="isDisplayModal" :title="selectedInquiry.title" :content="selectedInquiry.content"
       :thumbnail="selectedInquiry.thumbnail" :productTitle="selectedInquiry.productTitle"
-      :questionIdx="selectedInquiry.idx" @closeModal="closeModal" @registerAnswer="onAnswerRegistered" />
+      :questionIdx="selectedInquiry?.idx" @closeModal="closeModal" @registerAnswer="onAnswerRegistered"/>
 
     <!-- 답변 리스트 모달 -->
-    <CompanyAnswerListModalComponent v-if="isDisplayAnswerListModal" :selectedInquiry="selectedInquiry"
+    <CompanyAnswerListModalComponent v-if="isDisplayAnswerListModal" :key="selectedInquiry?.idx" :selectedInquiry="selectedInquiry"
       @closeModal="closeAnswerListModal" @answerDeleted="removeAnswerFromList" />
   </div>
 </template>
@@ -102,21 +102,22 @@ export default {
       }
     },
     async openModal(inquiry) {
-      try {
-        console.log(inquiry); // inquiry 객체의 내용을 확인하여 productBoardIdx 값이 있는지 확인
+    try {
+      console.log(inquiry); // inquiry 객체의 내용을 확인하여 productBoardIdx 값이 있는지 확인
 
-        // 스토어에서 상품 상세 정보 가져오기
-        const boardDetail = await this.boardStore.getProductBoardDetail(inquiry.productBoardIdx);
-        const lastAnswerContent = inquiry.answers.length > 0 ? inquiry.answers[inquiry.answers.length - 1].content : "";
+      // 스토어에서 상품 상세 정보 가져오기
+      const boardDetail = await this.boardStore.getProductBoardDetail(inquiry.productBoardIdx);
+      const lastAnswerContent = inquiry.answers.length > 0 ? inquiry.answers[inquiry.answers.length - 1].content : "";
 
-        // 문의 정보에 썸네일 이미지와 게시글 제목 추가
-        this.selectedInquiry = {
-          ...inquiry,
-          thumbnail: boardDetail.productThumbnailUrls ? boardDetail.productThumbnailUrls[0] : null, // 썸네일 이미지
-          productTitle: boardDetail.title || "No Title", // 게시글 제목
-          answerContent: lastAnswerContent, // 마지막 답변 내용 추가
-        };
-        this.isDisplayModal = true; // 모달을 열기
+      // 문의 정보에 썸네일 이미지와 게시글 제목 추가
+      this.selectedInquiry = {
+        ...inquiry,
+        thumbnail: boardDetail.productThumbnailUrls ? boardDetail.productThumbnailUrls[0] : null, // 썸네일 이미지
+        productTitle: boardDetail.title || "No Title", // 게시글 제목
+        answerContent: lastAnswerContent, // 마지막 답변 내용 추가
+        answers: inquiry.answers || [],  // answers 배열이 없을 경우 빈 배열로 초기화
+      };
+      this.isDisplayModal = true; // 모달을 열기
       } catch (error) {
         console.error("상품 상세 정보 로드 실패:", error);
       }
@@ -126,6 +127,7 @@ export default {
       this.isDisplayModal = false; // 모달 닫기
     },
     openAnswerListModal(inquiry) {
+      // inquiry.answers는 이미 데이터에 포함되어 있으므로 별도로 호출할 필요 없음
       this.selectedInquiry = inquiry;
       this.isDisplayAnswerListModal = true;
     },
@@ -158,47 +160,42 @@ export default {
         day: "2-digit",
       });
     },
-    async registerAnswer(answerContent) {
-      try {
-        const response = await axios.post(`/api/question/${this.selectedInquiry.id}/answer`, { content: answerContent });
-        const newAnswer = response.data.result;
+    onAnswerRegistered(newAnswer) {
+    // 방금 등록한 답변을 selectedInquiry의 answers에 추가
+    if (this.selectedInquiry && Array.isArray(this.selectedInquiry.answers)) {
+      // 배열을 재할당하여 반응성을 유지
+      this.selectedInquiry.answers = [...this.selectedInquiry.answers, newAnswer];
 
-        // 반응성을 유지하기 위해 새로운 배열을 생성하여 answers에 반영
-        this.selectedInquiry.answers = [...this.selectedInquiry.answers, newAnswer];
-
-        // 전체 문의 목록에서도 해당 문의의 답변 목록에 새 답변 추가
-        const inquiryIndex = this.inquiries.findIndex(inquiry => inquiry.idx === this.selectedInquiry.idx);
-        if (inquiryIndex !== -1) {
-          // 기존 answers 배열에 새 답변 추가
-          this.inquiries[inquiryIndex].answers = [...this.inquiries[inquiryIndex].answers, newAnswer];
+      // 전체 문의 목록에서도 해당 문의의 상태를 업데이트
+      const inquiryIndex = this.inquiries.findIndex(
+        (inquiry) => inquiry.idx === this.selectedInquiry.idx
+      );
+      this.loadInquiries();
+    if (inquiryIndex !== -1) {
+      // inquiries 배열을 업데이트하여 반응성 유지
+      this.inquiries = [
+        ...this.inquiries.slice(0, inquiryIndex),
+        {
+        ...this.inquiries[inquiryIndex],
+        answers: [...this.inquiries[inquiryIndex].answers, newAnswer],
+        answerStatus: '답변완료',
+        },
+        ...this.inquiries.slice(inquiryIndex + 1),
+        ];
         }
-
-        // 상태를 '답변완료'로 변경
-        this.selectedInquiry.answerStatus = '답변완료';
-        if (inquiryIndex !== -1) {
-          this.inquiries[inquiryIndex].answerStatus = '답변완료';
-        }
-
-        this.closeModal();
-      } catch (error) {
-        console.error("답변 등록 실패:", error);
       }
     },
-    onAnswerRegistered(newAnswer) {
-      if (this.selectedInquiry && Array.isArray(this.selectedInquiry.answers)) {
-        // 기존 answers 배열을 새로운 배열로 재할당하여 반응성 유도
-        this.selectedInquiry.answers = [...this.selectedInquiry.answers, newAnswer];
-
-        // 답변이 등록되었으므로 상태를 '답변완료'로 변경
-        this.selectedInquiry.answerStatus = '답변완료';
-
-        // 전체 문의 목록에서도 해당 문의의 상태 업데이트
-        const inquiryIndex = this.inquiries.findIndex(inquiry => inquiry.idx === this.selectedInquiry.idx);
-        if (inquiryIndex !== -1) {
-          this.inquiries[inquiryIndex].answerStatus = '답변완료';
-        }
+  },
+  watch: {
+    selectedInquiry: {
+    handler(newVal) {
+      // 새로운 answers 값이 기존 값과 다를 때만 업데이트
+      if (newVal && newVal.answers && this.selectedInquiry.answers !== newVal.answers) {
+        this.selectedInquiry.answers = [...newVal.answers];
       }
-    }
+    },
+    deep: true, // 객체 내부의 깊은 변화를 감지
+    },
   },
 };
 </script>
@@ -379,3 +376,4 @@ div {
   text-align: center;
 }
 </style>
+

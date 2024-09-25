@@ -4,10 +4,10 @@
             <span class="close" @click="closeModal">&times;</span>
             <div class="answer-list-modal">
                 <h3>답변 목록</h3>
-                <ul>
-                    <li v-for="answer in selectedInquiry.answers || []" :key="answer.idx">
-                        <div class="answer-item">
-                            <p class="answer-content">{{ answer.content }}</p>
+                <ul v-if="selectedInquiry.answers && selectedInquiry.answers.length > 0">
+                    <li v-for="(answer, index) in selectedInquiry.answers" :key="index">
+                        <div v-if="answer" class="answer-item">
+                            <p class="answer-content">{{ answer.content || '아직 답변이 없습니다.' }}</p>
                             <div class="answer-footer">
                                 <span class="answer-date">{{ formatDate(answer.createdAt) }}</span>
                                 <button class="delete-button" @click="deleteAnswer(answer.idx)">삭제</button>
@@ -149,3 +149,4 @@ export default {
     background-color: #5f0080;
 }
 </style>
+
