@@ -8,7 +8,7 @@
             <span class="thumnail-wrapper">
               <img
                 :alt="`Image ${mainThumbnail}`"
-                :src="mainThumbnail"
+                :src="thumbnails[index]"
                 decoding="async"
                 data-nimg="fill"
                 class="css-1zjvv7 thumnail-img"
@@ -26,7 +26,7 @@
         v-for="(thumbnail, index) in thumbnails"
         :key="index"
         class="thumnail-item"
-        @click="updateMainThumbnail(thumbnail)"
+        @click="updateMainThumbnail(index)"
       >
         <div class="css-0">
           <div class="css-pw7jst" style="padding-bottom: 128.372%">
@@ -62,11 +62,13 @@ export default {
   data() {
     return {
       mainThumbnail: this.thumbnails[0],
+      index: 0,
     };
   },
   methods: {
-    updateMainThumbnail(thumbnail) {
-      this.mainThumbnail = thumbnail;
+    updateMainThumbnail(index) {
+      // this.mainThumbnail = thumbnail;
+      this.index = index;
     },
   },
 };
