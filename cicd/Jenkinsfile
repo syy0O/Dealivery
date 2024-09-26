@@ -1,3 +1,69 @@
-pipeline{
+pipeline {
+    agent any
 
+    environment {
+        // 현재 작업해야 할 값 (frontend, backend, all)을 저장할 변수
+        TARGET_COMPONENT = ''
+    }
+
+    stages {
+        stage('Initialize Variables') {
+            steps {
+                script {
+                    // 커밋 메시지 확인
+                    def commitMessage = '' // 커밋 메시지를 가져오는 로직을 추가할 수 있음
+                    echo "Commit Message: ${commitMessage}"
+
+                    // 메시지에 따라 TARGET_COMPONENT 값 할당
+                    if (commitMessage.contains('frontend')) {
+                        TARGET_COMPONENT = 'frontend'
+                    } else if (commitMessage.contains('backend')) {
+                        TARGET_COMPONENT = 'backend'
+                    } else if (commitMessage.contains('all')) {
+                        TARGET_COMPONENT = 'all'
+                    } else {
+                        error 'No valid component specified in commit message.'
+                    }
+
+                    echo "Target Component: ${TARGET_COMPONENT}"
+                }
+            }
+        }
+
+        stage('Clone Repository') {
+            steps {
+                // Git 리포지토리 클론
+                echo "Cloning Repository..."
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo "Building Components..."
+            }
+        }
+
+        stage('Dockerize') {
+            steps {
+                echo "Dockerizing Components..."
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "Deploying Components..."
+            }
+        }
+    }
+
+    post {
+        success {
+            sh '''
+            echo "성공"
+            '''
+        }
+        failure {
+            sh 'echo "실패"'
+        }
+    }
 }
