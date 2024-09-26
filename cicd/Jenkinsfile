@@ -11,14 +11,12 @@ pipeline {
         stage('Clean up dealivery-pipeline directory') {
                 steps {
                     script {
-                        def pipelineDir = "${JENKINS_HOME}/workspace/dealivery-pipeline"
-                        def tmpDir = "${JENKINS_HOME}/workspace/dealivery-pipeline@tmp"
-
-                        // dealivery-pipeline 디렉토리 삭제
-                        sh "rm -rf ${pipelineDir}"
-
-                        // dealivery-pipeline@tmp 디렉토리 삭제
-                        sh "rm -rf ${tmpDir}"
+                        // 상위 디렉토리로 이동 후 dealivery-pipeline 디렉토리 삭제
+                        sh '''
+                        cd ..
+                        rm -rf dealivery-pipeline
+                        rm -rf dealivery-pipeline@tmp
+                        '''
                     }
                 }
             }
