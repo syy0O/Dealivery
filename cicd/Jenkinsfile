@@ -114,7 +114,30 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo "Deploying Components..."
+                script{
+                    echo "Deploying Components..."
+                    sh 'cd ..'
+                    if (TARGET_COMPONENT == 'backend') {
+                        // 백엔드 rollout 수정 후
+                       sh '''
+                       cd cicd/develop
+                       sed -i 's/\\${LATEST_VERSION}/'${BUILD_NUMBER}'/g' backend-rollout.yml
+                       sed -i 's/\\${LATEST_VERSION}/'${BUILD_NUMBER}'/g' backend-oauth-rollout.yml
+                       cat backend-rollout.yml
+                       cat backend-rollout.yml
+                       '''
+                    } else if (TARGET_COMPONENT == 'frontend') {
+                        sh '''
+
+                        '''
+                    } else if (TARGET_COMPONENT == 'all') {
+                        sh '''
+
+                        '''
+                    } else {
+                        echo "Rollout Edit Fail............................"
+                    }
+                }
             }
         }
     }
