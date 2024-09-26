@@ -43,7 +43,6 @@ pipeline {
                             } else {
                                 error 'No valid component specified in commit message.'
                             }
-
                             echo "Target Component: ${TARGET_COMPONENT}"
                         }
                     }
@@ -51,7 +50,31 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo "Building Components..."
+                if (env.TARGET_COMPONENT == 'backend'){
+                // gradlew 권한 부여 및 빌드
+                    sh '''
+                    chmod +x backend/gradlew
+                    cd backend
+                    ./gradlew bootJar
+                    '''
+                } else if ( env.TARGET_COMPONENT == 'frontend'){
+                    sh '''
+                    cd frontend
+                    npm i
+                    npm run build
+                    '''
+                } else if ( env.TARGET_COMPONENT == 'all'){
+                    sh '''
+                    chmod +x backend/gradlew
+                    cd backend
+                    ./gradlew bootJar
+                    cd ../frontend
+                    npm i
+                    npm run build
+                    '''
+                } else{
+                    echo "Build Fail........................."
+                }
             }
         }
 
