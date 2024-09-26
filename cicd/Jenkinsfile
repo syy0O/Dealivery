@@ -11,34 +11,10 @@ pipeline {
         stage('Clean up dealivery-pipeline directory') {
                 steps {
                     script {
-                        sh 'rm -rf /var/lib/jenkins/workspace/dealivery-pipeline/*'
+                        sh 'rm -rf *'
                     }
                 }
             }
-        stage('Initialize Variables') {
-            steps {
-                script {
-                     // 커밋 메시지 가져오기 (예: git log를 사용하여 최신 커밋 메시지 가져오기)
-                     //test
-                    def commitMessage = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
-
-                    echo "Commit Message: ${commitMessage}"
-
-                    // 메시지에 따라 TARGET_COMPONENT 값 할당
-                    if (commitMessage.contains('frontend')) {
-                        TARGET_COMPONENT = 'frontend'
-                    } else if (commitMessage.contains('backend')) {
-                        TARGET_COMPONENT = 'backend'
-                    } else if (commitMessage.contains('all')) {
-                        TARGET_COMPONENT = 'all'
-                    } else {
-                        error 'No valid component specified in commit message.'
-                    }
-
-                    echo "Target Component: ${TARGET_COMPONENT}"
-                }
-            }
-        }
 
         stage('Clone Repository') {
             steps {
@@ -47,6 +23,31 @@ pipeline {
                 git branch: 'develop', url: 'https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery.git'
             }
         }
+
+        stage('Initialize Variables') {
+                    steps {
+                        script {
+                             // 커밋 메시지 가져오기 (예: git log를 사용하여 최신 커밋 메시지 가져오기)
+                             //test
+                            def commitMessage = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
+
+                            echo "Commit Message: ${commitMessage}"
+
+                            // 메시지에 따라 TARGET_COMPONENT 값 할당
+                            if (commitMessage.contains('frontend')) {
+                                TARGET_COMPONENT = 'frontend'
+                            } else if (commitMessage.contains('backend')) {
+                                TARGET_COMPONENT = 'backend'
+                            } else if (commitMessage.contains('all')) {
+                                TARGET_COMPONENT = 'all'
+                            } else {
+                                error 'No valid component specified in commit message.'
+                            }
+
+                            echo "Target Component: ${TARGET_COMPONENT}"
+                        }
+                    }
+                }
 
         stage('Build') {
             steps {
