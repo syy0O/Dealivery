@@ -93,7 +93,7 @@
                     <span>{{ row.content }}<br /></span>
                   </div>
                 </div>
-                <div class="css-1j49yxi e11ufodi1" v-if="row.answerStatus === '답변대기' && row.email === this.userEmail">
+                <div class="css-1j49yxi e11ufodi1" v-if="row.answerStatus === '답변대기' && row.email === this.userEmail && this.userType === 'ROLE_USER'">
                   <button type=" button" @click="openEditModal(index)">수정</button>
                   <button type="button" class="css-1ankuif e11ufodi0" @click="deleteInquiry(row.idx, index)">삭제</button>
                 </div>
