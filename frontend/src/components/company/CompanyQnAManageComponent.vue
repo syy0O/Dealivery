@@ -135,8 +135,15 @@ export default {
       this.selectedInquiry = null;
       this.isDisplayAnswerListModal = false;
     },
-    removeAnswerFromList(answerId) {
-      this.selectedInquiry.answers = this.selectedInquiry.answers.filter(answer => answer.idx !== answerId);
+    removeAnswerFromList(answerId, updatedInquiry) {
+      // 부모 컴포넌트에서 상태를 관리하므로, 여기서 상태를 업데이트합니다.
+      this.selectedInquiry.answers = updatedInquiry.answers;
+
+      if (this.selectedInquiry.answers.length === 0) {
+        this.selectedInquiry.answerStatus = '답변대기';
+      }
+
+      // 전체 문의 목록에서도 해당 문의의 상태를 업데이트할 수 있습니다.
     },
     async deleteInquiry(inquiryId) {
       try {

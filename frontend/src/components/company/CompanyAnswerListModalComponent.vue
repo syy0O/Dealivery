@@ -39,9 +39,19 @@ export default {
             this.$emit("closeModal");
         },
         async deleteAnswer(answerId) {
-            try {
-                await axios.delete(`/api/qna/answer/delete/${answerId}`);
-                this.$emit("answerDeleted", answerId);
+    try {
+        await axios.delete(`/api/qna/answer/delete/${answerId}`);
+        
+        const updatedAnswers = this.selectedInquiry.answers.filter(answer => answer.idx !== answerId);
+
+        // 남은 답변이 없으면 상태를 '답변대기'로 변경
+        const updatedStatus = updatedAnswers.length === 0 ? '답변대기' : this.selectedInquiry.answerStatus;
+
+        // 부모 컴포넌트에게 상태 업데이트 요청
+        this.$emit("answerDeleted", answerId, {
+            answers: updatedAnswers,
+            answerStatus: updatedStatus,
+            });
             } catch (error) {
                 console.error("답변 삭제 실패:", error);
             }
