@@ -11,8 +11,7 @@ pipeline {
         stage('Clean up dealivery-pipeline directory') {
                 steps {
                     script {
-                        // 상위 디렉토리로 이동 후 dealivery-pipeline 디렉토리 삭제
-                        sh 'find . -mindepth 1 -delete'
+                        sh 'rm -rf /var/lib/jenkins/workspace/dealivery-pipeline/*'
                     }
                 }
             }
