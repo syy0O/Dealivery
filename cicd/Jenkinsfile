@@ -51,19 +51,19 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    if (env.TARGET_COMPONENT.equals('backend')) {
+                    if (TARGET_COMPONENT == 'backend') {
                         sh '''
                         chmod +x backend/gradlew
                         cd backend
                         ./gradlew bootJar
                         '''
-                    } else if (env.TARGET_COMPONENT.equals('frontend')) {
+                    } else if (TARGET_COMPONENT == 'frontend') {
                         sh '''
                         cd frontend
                         npm i
                         npm run build
                         '''
-                    } else if (env.TARGET_COMPONENT.equals('all')) {
+                    } else if (TARGET_COMPONENT == 'all') {
                         sh '''
                         chmod +x backend/gradlew
                         cd backend
