@@ -10,8 +10,8 @@ pipeline {
         stage('Initialize Variables') {
             steps {
                 script {
-                    // 커밋 메시지 확인
-                    def commitMessage = '' // 커밋 메시지를 가져오는 로직을 추가할 수 있음
+                     // 커밋 메시지 가져오기 (예: git log를 사용하여 최신 커밋 메시지 가져오기)
+                    def commitMessage = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
                     echo "Commit Message: ${commitMessage}"
 
                     // 메시지에 따라 TARGET_COMPONENT 값 할당
