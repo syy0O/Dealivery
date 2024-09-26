@@ -1,5 +1,4 @@
 <template>
-    
     <div class="css-heioij eug5r8l1">
         <div class="css-1xdhyk6 eug5r8l0">
             <ul>
@@ -17,7 +16,6 @@
                             </div>
                         </div>
                         <a :href="'/board/detail/' + inquiry.productBoardIdx" class="product-image-wrap">
-                            <!-- 이미지가 없는 경우 대비하여 기본 이미지를 제공 -->
                             <img :src="inquiry.productImageUrl || 'https://via.placeholder.com/150'" :alt="inquiry.title">
                         </a>
                     </button>
@@ -27,8 +25,7 @@
                                 <!-- 아이콘과 질문/답변을 같은 줄에 배치 -->
                                 <div class="content-row flex-row">
                                     <div class="icon-wrap">
-                                        <img src="https://res.kurly.com/kurly/ico/2021/question_24_24_purple.svg"
-                                            alt="질문">
+                                        <img src="https://res.kurly.com/kurly/ico/2021/question_24_24_purple.svg" alt="질문">
                                     </div>
                                     <p class="subject">{{ inquiry.content }}</p>
                                 </div>
@@ -36,8 +33,7 @@
                                     <div v-for="(answer, answerIndex) in inquiry.answers" :key="answerIndex"
                                         class="answer-section flex-row">
                                         <div class="icon-wrap">
-                                            <img src="https://res.kurly.com/kurly/ico/2021/answer_24_24_purple.svg"
-                                                alt="답변">
+                                            <img src="https://res.kurly.com/kurly/ico/2021/answer_24_24_purple.svg" alt="답변">
                                         </div>
                                         <div class="answer-content">
                                             <p class="subject">{{ answer.content }}</p>
@@ -46,6 +42,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <!-- 답변대기 상태일 때만 수정/삭제 버튼 표시 -->
+                                <div class="css-1j49yxi e11ufodi1" v-if="inquiry.answerStatus === '답변대기'">
+                                    <button @click="openEditModal(inquiry, index)">수정</button>
+                                    <button @click="deleteInquiry(inquiry.idx, index)">삭제</button>
                                 </div>
                                 <div v-if="inquiry.answers.length === 0" class="no-answer">
                                     <img src="https://res.kurly.com/kurly/ico/2021/answer_24_24_purple.svg" alt="답변">
@@ -58,24 +59,34 @@
             </ul>
         </div>
     </div>
+
+    <!-- 수정 모달 -->
+    <QnaRegisterModalComponent v-if="showEditInquiryModal" :initialSubject="selectedInquiry.title"
+        :initialContent="selectedInquiry.content" :inquiryId="selectedInquiry.idx" @close="closeModal"
+        @submit="updateInquiry" :isEditMode="true" :productBoardIdx="selectedInquiry.productBoardIdx"
+        :thumbnail="selectedInquiry.productImageUrl" :title="selectedInquiry.productTitle" />
 </template>
 
 <script>
 import { useBoardStore } from "@/stores/useBoardStore";
 import { mapStores } from "pinia";
 import axios from "axios";
+import QnaRegisterModalComponent from "../qna/QnaRegisterModalComponent.vue"; // 수정 모달
 
 export default {
+    components: { QnaRegisterModalComponent },
     data() {
         return {
             inquiries: [],  // 서버로부터 받아온 문의 목록
-            showDetailIndex: null
+            showDetailIndex: null,
+            showEditInquiryModal: false,
+            selectedInquiry: null,  // 선택된 문의 데이터
         };
     },
     mounted() {
         this.loadMyInquiries();  // 컴포넌트가 마운트될 때 로그인된 사용자의 문의 목록을 불러옴
     },
-    computed:{
+    computed: {
         ...mapStores(useBoardStore),
     },
     methods: {
@@ -98,24 +109,48 @@ export default {
         toggleDetail(index) {
             this.showDetailIndex = this.showDetailIndex === index ? null : index;
         },
-        afterEnter(el) {
-            el.style.maxHeight = 'none';  // 애니메이션 후 스타일 설정
+        openEditModal(inquiry) {
+            console.log(inquiry);  // inquiry에 idx 값이 있는지 확인
+            this.selectedInquiry = inquiry;
+            this.showEditInquiryModal = true; // 수정 모달 표시
         },
-        afterLeave(el) {
-            el.style.maxHeight = '0px';  // 애니메이션 후 스타일 설정
+        closeModal() {
+            this.showEditInquiryModal = false;
+        },
+        async updateInquiry(updatedInquiry) {
+        // updatedInquiry에 idx가 없으면 경고 메시지를 출력하고 종료
+        if (!updatedInquiry || !updatedInquiry.idx) {
+            console.error("No idx found in updated inquiry:", updatedInquiry);
+            return;
+        }
+
+        try {
+            // PUT 요청을 통해 문의 수정
+            const response = await axios.put(`/api/qna/question/update/${updatedInquiry.idx}`, updatedInquiry);
+            if (response.data.isSuccess) {
+                // 문의 수정 후 목록을 다시 로드
+                await this.loadMyInquiries();
+                this.showEditInquiryModal = false;  // 모달 닫기
+            } else {
+                console.error("문의 수정 실패:", response.data.message);
+            }
+        } catch (error) {
+            console.error("문의 수정 중 오류 발생:", error);
+        }
+    },
+        async deleteInquiry(idx, index) {
+            try {
+                await axios.delete(`/api/qna/question/delete/${idx}`);
+                this.inquiries.splice(index, 1); // 삭제 후 목록에서 제거
+            } catch (error) {
+                console.error("문의 삭제 실패:", error);
+            }
         },
         formatDate(dateString) {
             const date = new Date(dateString);
             return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleDateString(); 
         },
-        async getProductImage(inquiry) {
-            // 상품 게시물 ID를 사용해 상품 정보를 가져옴
-            const product = await this.boardStore.getDetail(inquiry.productBoardIdx);
-            console.log(product)
-            return product?.productThumbnailUrls?.[0] || "https://via.placeholder.com/150";
-        },
     },
-
 }
 </script>
 
@@ -610,5 +645,22 @@ img {
 .flex-row {
     display: flex;
     align-items: center;
+}
+
+.css-1j49yxi {
+    width: 100%;
+    display: flex;
+    -webkit-box-pack: end;
+    justify-content: flex-end;
+}
+
+.css-1j49yxi button {
+    position: relative;
+    padding: 0px 11px;
+    font-size: 14px;
+    line-height: 20px;
+    border: 0px;
+    background: none;
+    color: rgb(153, 153, 153);
 }
 </style>

@@ -264,6 +264,7 @@ export default {
         this.qnaStore.updateInquiry(this.editingIndex, updatedInquiry);
         this.localTableData[this.editingIndex] = { ...this.localTableData[this.editingIndex], ...updatedInquiry };  // 바로 반영
         this.editingIndex = null;
+        this.loadInquiries();
         this.closeModal();
       }
       this.qnaStore.fetchInquiries().then(() => {

@@ -157,6 +157,7 @@ export default {
         async submitForm() {
             // 문의 수정 또는 등록 로직
             const inquiryData = {
+                idx: this.inquiryId,  // 수정 시 ID 전달
                 title: this.subject,
                 content: this.content,
                 productBoardIdx: this.productBoardIdx,
@@ -167,15 +168,13 @@ export default {
                     // 수정 모드일 때 PUT 요청
                     const response = await axios.put(`/api/qna/question/update/${this.inquiryId}`, inquiryData);
                     if (response.data.isSuccess) {
-                        this.qnaStore.updateInquiry(response.data.result);
-                        this.$emit("submit", response.data.result); // 부모 컴포넌트에 수정된 데이터를 전달
+                        this.$emit("submit", inquiryData); // 부모 컴포넌트에 수정된 데이터를 전달
                     }
                 } else {
                     // 등록 모드일 때 POST 요청
                     const response = await axios.post('/api/qna/question/create', inquiryData);
                     if (response.data.isSuccess) {
-                        this.qnaStore.addInquiry(response.data.result);
-                        this.$emit("submit", response.data.result); // 부모 컴포넌트에 등록된 데이터를 전달
+                        this.$emit("submit", inquiryData); // 부모 컴포넌트에 등록된 데이터를 전달
                     }
                 }
                 this.closeModal();
