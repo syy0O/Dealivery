@@ -81,7 +81,34 @@ pipeline {
 
         stage('Dockerize') {
             steps {
-                echo "Dockerizing Components..."
+                script {
+                    echo "Dockerizing Components..."
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credential', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                                               sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                                           }
+                    if (TARGET_COMPONENT == 'backend') {
+                       // Docker 이미지 빌드 및 푸시
+                       sh '''
+                       docker build --tag simkids/dealivery-backend:1.${BUILD_NUMBER} ./backend
+                       docker push simkids/dealivery-backend:1.${BUILD_NUMBER}
+                       '''
+                    } else if (TARGET_COMPONENT == 'frontend') {
+                        // Docker 이미지 빌드 및 푸시
+                        sh '''
+                        docker build --tag simkids/dealivery-frontend:1.${BUILD_NUMBER} ./frontend
+                        docker push simkids/dealivery-frontend:1.${BUILD_NUMBER}
+                        '''
+                    } else if (TARGET_COMPONENT == 'all') {
+                        sh '''
+                        docker build --tag simkids/dealivery-backend:1.${BUILD_NUMBER} ./backend
+                        docker build --tag simkids/dealivery-frontend:1.${BUILD_NUMBER} ./frontend
+                        docker push simkids/dealivery-backend:1.${BUILD_NUMBER}
+                        docker push simkids/dealivery-frontend:1.${BUILD_NUMBER}
+                        '''
+                    } else {
+                        echo "Build Fail........................."
+                    }
+                }
             }
         }
 
