@@ -121,10 +121,20 @@ pipeline {
                         // 백엔드 rollout 수정 후
                        sh '''
                        cd cicd/develop
+                       # backend-rollout.yml 파일의 ${LATEST_VERSION}을 BUILD_NUMBER로 치환
                        sed -i 's/\\${LATEST_VERSION}/'${BUILD_NUMBER}'/g' backend-rollout.yml
                        sed -i 's/\\${LATEST_VERSION}/'${BUILD_NUMBER}'/g' backend-oauth-rollout.yml
+
+                       # 변경 사항 확인
                        cat backend-rollout.yml
-                       cat backend-rollout.yml
+                       cat backend-oauth-rollout.yml
+
+                       # 변경된 파일을 git에 추가하고 커밋
+                       git add backend-rollout.yml backend-oauth-rollout.yml
+                       git commit -m "[Deploy] v1.${BUILD_NUMBER} 배포"
+
+                       # 변경 사항을 원격 저장소의 cicd 브랜치로 푸시
+                       git push origin cicd
                        '''
                     } else if (TARGET_COMPONENT == 'frontend') {
                         sh '''
