@@ -36,6 +36,8 @@ pipeline {
             steps {
                 // Git 리포지토리 클론
                 echo "Cloning Repository..."
+                git branch: 'develop', url: 'https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery.git'
+                echo sh(script: "pwd")
             }
         }
 
