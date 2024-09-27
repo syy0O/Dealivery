@@ -43,7 +43,7 @@ public class InitDB {
     private List<Orders> ordersList;
 
 
-    @PostConstruct
+    // @PostConstruct
     public void execute() {
         insertCategory();
         //insertBoard();
