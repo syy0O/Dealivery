@@ -1,123 +1,127 @@
 <template>
-  <div class="e1e6st7u6 css-17p5a04 e1ne12di0">
-    <div class="css-ghsdgz e1e6st7u4">
-      <h2 class="css-n9ehvd e1e6st7u3">일일특가</h2>
-      <h3 class="css-1fc0npt e1e6st7u2">24시간 한정 특가</h3>
-      <div class="e1e6st7u5 css-we1gxf e17lobue1">
-        <div class="lottie-timer">
-          <img
-            src="@/assets/clock.svg"
-            alt="timer"
-            style="width: 36px; height: 36px"
-          />
-        </div>
-        <div class="time-units css-hb6k3w e17lobue0">
-          <span>{{ hours }}</span> <span>{{ minutes }}</span>
-          <span>{{ seconds }}</span>
-        </div>
-      </div>
-      <p class="css-d0y7nj e1e6st7u1">망설이면 늦어요!</p>
-    </div>
-    <div class="css-1yx948y e1e6st7u0">
-      <div class="deal-size-2 e1nucwdg0 e14udynn0 css-ae5x66 e1cmg4vm6">
-        <div class="css-p55uhh">
-          <div class="css-4vnm46">
-            <div class="css-pw7jst e9elpup1" style="padding-bottom: 128.402%">
-              <div class="css-j2pfbl e9elpup0">
-                <span
-                  style="
-                    box-sizing: border-box;
-                    display: block;
-                    overflow: hidden;
-                    width: initial;
-                    height: initial;
-                    background: none;
-                    opacity: 1;
-                    border: 0px;
-                    margin: 0px;
-                    padding: 0px;
-                    position: absolute;
-                    inset: 0px;
-                  "
-                >
-                  <a :href="`/board/detail/${data.idx}`">
-                    <img
-                      alt=""
-                      :src="data.productThumbnailUrl"
-                      decoding="async"
-                      data-nimg="fill"
-                      class="css-1zjvv7"
-                      style="
-                        position: absolute;
-                        inset: 0px;
-                        box-sizing: border-box;
-                        padding: 0px;
-                        border: none;
-                        margin: auto;
-                        display: block;
-                        width: 0px;
-                        height: 0px;
-                        min-width: 100%;
-                        max-width: 100%;
-                        min-height: 100%;
-                        max-height: 100%;
-                        object-fit: cover;
-                      "
-                      sizes="100vw"
-                    />
-                  </a>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="button-wrapper">
-          <button
-            type="button"
-            @click="toggleHeart"
-            class="product-function css-13xu5fn e17x72af0"
-          >
+  <div v-if="data.price">
+    <div class="e1e6st7u6 css-17p5a04 e1ne12di0">
+      <div class="css-ghsdgz e1e6st7u4">
+        <h2 class="css-n9ehvd e1e6st7u3">일일특가</h2>
+        <h3 class="css-1fc0npt e1e6st7u2">24시간 한정 특가</h3>
+        <div class="e1e6st7u5 css-we1gxf e17lobue1">
+          <div class="lottie-timer">
             <img
-              :src="heartIcon"
-              alt="heart icon"
-              style="width: 21px; height: 21px; margin: 5px"
+              src="@/assets/clock.svg"
+              alt="timer"
+              style="width: 36px; height: 36px"
             />
-            관심 등록
-          </button>
+          </div>
+          <div class="time-units css-hb6k3w e17lobue0">
+            <span>{{ hours }}</span> <span>{{ minutes }}</span>
+            <span>{{ seconds }}</span>
+          </div>
         </div>
-        <a :href="`/board/detail/${data.idx}`">
-          <div class="product-info css-1ud9i0q e1cmg4vm4">
-            <h2 class="product-name css-eaolx3 e1cmg4vm5">
-              {{ data.companyName }}
-            </h2>
-            <h3 class="product-name css-eaolx3 e1cmg4vm5">{{ data.title }}</h3>
-            <div class="content-row css-1066lcq e1cmg4vm3">
-              <div class="product-price discount-price css-1fttcpj ei5rudb2">
-                <div>
-                  <span class="dimmed-price css-105zgxh ei5rudb1"
-                    ><span class="price-number">{{
-                      data.price.toLocaleString()
-                    }}</span
-                    ><span class="won">원</span></span
+        <p class="css-d0y7nj e1e6st7u1">망설이면 늦어요!</p>
+      </div>
+      <div class="css-1yx948y e1e6st7u0">
+        <div class="deal-size-2 e1nucwdg0 e14udynn0 css-ae5x66 e1cmg4vm6">
+          <div class="css-p55uhh">
+            <div class="css-4vnm46">
+              <div class="css-pw7jst e9elpup1" style="padding-bottom: 128.402%">
+                <div class="css-j2pfbl e9elpup0">
+                  <span
+                    style="
+                      box-sizing: border-box;
+                      display: block;
+                      overflow: hidden;
+                      width: initial;
+                      height: initial;
+                      background: none;
+                      opacity: 1;
+                      border: 0px;
+                      margin: 0px;
+                      padding: 0px;
+                      position: absolute;
+                      inset: 0px;
+                    "
                   >
-                </div>
-                <div class="discount">
-                  <span class="discount-rate css-19lkxd2 ei5rudb0"
-                    >{{ data.discountRate }}%</span
-                  ><span class="sales-price css-105zgxh ei5rudb1"
-                    ><span class="price-number">{{
-                      (
-                        this.data.price *
-                        (1 - this.data.discountRate / 100)
-                      ).toLocaleString()
-                    }}</span
-                    ><span class="won">원</span></span
-                  >
+                    <a :href="`/board/detail/${data.idx}`">
+                      <img
+                        alt=""
+                        :src="data.productThumbnailUrl"
+                        decoding="async"
+                        data-nimg="fill"
+                        class="css-1zjvv7"
+                        style="
+                          position: absolute;
+                          inset: 0px;
+                          box-sizing: border-box;
+                          padding: 0px;
+                          border: none;
+                          margin: auto;
+                          display: block;
+                          width: 0px;
+                          height: 0px;
+                          min-width: 100%;
+                          max-width: 100%;
+                          min-height: 100%;
+                          max-height: 100%;
+                          object-fit: cover;
+                        "
+                        sizes="100vw"
+                      />
+                    </a>
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-        </a>
+          <div class="button-wrapper">
+            <button
+              type="button"
+              @click="toggleHeart"
+              class="product-function css-13xu5fn e17x72af0"
+            >
+              <img
+                :src="heartIcon"
+                alt="heart icon"
+                style="width: 21px; height: 21px; margin: 5px"
+              />
+              관심 등록
+            </button>
+          </div>
+          <a :href="`/board/detail/${data.idx}`">
+            <div class="product-info css-1ud9i0q e1cmg4vm4">
+              <h2 class="product-name css-eaolx3 e1cmg4vm5">
+                {{ data.companyName }}
+              </h2>
+              <h3 class="product-name css-eaolx3 e1cmg4vm5">
+                {{ data.title }}
+              </h3>
+              <div class="content-row css-1066lcq e1cmg4vm3">
+                <div class="product-price discount-price css-1fttcpj ei5rudb2">
+                  <div>
+                    <span class="dimmed-price css-105zgxh ei5rudb1"
+                      ><span class="price-number">{{
+                        data.price.toLocaleString()
+                      }}</span
+                      ><span class="won">원</span></span
+                    >
+                  </div>
+                  <div class="discount">
+                    <span class="discount-rate css-19lkxd2 ei5rudb0"
+                      >{{ data.discountRate }}%</span
+                    ><span class="sales-price css-105zgxh ei5rudb1"
+                      ><span class="price-number">{{
+                        (
+                          this.data.price *
+                          (1 - this.data.discountRate / 100)
+                        ).toLocaleString()
+                      }}</span
+                      ><span class="won">원</span></span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -133,8 +137,8 @@ export default {
     return {
       isActive: false,
       heartIcon: heartIcon,
-      request:{
-        productBoardIdx: null
+      request: {
+        productBoardIdx: null,
       },
       hours: "00",
       minutes: "00",
@@ -149,7 +153,7 @@ export default {
   },
   computed: {
     ...mapStores(useUserStore),
-  },  
+  },
   mounted() {
     this.startTimer();
     this.isActive = this.data.likes;
@@ -198,18 +202,18 @@ export default {
   },
   async toggleHeart() {
     this.request.productBoardIdx = this.data.idx;
-      console.log(this.data.likes);
-      if(!this.userStore.isLogined){
-        alert("로그인이 필요한 서비스입니다.");
-        this.$router.push("/auth/login");
-        return
-      }
-      if(await this.userStore.like(this.request)){
-        this.isActive = !this.isActive;
-        this.heartIcon = this.isActive ? heartIconActive : heartIcon;
-      }else{
-        alert("관심 등록에 실패했습니다.");
-      }
+    console.log(this.data.likes);
+    if (!this.userStore.isLogined) {
+      alert("로그인이 필요한 서비스입니다.");
+      this.$router.push("/auth/login");
+      return;
+    }
+    if (await this.userStore.like(this.request)) {
+      this.isActive = !this.isActive;
+      this.heartIcon = this.isActive ? heartIconActive : heartIcon;
+    } else {
+      alert("관심 등록에 실패했습니다.");
+    }
   },
 };
 </script>

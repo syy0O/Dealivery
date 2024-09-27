@@ -24,29 +24,45 @@ pipeline {
             }
         }
 
-        stage('Initialize Variables') {
-                    steps {
-                        script {
-                             // 커밋 메시지 가져오기 (예: git log를 사용하여 최신 커밋 메시지 가져오기)
-                             //test
-                            def commitMessage = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
+        stage('Check for Merge Event') {
+            steps {
+                script {
+                    def changeLogSets = currentBuild.changeSets
+                    def isMerge = false
 
-                            echo "Commit Message: ${commitMessage}"
+                    changeLogSets.each { changeSet ->
+                        changeSet.items.each { entry ->
+                            // 커밋 메시지 확인
+                            def commitMessage = entry.msg.toLowerCase()  // 소문자로 변환하여 비교
+                            if (commitMessage.contains('merge')) {
+                                isMerge = true
+                            }
 
-                            // 메시지에 따라 TARGET_COMPONENT 값 할당
+                            // 각 키워드 포함 여부 확인
                             if (commitMessage.contains('frontend')) {
                                 TARGET_COMPONENT = 'frontend'
                             } else if (commitMessage.contains('backend')) {
                                 TARGET_COMPONENT = 'backend'
                             } else if (commitMessage.contains('all')) {
                                 TARGET_COMPONENT = 'all'
-                            } else {
-                                error 'No valid component specified in commit message.'
                             }
-                            echo "Target Component: ${TARGET_COMPONENT}"
                         }
                     }
+
+                    // 머지 이벤트 확인
+                    if (!isMerge) {
+                        error('This build is not triggered by a merge event.')  // 전체 파이프라인 종료
+                    }
+
+                    // 타겟 컴포넌트가 설정되지 않은 경우 처리
+                    if (TARGET_COMPONENT == null) {
+                        error('No valid component specified in commit message.')  // 전체 파이프라인 종료
+                    } else {
+                        echo "Target Component: ${TARGET_COMPONENT}"
+                    }
                 }
+            }
+        }
 
         stage('Build') {
             steps {
@@ -124,17 +140,19 @@ pipeline {
                           cd cicd/develop
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-rollout.yml
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-oauth-rollout.yml
-                          cat backend-rollout.yml
-                          cat backend-oauth-rollout.yml
                           """
                        } else if (TARGET_COMPONENT == 'frontend') {
-                           sh '''
-
-                           '''
+                          sh """
+                          cd cicd/develop
+                          sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' frontend-rollout.yml
+                          """
                        } else if (TARGET_COMPONENT == 'all') {
-                           sh '''
-
-                           '''
+                          sh """
+                          cd cicd/develop
+                          sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-rollout.yml
+                          sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-oauth-rollout.yml
+                          sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' frontend-rollout.yml
+                          """
                        } else {
                            echo "Rollout Edit Fail............................"
                        }
