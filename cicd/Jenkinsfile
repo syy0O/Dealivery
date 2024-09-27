@@ -11,10 +11,7 @@ pipeline {
         stage('Clean up dealivery-pipeline directory') {
                 steps {
                     script {
-                        sh 'rm -rf *'
-                        sh 'rm -rf .git'
-                        sh 'rm -rf .github'
-                        sh 'rm -rf .gitignore'
+                        sh 'rm -rf ./* ./.git'
                     }
                 }
             }
@@ -120,7 +117,7 @@ pipeline {
                 script{
                     echo "Editing Manifest..."
                     sh 'cd ..'
-                    sh 'git checkout cicd'
+                    sh 'git checkout refs/remotes/origin/cicd'
                        if (TARGET_COMPONENT == 'backend') {
                            // 백엔드 rollout 수정 후
                           sh '''
