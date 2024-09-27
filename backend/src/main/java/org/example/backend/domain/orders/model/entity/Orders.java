@@ -66,10 +66,13 @@ public class Orders {
     private String addressDetail;
     private String postNumber;
 
+
     private String paymentId;
     @Enumerated(EnumType.STRING)
     private PaymentType payMethod;
+  
     private Long usedPoint;
+
 
     private Long totalPaidAmount;
 
@@ -81,6 +84,7 @@ public class Orders {
 
     @OneToMany(mappedBy = "orders", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<OrderedProduct> orderedProducts;
+
 
     public void update(OrderCompleteRequest dto) {
         this.paymentId = dto.getPaymentId();

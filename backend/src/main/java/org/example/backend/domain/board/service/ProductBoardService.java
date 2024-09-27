@@ -161,6 +161,7 @@ public class ProductBoardService {
 		}
 	}
 
+
 	@Scheduled(cron = "0 1/30 * * * ?") // 매 30분마다 정각 또는 30분에 실행
 	public void updateStatus() {
 		List<ProductBoard> productBoards = productBoardRepository.findAll();

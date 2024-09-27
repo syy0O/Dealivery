@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.example.backend.domain.board.model.entity.ProductBoard;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -25,6 +26,7 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idx;
+
 	@Column(unique = true)
 	private String name;
 

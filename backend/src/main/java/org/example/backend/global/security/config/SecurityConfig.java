@@ -2,7 +2,6 @@ package org.example.backend.global.security.config;
 
 
 import lombok.RequiredArgsConstructor;
-
 import org.example.backend.global.security.custom.service.OAuth2Service;
 import org.example.backend.global.security.filter.JwtFilter;
 import org.example.backend.global.security.filter.LoginFilter;
@@ -42,10 +41,10 @@ public class SecurityConfig {
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
     private final OAuth2Service oAuth2Service;
 
+
     @Value("${domain}")
     private String domain;
-
-
+  
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -96,8 +95,6 @@ public class SecurityConfig {
             logout.permitAll();
         });
 
-
-
         http.oauth2Login(
             oauth2Login -> oauth2Login.authorizationEndpoint(
                 authorizationEndpointConfig -> authorizationEndpointConfig
@@ -108,7 +105,6 @@ public class SecurityConfig {
                         .baseUri(("/oauth/login/oauth2/code/*"))
                 )
             );
-
 
         //필터생성 및 설정추가
         LoginFilter loginFilter = new LoginFilter(jwtUtil, authenticationManager(authenticationConfiguration)

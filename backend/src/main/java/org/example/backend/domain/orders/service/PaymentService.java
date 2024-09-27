@@ -79,6 +79,7 @@ public class PaymentService {
             long originalPrice = product.getPrice();
             int quantity = orderdProduct.getQuantity();
             totalPrice.updateAndGet(v -> (long) (v + (originalPrice * quantity * (1 - discountRate / 100.0))));
+
         });
 
         return totalPrice;
