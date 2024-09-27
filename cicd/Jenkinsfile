@@ -153,13 +153,13 @@ pipeline {
                            string(credentialsId: 'github_token', variable: 'GITHUB_TOKEN'),
                            string(credentialsId: 'repository', variable: 'GITHUB_URL')
                        ]) {
-                              sh '''
+                              sh """
                               git add .
                               git commit -m "[Deploy] v1.${BUILD_NUMBER} ${TARGET_COMPONENT} 배포"
                               git remote set-url origin https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@${GITHUB_URL}
                               # 변경 사항을 원격 저장소의 cicd 브랜치로 푸시
                               git push origin argoCD
-                              '''
+                              """
                        }
 
                 }
