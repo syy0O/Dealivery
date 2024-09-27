@@ -1,20 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: backend-rollout
+  name: dev-backend-rollout
 spec:
   replicas: 2
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: backend
+      app: dev-backend
   template:
     metadata:
       labels:
-        app: backend
+        app: dev-backend
     spec:
       containers:
-        - name: backend
+        - name: dev-backend
           image: simkids/dealivery-backend:1.23
           #image: simkids/dealivery-backend:v2 <- 새로운 버전 배포 할 때
           imagePullPolicy: Always
@@ -26,7 +26,7 @@ spec:
   strategy:
     blueGreen:
       #activeService는 현재 운영중인 Blue 서비스
-      activeService: backend-service-active
+      activeService: dev-backend-service-active
 
       #previewService는 새롭게 배포될 Green 서비스
-      previewService: backend-service-preview
+      previewService: dev-backend-service-preview
