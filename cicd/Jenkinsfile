@@ -117,7 +117,7 @@ pipeline {
                 script{
                     echo "Editing Manifest..."
                     sh 'cd ..'
-                    git checkout 'cicd'
+                    sh 'git checkout cicd'
                        if (TARGET_COMPONENT == 'backend') {
                            // 백엔드 rollout 수정 후
                           sh '''
