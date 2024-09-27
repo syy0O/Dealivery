@@ -1,11 +1,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: frontend-service
+  name: dev-frontend-service
 spec:
   type: NodePort
   selector:
-    app: frontend
+    app: dev-frontend
   ports:
     - protocol: TCP
       port: 80

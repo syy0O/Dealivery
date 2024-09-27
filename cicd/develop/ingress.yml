@@ -2,12 +2,16 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: dealivery-ingress
+  namespace: dealivery
 spec:
   ingressClassName: "nginx"
   tls:
     - hosts:
         - www.dealivery.kro.kr
       secretName: tls-secret
+    - hosts:
+        - www.dev-dealivery.kro.kr
+      secretName: dev-tls-secret
   rules:
     - host: www.dealivery.kro.kr
       http:
@@ -31,5 +35,29 @@ spec:
             backend:
               service:
                 name: frontend-service-active
+                port:
+                  number: 80
+    - host: www.dev-dealivery.kro.kr
+      http:
+        paths:
+          - path: /api/oauth
+            pathType: Prefix
+            backend:
+              service:
+                name: dev-backend-service-oauth-active
+                port:
+                  number: 8080
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: dev-backend-service-active
+                port:
+                  number: 8080
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dev-frontend-service-active
                 port:
                   number: 80
