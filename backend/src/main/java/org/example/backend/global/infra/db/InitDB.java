@@ -46,9 +46,12 @@ public class InitDB {
     @PostConstruct
     public void execute() {
         insertCategory();
-        insertBoard();
-        insertProduct();
-        insertProductThumbnailImage();
+        //insertBoard();
+        //insertProduct();
+        //insertProductThumbnailImage();
+        // insertBoard();
+        // insertProduct();
+        // insertProductThumbnailImage();
     }
     private void insertCategory(){
         List<String> categoryNames = List.of("식품", "의류", "뷰티", "라이프");

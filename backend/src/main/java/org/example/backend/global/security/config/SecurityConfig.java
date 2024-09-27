@@ -12,6 +12,7 @@ import org.example.backend.global.security.handler.OAuth2AuthenticationSuccessHa
 import org.example.backend.global.security.jwt.JwtUtil;
 import org.example.backend.global.security.jwt.repository.CompanyRefreshTokenRepository;
 import org.example.backend.global.security.jwt.repository.UserRefreshTokenRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,6 +41,10 @@ public class SecurityConfig {
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
     private final OAuth2Service oAuth2Service;
 
+
+    @Value("${domain}")
+    private String domain;
+  
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -50,6 +55,8 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("http://localhost:8081"); // 허용할 출처
         config.addAllowedOrigin("http://localhost:3000"); // 허용할 출처
+        config.addAllowedOrigin(domain); // 허용할 출처
+        config.addAllowedOrigin(domain + "/api"); // 허용할 출처
         config.addAllowedOriginPattern("*"); // 허용할 출처
         config.addAllowedMethod("*"); // 허용할 메서드 (GET, POST, PUT 등)
         config.addAllowedHeader("*"); // 허용할 헤더
@@ -87,6 +94,17 @@ public class SecurityConfig {
             logout.invalidateHttpSession(true);
             logout.permitAll();
         });
+
+        http.oauth2Login(
+            oauth2Login -> oauth2Login.authorizationEndpoint(
+                authorizationEndpointConfig -> authorizationEndpointConfig
+                    .baseUri("/oauth/oauth2/authorization")
+                )
+                .redirectionEndpoint(
+                    redirectionEndpointConfig -> redirectionEndpointConfig
+                        .baseUri(("/oauth/login/oauth2/code/*"))
+                )
+            );
 
         //필터생성 및 설정추가
         LoginFilter loginFilter = new LoginFilter(jwtUtil, authenticationManager(authenticationConfiguration)

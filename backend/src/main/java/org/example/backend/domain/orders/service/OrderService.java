@@ -102,6 +102,7 @@ public class OrderService {
         try {
             Payment payment = paymentService.getPaymentInfo(paymentId);
             paymentService.validatePayment(payment, order);
+            order.getUser().deductPoints(order.getUsedPoint());
             order.setStatus(OrderStatus.ORDER_COMPLETE);
 
         } catch (IamportResponseException | IOException e) { // 해당하는 결제 정보를 찾지 못했을 때
@@ -137,6 +138,8 @@ public class OrderService {
             try {
                 Payment payment = paymentService.getPaymentInfo(impUid);
                 paymentService.refund(impUid, payment);
+                order.getUser().earnPoints(order.getUsedPoint());
+
                 order.setStatus(OrderStatus.ORDER_CANCEL);
 
             } catch (IamportResponseException | IOException  e) {
@@ -149,10 +152,11 @@ public class OrderService {
     public void rollbackStock(Orders order) {
         List<OrderedProduct> orderedProducts = order.getOrderedProducts();
 
-        orderedProducts.forEach((product) -> {
-            Product orderdProduct = productRepository.findByIdWithLock(product.getIdx())
+        orderedProducts.forEach((orderedProduct) -> {
+            Product product = productRepository.findByIdWithLock(orderedProduct.getProduct().getIdx())
                     .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_PRODUCT_NOT_FOUND));
-            orderdProduct.increaseStock(product.getQuantity());
+            product.increaseStock(orderedProduct.getQuantity());
+
         });
     }
 

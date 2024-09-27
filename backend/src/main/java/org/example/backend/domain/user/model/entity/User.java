@@ -57,7 +57,17 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Likes> likes;
-  
+
+
+    public void deductPoints(Long point) {
+        this.point -= point;
+    }
+
+    public void earnPoints(Long point) {
+        this.point += point;
+    }
+
+ 
     public UserDto.UserDetailResponse toUserDetailResponse(){
         return UserDto.UserDetailResponse.builder()
                 .name(this.name)
