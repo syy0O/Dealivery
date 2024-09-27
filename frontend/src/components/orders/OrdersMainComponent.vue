@@ -431,7 +431,7 @@ export default {
       isLoading: true, // 로딩 상태
       isIconRotated: false,
       isDisplayModal: false,
-      isToggleContentVisible: false,
+      isToggleContentVisible: true,
       isDeliveryNotiVisible: false,
       isSameAsOrdererName: false,
       isSameAsOrdererPhone: false,
