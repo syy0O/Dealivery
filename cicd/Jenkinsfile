@@ -25,34 +25,42 @@ pipeline {
         }
 
         stage('Initialize Variables') {
-                    steps {
-                        script {
-                            // 웹훅에서 전달된 이벤트 정보
-                            def eventPayload = readJSON file: 'event.json'
-                            def action = eventPayload.action
-                            def message = eventPayload.head_commit.message
+            steps {
+                script {
+                    // 웹훅에서 전달된 이벤트 정보
+                    def eventPayload = readJSON file: 'event.json'
+                    def action = eventPayload.action
+                    def message = eventPayload.head_commit.message
 
-                           if (action == 'merged') {
-                               echo "Merge event detected."
-                               // 커밋 메시지에 'merge' 포함 여부 판단
-                               if (message.toLowerCase().contains('merge')) {
-                                   echo "Commit message contains 'merge': ${message}"
-                                    // 메시지에 따라 TARGET_COMPONENT 값 할당
-                                    if (message.toLowerCase().contains('frontend')) {
-                                        TARGET_COMPONENT = 'frontend'
-                                    } else if (message.toLowerCase().contains('backend')) {
-                                        TARGET_COMPONENT = 'backend'
-                                    } else if (message.toLowerCase().contains('all')) {
-                                        TARGET_COMPONENT = 'all'
-                                    } else {
-                                        error 'No valid component specified in commit message.'
-                                    }
-                                    echo "Target Component: ${TARGET_COMPONENT}"
-                                }
+                    if (action == 'merged') {
+                        echo "Merge event detected."
+                        // 커밋 메시지에 'merge' 포함 여부 판단
+                        if (message.toLowerCase().contains('merge')) {
+                            echo "Commit message contains 'merge': ${message}"
+                            // 메시지에 따라 TARGET_COMPONENT 값 할당
+                            if (message.toLowerCase().contains('frontend')) {
+                                TARGET_COMPONENT = 'frontend'
+                            } else if (message.toLowerCase().contains('backend')) {
+                                TARGET_COMPONENT = 'backend'
+                            } else if (message.toLowerCase().contains('all')) {
+                                TARGET_COMPONENT = 'all'
+                            } else {
+                                error 'No valid component specified in commit message.'
                             }
+                            echo "Target Component: ${TARGET_COMPONENT}"
+                        } else {
+                            echo "Commit message does not contain 'merge'."
+                            currentBuild.result = 'SUCCESS'  // 파이프라인 정상 종료
+                            return  // 스크립트 종료
                         }
+                    } else {
+                        echo "Action is not 'merged'."
+                        currentBuild.result = 'SUCCESS'  // 파이프라인 정상 종료
+                        return  // 스크립트 종료
                     }
                 }
+            }
+        }
 
         stage('Build') {
             steps {
