@@ -51,16 +51,12 @@ pipeline {
 
                     // 머지 이벤트 확인
                     if (!isMerge) {
-                        echo 'This build is not triggered by a merge event.'
-                        currentBuild.result = 'SUCCESS'  // 정상 종료
-                        return  // 스크립트 종료
+                        error('This build is not triggered by a merge event.')  // 전체 파이프라인 종료
                     }
 
                     // 타겟 컴포넌트가 설정되지 않은 경우 처리
-                    if (targetComponent == null) {
-                        echo 'No valid component specified in commit message.'
-                        currentBuild.result = 'SUCCESS'  // 정상 종료
-                        return  // 스크립트 종료
+                    if (TARGET_COMPONENT == null) {
+                        error('No valid component specified in commit message.')  // 전체 파이프라인 종료
                     } else {
                         echo "Target Component: ${TARGET_COMPONENT}"
                     }
