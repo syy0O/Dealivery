@@ -62,14 +62,14 @@ public class Orders {
     private String receiverName;
     private String receiverPhoneNumber;
 
-//    private String address;
-//    private String addressDetail;
-//    private String postNumber;
+    private String address;
+    private String addressDetail;
+    private String postNumber;
 
     private String paymentId;
     @Enumerated(EnumType.STRING)
     private PaymentType payMethod;
-    private Integer usedPoint;
+    private Long usedPoint;
 
     private Long totalPaidAmount;
 
@@ -82,10 +82,6 @@ public class Orders {
     @OneToMany(mappedBy = "orders", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<OrderedProduct> orderedProducts;
 
-    @ManyToOne
-    @JoinColumn(name="delivery_idx")
-    private Delivery delivery;
-
     public void update(OrderCompleteRequest dto) {
         this.paymentId = dto.getPaymentId();
         this.totalPaidAmount = dto.getTotalPaidAmount();
@@ -95,7 +91,9 @@ public class Orders {
         this.receiverName = dto.getReceiverName();
         this.receiverPhoneNumber = dto.getReceiverPhoneNumber();
         this.modifiedAt = LocalDateTime.now();
-        this.delivery = Delivery.builder().idx(dto.getDeliveryIdx()).build();
+        this.address = dto.getAddress();
+        this.addressDetail = dto.getAddressDetail();
+        this.postNumber = dto.getPostNumber();
     }
 
     public void setStatus(OrderStatus status) {
@@ -147,7 +145,7 @@ public class Orders {
                 .originalPaidAmount(this.originalPaidAmount)
                 .receiverName(receiverName)
                 .receiverPhoneNumber(this.receiverPhoneNumber)
-                .address(this.delivery.getAddress())
+                .address(this.getAddress())
                 .build();
     }
 }

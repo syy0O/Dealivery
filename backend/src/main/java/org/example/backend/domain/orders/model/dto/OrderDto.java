@@ -41,13 +41,15 @@ public class OrderDto {
         private String receiverName;
         private String receiverPhoneNumber;
 
-        private Long deliveryIdx;
+        private String address;
+        private String addressDetail;
+        private String postNumber;
 
         private String paymentId;
         private Long totalPaidAmount;
         private Long originalPaidAmount;
         private PaymentType payMethod;
-        private Integer usedPoint;
+        private Long usedPoint;
     }
 
     @Builder
@@ -101,7 +103,7 @@ public class OrderDto {
         private Long totalPaidAmount;
         private Long originalPaidAmount;
         private String payMethod;
-        private Integer usedPoint;
+        private Long usedPoint;
 
         private String receiverName;
         private String receiverPhoneNumber;
