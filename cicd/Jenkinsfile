@@ -124,17 +124,19 @@ pipeline {
                           cd cicd/develop
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-rollout.yml
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-oauth-rollout.yml
-                          cat backend-rollout.yml
-                          cat backend-oauth-rollout.yml
                           """
                        } else if (TARGET_COMPONENT == 'frontend') {
-                           sh '''
-
-                           '''
+                          sh """
+                          cd cicd/develop
+                          sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' frontend-rollout.yml
+                          """
                        } else if (TARGET_COMPONENT == 'all') {
-                           sh '''
-
-                           '''
+                          sh """
+                          cd cicd/develop
+                          sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-rollout.yml
+                          sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-oauth-rollout.yml
+                          sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' frontend-rollout.yml
+                          """
                        } else {
                            echo "Rollout Edit Fail............................"
                        }
