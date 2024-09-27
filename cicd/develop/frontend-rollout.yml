@@ -11,6 +11,13 @@ spec:
     metadata:
       labels:
         app: dev-frontend
+    spec:  # spec 안에 template과 containers가 있어야 함
+      containers:
+        - name: dev-frontend
+          image: simkids/dealivery-frontend:1.21  # 새로운 이미지
+          envFrom:
+            - configMapRef:
+                name: frontend-configmap
   strategy:
     canary:
       steps:
@@ -18,11 +25,3 @@ spec:
         - pause:
             duration: 30s
         - setWeight: 100  # 모든 파드를 새 이미지로 업데이트
-template:
-  spec:
-    containers:
-      - name: dev-frontend
-        image: simkids/dealivery-frontend:1.21  # 새로운 이미지
-        envFrom:
-          - configMapRef:
-              name: frontend-configmap
