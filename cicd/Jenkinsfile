@@ -120,13 +120,13 @@ pipeline {
                     sh 'git checkout argoCD'
                        if (TARGET_COMPONENT == 'backend') {
                            // 백엔드 rollout 수정 후
-                          sh '''
+                          sh """
                           cd cicd/develop
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-rollout.yml
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-oauth-rollout.yml
                           cat backend-rollout.yml
                           cat backend-oauth-rollout.yml
-                          '''
+                          """
                        } else if (TARGET_COMPONENT == 'frontend') {
                            sh '''
 
