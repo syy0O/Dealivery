@@ -7,11 +7,11 @@ spec:
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      name: dev-oauth2-proxy
+      app: dev-oauth2-proxy
   template:
     metadata:
       labels:
-        name: dev-oauth2-proxy
+        app: dev-oauth2-proxy
     spec:
       containers:
         - name: dev-backend
