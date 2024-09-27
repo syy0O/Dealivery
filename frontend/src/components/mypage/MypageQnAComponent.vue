@@ -2,7 +2,7 @@
     <div class="css-heioij eug5r8l1">
         <div class="css-1xdhyk6 eug5r8l0">
             <ul>
-                <li class="css-1w5u25a e1q2koch0" v-for="(inquiry, index) in inquiries || []" :key="index">
+                <li class="css-1w5u25a e1q2koch0" v-for="(inquiry, index) in paginatedInquiries" :key="index">
                     <button type="button" class="inquiry-product-info" @click="toggleDetail(index)">
                         <div class="product-info-wrap">
                             <div class="product-name">{{ inquiry.productTitle }}</div>
@@ -57,6 +57,42 @@
                     </div>
                 </li>
             </ul>
+            <!-- 페이지 네비게이션 -->
+            <div class="css-rdz8z7 e82lnfz1" v-if="inquiries.length !== 0">
+                <a class="page-unselected e82lnfz0" @click="goToPage(1)">
+                    <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAHCAQAAABwkq/rAAAAHUlEQVR42mNgAIPi/8X/kWkwA8SE0UQIMJAsCKMBBzk27fqtkcYAAAAASUVORK5CYII="
+                    alt="처음 페이지로 이동하기 아이콘" />
+                </a>
+                <a class="page-unselected e82lnfz0" @click="prevPageGroup">
+                    <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAHCAQAAABqrk9lAAAAGElEQVR42mNgAIPi/8X/4QwwE5PBQJADAAKSG3cyVhtXAAAAAElFTkSuQmCC"
+                    alt="이전 페이지로 이동하기 아이콘"
+                    />
+                </a>
+
+                <a
+                    v-for="pageNumber in visiblePages"
+                    :key="pageNumber"
+                    :class="pageNumber === currentPage ? 'page-selected e82lnfz0' : 'page-unselected e82lnfz0'"
+                    @click="goToPage(pageNumber)"
+                >
+                    {{ pageNumber }}
+                </a>
+
+                <a class="page-unselected e82lnfz0" @click="nextPageGroup">
+                    <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAHCAQAAABqrk9lAAAAGUlEQVR42mMo/l/8nwECQEwCHEwGhAlRBgA2mht3SwgzrwAAAABJRU5ErkJggg=="
+                    alt="다음 페이지로 이동하기 아이콘"
+                    />
+                </a>
+                <a class="page-unselected e82lnfz0" @click="goToPage(totalPages)">
+                <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAHCAQAAABwkq/rAAAAIElEQVR42mMo/l/8n4GBgQFGQ5kgDowmQZCwAMImhDkAb0k27Zcisn8AAAAASUVORK5CYII="
+                    alt="마지막 페이지로 이동하기 아이콘"
+                    />
+                </a>
+            </div>
         </div>
     </div>
 
@@ -81,6 +117,9 @@ export default {
             showDetailIndex: null,
             showEditInquiryModal: false,
             selectedInquiry: null,  // 선택된 문의 데이터
+            currentPage: 1,       // 현재 페이지
+            pageSize: 5,          // 페이지 당 아이템 개수
+            totalInquiries: 0,    // 전체 문의 개수
         };
     },
     mounted() {
@@ -88,12 +127,32 @@ export default {
     },
     computed: {
         ...mapStores(useBoardStore),
+                // 페이징 처리된 문의 목록
+                paginatedInquiries() {
+            const start = (this.currentPage - 1) * this.pageSize;
+            const end = start + this.pageSize;
+            return this.inquiries.slice(start, end);
+        },
+        totalPages() {
+            return Math.ceil(this.totalInquiries / this.pageSize);
+        },
+        visiblePages() {
+            const pages = [];
+            for (let i = 1; i <= this.totalPages; i++) {
+                pages.push(i);
+            }
+            return pages;
+        },
     },
     methods: {
         async loadMyInquiries() {
             try {
                 const response = await axios.get('/api/qna/question/list/my');
                 this.inquiries = response.data.result;
+
+                this.inquiries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                this.totalInquiries = this.inquiries.length; // 전체 문의 수 설정
 
                 // 각 문의에 대한 상품 이미지 URL을 추가로 불러옴
                 for (const inquiry of this.inquiries) {
@@ -142,6 +201,7 @@ export default {
             try {
                 await axios.delete(`/api/qna/question/delete/${idx}`);
                 this.inquiries.splice(index, 1); // 삭제 후 목록에서 제거
+                this.showDetailIndex = null; // 페이지 이동 시 토글 상태 초기화
             } catch (error) {
                 console.error("문의 삭제 실패:", error);
             }
@@ -150,12 +210,125 @@ export default {
             const date = new Date(dateString);
             return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleDateString(); 
         },
+        // 페이징 처리 관련 메서드들
+        goToPage(pageNumber) {
+            if (pageNumber >= 1 && pageNumber <= this.totalPages) {
+                this.currentPage = pageNumber;
+                this.showDetailIndex = null; // 페이지 이동 시 토글 상태 초기화
+            }
+        },
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage -= 1;
+                this.showDetailIndex = null; // 페이지 이동 시 토글 상태 초기화
+            }
+        },
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage += 1;
+                this.showDetailIndex = null; // 페이지 이동 시 토글 상태 초기화
+            }
+        },
     },
 }
 </script>
 
 
 <style scoped>
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 수직 중앙 정렬 추가 */
+    margin-top: 20px;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    gap: 5px; /* 요소 간의 간격을 추가 */
+}
+
+.page-unselected:first-of-type {
+    border-left: 1px solid rgb(221, 221, 221);
+}
+
+.css-30tvht {
+    position: relative;
+    min-height: 400px; /* 페이지가 작을 때에도 테이블 높이를 일정하게 유지 */
+    padding-bottom: 60px; /* 페이징 버튼이 겹치지 않도록 여유 공간 추가 */
+}
+
+.pagination button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    cursor: not-allowed;
+    color: #aaa;
+}
+
+.prev-button, .next-button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.prev-button:disabled, .next-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5; /* 비활성화 시 불투명하게 처리 */
+}
+
+.page-unselected {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgb(221, 221, 221);
+    cursor: pointer;
+}
+
+.page-selected {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgb(221, 221, 221);
+    cursor: pointer;
+    background-color: rgb(247, 247, 247);
+    color: rgb(95, 0, 128);
+}
+
+.page-unselected,
+.page-selected {
+    display: inline-flex; /* a 태그에 수평 배치를 적용 */
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgb(221, 221, 221);
+    cursor: pointer;
+}
+
+.css-rdz8z7.e82lnfz1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 0; /* 부모 요소의 맨 아래에 붙이기 */
+    background-color: white; /* 배경을 흰색으로 설정하여 내용과 구분 */
+    padding: 10px 0;
+    z-index: 100; /* 다른 요소 위에 표시되도록 설정 */
+    width: 100%; /* 너비를 부모 요소에 맞추기 */
+    margin-top: 20px;
+}
+
 .row-inquiry-detail>.inquiry-detail-content>.content-row {
     display: flex;
     align-items: center;
