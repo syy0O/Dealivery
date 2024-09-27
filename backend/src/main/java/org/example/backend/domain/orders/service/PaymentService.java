@@ -44,7 +44,7 @@ public class PaymentService {
 
         Integer usedPoint = (Double.valueOf(data.get("usedPoint").toString())).intValue();
         Integer discountRate = (Double.valueOf(data.get("discountRate").toString())).intValue();
-        Integer amount = payment.getAmount().intValue(); // 결제된 금액
+        Integer amount = payment.getAmount().intValue();
 
         AtomicLong totalPrice = validateAndDecreaseStock(payment, usedPoint, order, discountRate);
 
