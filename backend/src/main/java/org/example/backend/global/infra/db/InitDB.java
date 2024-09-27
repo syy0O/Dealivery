@@ -49,6 +49,9 @@ public class InitDB {
         //insertBoard();
         //insertProduct();
         //insertProductThumbnailImage();
+        // insertBoard();
+        // insertProduct();
+        // insertProductThumbnailImage();
     }
     private void insertCategory(){
         List<String> categoryNames = List.of("식품", "의류", "뷰티", "라이프");

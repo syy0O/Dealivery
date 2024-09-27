@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.example.backend.domain.board.model.entity.ProductBoard;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,6 +25,7 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idx;
+	@Column(unique = true)
 	private String name;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
