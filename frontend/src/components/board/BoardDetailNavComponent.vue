@@ -93,8 +93,8 @@
                     <span>{{ row.content }}<br /></span>
                   </div>
                 </div>
-                <div class="css-1j49yxi e11ufodi1" v-if="row.answerStatus === '답변대기' && row.email === this.userEmail && this.userType === 'ROLE_USER'">
-                  <button type=" button" @click="openEditModal(index)">수정</button>
+                <div class="css-1j49yxi e11ufodi1" v-if="shouldShowEditDeleteButtons(row)">
+                  <button type="button" @click="openEditModal(index)">수정</button>
                   <button type="button" class="css-1ankuif e11ufodi0" @click="deleteInquiry(row.idx, index)">삭제</button>
                 </div>
               </div>
@@ -115,6 +115,43 @@
           </tr>
         </tbody>
       </table>
+      <div class="css-rdz8z7 e82lnfz1" v-if="totalInquiries > 0">
+        <!-- 처음 페이지로 이동 -->
+          <a class="page-unselected" @click="goToPage(1)">
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAHCAQAAABwkq/rAAAAHUlEQVR42mNgAIPi/8X/kWkwA8SE0UQIMJAsCKMBBzk27fqtkcYAAAAASUVORK5CYII="
+              alt="처음 페이지로 이동"
+            />
+          </a>
+          <!-- 이전 페이지로 이동 -->
+          <a class="page-unselected" @click="prevPage">
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAHCAQAAABqrk9lAAAAGElEQVR42mNgAIPi/8X/4QwwE5PBQJADAAKSG3cyVhtXAAAAAElFTkSuQmCC"
+              alt="이전 페이지로 이동"/>
+          </a>
+          <!-- 페이지 번호 표시 -->
+          <!-- 페이지 번호 표시 -->
+          <a
+            v-for="pageNumber in visiblePages"
+            :key="pageNumber"
+            :class="pageNumber === currentPage ? 'page-selected' : 'page-unselected'"
+            @click="goToPage(pageNumber)"
+          >
+            {{ pageNumber }}
+          </a>
+          <!-- 다음 페이지로 이동 -->
+          <a class="page-unselected" @click="nextPageGroup">
+            <img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAHCAQAAABqrk9lAAAAGUlEQVR42mMo/l/8nwECQEwCHEwGhAlRBgA2mht3SwgzrwAAAABJRU5ErkJggg=="
+            alt="다음 페이지로 이동"/>
+          </a>
+          <!-- 마지막 페이지로 이동 -->
+          <a class="page-unselected" @click="goToPage(totalPages)">
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAHCAQAAABwkq/rAAAAIElEQVR42mMo/l/8n4GBgQFGQ5kgDowmQZCwAMImhDkAb0k27Zcisn8AAAAASUVORK5CYII="
+              alt="마지막 페이지로 이동"/>
+          </a>
+        </div>
     </div>
 
     <!-- 새 문의 작성 모달 -->
@@ -134,23 +171,39 @@ import { useQnaStore } from "@/stores/useQnaStore";
 import QnaRegisterModalComponent from "../qna/QnaRegisterModalComponent.vue";
 import { mapStores } from "pinia";
 import { useUserStore } from "@/stores/useUserStore";
-import axios from "axios";
+import axios from 'axios'; 
 
 export default {
   name: "BoardDetailNavComponent",
   computed: {
-  ...mapStores(useQnaStore, useUserStore),
-  userEmail() {
-    return this.userStore.userDetail.email || "email 세팅 안 됨";
-  },
-  userType() {
-    if (this.userStore.roles.includes("ROLE_USER")) {
-      return "ROLE_USER";
-    } else if (this.userStore.roles.includes("ROLE_COMPANY")) {
-      return "ROLE_COMPANY";
-    }
-    return null; // roles 값이 없으면 null 반환
-    }
+    ...mapStores(useQnaStore, useUserStore),
+    userType() {
+      if (this.userStore.roles.includes("ROLE_USER")) {
+        return "ROLE_USER";
+      } else if (this.userStore.roles.includes("ROLE_COMPANY")) {
+        return "ROLE_COMPANY";
+      }
+      return null;
+    },
+    totalPages() {
+      return Math.ceil(this.totalInquiries / this.pageSize);
+    },
+    paginatedInquiries() {
+      return this.localTableData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize);
+    },
+    visiblePages() {
+      const pageNumbers = [];
+      for (let i = this.startPage; i <= this.endPage; i++) {
+        pageNumbers.push(i);
+      }
+      return pageNumbers;
+    },
+    startPage() {
+      return Math.floor((this.currentPage - 1) / this.pagesPerGroup) * this.pagesPerGroup + 1;
+    },
+    endPage() {
+      return Math.min(this.startPage + this.pagesPerGroup - 1, this.totalPages);
+    },
   },
   props: {
     thumbnails: {
@@ -183,31 +236,36 @@ export default {
       },
       localTableData: [],
       expandedInquiryIndex: null,
-      editingIndex: null, // 수정할 문의 인덱스
+      editingIndex: null,
+      currentPage: 1,
+      pageSize: 6,
+      totalInquiries: 0,
+      pagesPerGroup: 5,
+      // 사용자 정보를 직접 관리하기 위해 새로운 상태 추가
+      userDetailWithoutAlert: {
+      email: "",
+      roles: [],
+      },
     };
   },
   methods: {
     loadInquiries() {
-      this.activeTab = "inquiries"; // 문의 탭 활성화
+      this.activeTab = "inquiries";
 
-      axios.get('/api/user/detail', { withCredentials: true })
-        .then((response) => {
-          if (response.data.code === 1000) {
-            this.userStore.userDetail = response.data.result;
-          } else {
-            console.log("회원 정보를 가져오는 데 실패했습니다.");
-          }
-        })
-        .catch((error) => {
-          // 에러가 발생해도 alert 대신 로그만 출력
-          console.error("회원 정보 조회 중 오류 발생:", error);
-        })
-        .finally(() => {
-          // 회원정보 조회에 성공하든 실패하든 문의 목록은 조회하도록
-          this.qnaStore.fetchInquiries().then(() => {
-            this.localTableData = [...this.qnaStore.inquiries.filter(inquiry => inquiry.productBoardIdx === this.productBoardIdx)];
-          });
+      // 사용자 정보를 alert 없이 로드
+      this.getUserDetailWithoutAlert().then(() => {
+        this.qnaStore.fetchInquiries().then(() => {
+          const inquiries = this.qnaStore.inquiries
+            .filter((inquiry) => inquiry.productBoardIdx === this.productBoardIdx)
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+          this.totalInquiries = inquiries.length;
+          this.localTableData = inquiries.slice(
+            (this.currentPage - 1) * this.pageSize,
+            this.currentPage * this.pageSize
+          );
         });
+      });
     },
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -223,7 +281,7 @@ export default {
       }
     },
     openEditModal(index) {
-      const selectedInquiry = { ...this.localTableData[index] }; // 선택한 문의 데이터를 저장
+      const selectedInquiry = { ...this.localTableData[index] };
       this.selectedInquiry = selectedInquiry;
       this.editingIndex = index;
       this.showEditInquiryModal = true;
@@ -238,7 +296,7 @@ export default {
     },
     maskAuthorName(name) {
       if (!name) {
-        return "익명"; // name이 undefined나 null일 경우 기본값을 반환
+        return "익명";
       }
       if (name.length <= 2) {
         return name[0] + "*";
@@ -252,32 +310,86 @@ export default {
       el.style.maxHeight = "0px";
     },
     addNewInquiry(newInquiry) {
-      this.qnaStore.addInquiry(newInquiry);
-      //this.localTableData = [...this.localTableData, newInquiry]; // 화면에 바로 반영
+      this.localTableData.unshift(newInquiry);  // 새로 등록된 문의를 맨 위에 추가
+      this.totalInquiries += 1;  // 전체 문의 개수 증가
+      this.checkPageAdjustments();
       this.closeModal();
-      this.qnaStore.fetchInquiries().then(() => {
-            this.localTableData = [...this.qnaStore.inquiries.filter(inquiry => inquiry.productBoardIdx === this.productBoardIdx)];
-          });
     },
     updateInquiry(updatedInquiry) {
       if (this.editingIndex !== null) {
-        this.qnaStore.updateInquiry(this.editingIndex, updatedInquiry);
-        this.localTableData[this.editingIndex] = { ...this.localTableData[this.editingIndex], ...updatedInquiry };  // 바로 반영
+        this.localTableData[this.editingIndex] = {
+          ...this.localTableData[this.editingIndex],
+          ...updatedInquiry,
+        };
         this.editingIndex = null;
-        this.loadInquiries();
         this.closeModal();
       }
-      this.qnaStore.fetchInquiries().then(() => {
-            this.localTableData = [...this.qnaStore.inquiries.filter(inquiry => inquiry.productBoardIdx === this.productBoardIdx)];
-          });
     },
     deleteInquiry(idx, index) {
-      this.qnaStore.deleteInquiry(idx, index);
-      this.localTableData = [...this.localTableData.slice(0, index), ...this.localTableData.slice(index + 1)];
-      if (this.expandedInquiryIndex === index) {
-        this.expandedInquiryIndex = null;
-      } else if (this.expandedInquiryIndex > index) {
-        this.expandedInquiryIndex -= 1;
+      // 서버로 삭제 요청 보내기
+      this.qnaStore.deleteInquiry(idx, index).then(() => {
+        // localTableData에서 해당 문의를 즉시 제거
+        this.localTableData.splice(index, 1);
+        this.totalInquiries -= 1; // 전체 문의 개수 감소
+        this.checkPageAdjustments(); // 페이징 조정
+
+        // 삭제된 문의가 화면에 보이지 않도록 즉시 반영
+        if (this.expandedInquiryIndex === index) {
+          this.expandedInquiryIndex = null;
+        } else if (this.expandedInquiryIndex > index) { 
+          this.expandedInquiryIndex -= 1;
+        }
+      }).catch(error => {
+        console.error("문의 삭제 중 오류 발생:", error);
+      });
+    },
+    // 수정/삭제 버튼이 노출될 조건 체크
+    shouldShowEditDeleteButtons(row) {
+      console.log("row.email->" + row.email + "  userEmail->" + this.userDetailWithoutAlert.email);
+      return row.answerStatus === '답변대기' && row.email === this.userDetailWithoutAlert.email;
+    },
+    checkPageAdjustments() {
+      // 페이징 계산을 다시 하여 데이터가 제대로 분할되고 표시되는지 확인
+      if (this.totalInquiries <= (this.currentPage - 1) * this.pageSize && this.currentPage > 1) {
+        this.currentPage -= 1;
+      }
+      this.loadInquiries();  // 페이지 재로딩
+    },
+    goToPage(pageNumber) {
+      if (pageNumber >= 1 && pageNumber <= this.totalPages) {
+        this.currentPage = pageNumber;
+        this.loadInquiries();
+      }
+    },
+    prevPageGroup() {
+      const newPage = this.startPage - 1;
+      if (newPage >= 1) {
+        this.goToPage(newPage);
+      }
+    },
+    nextPageGroup() {
+      const newPage = this.endPage + 1;
+      if (newPage <= this.totalPages){
+        this.goToPage(newPage);
+      }
+    },
+    // 새로운 사용자 정보 로드 메서드 추가
+    async getUserDetailWithoutAlert() {
+      try {
+        const response = await axios.get("/api/user/detail", {
+          withCredentials: true,
+        });
+        if (response.data.code === 1000) {
+          this.userDetailWithoutAlert = response.data.result;
+          console.log(this.userDetailWithoutAlert)
+          return true;
+        } else {
+          console.log("사용자 정보 조회 실패");
+          return false;
+        }
+      } catch (error) {
+        console.error("사용자 정보 조회 중 오류 발생", error);
+        return false;
       }
     },
   },
@@ -295,6 +407,100 @@ export default {
 
 
 <style scoped>
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* 수직 중앙 정렬 추가 */
+  margin-top: 20px;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  gap: 5px; /* 요소 간의 간격을 추가 */
+}
+
+.page-unselected:first-of-type {
+  border-left: 1px solid rgb(221, 221, 221);
+}
+
+.css-30tvht {
+  position: relative;
+  min-height: 400px; /* 페이지가 작을 때에도 테이블 높이를 일정하게 유지 */
+  padding-bottom: 60px; /* 페이징 버튼이 겹치지 않도록 여유 공간 추가 */
+}
+
+.pagination button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  color: #aaa;
+}
+
+.prev-button, .next-button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.prev-button:disabled, .next-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5; /* 비활성화 시 불투명하게 처리 */
+}
+
+.page-unselected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgb(221, 221, 221);
+  cursor: pointer;
+}
+
+.page-selected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgb(221, 221, 221);
+  cursor: pointer;
+  background-color: rgb(247, 247, 247);
+  color: rgb(95, 0, 128);
+}
+
+.page-unselected,
+.page-selected {
+  display: inline-flex; /* a 태그에 수평 배치를 적용 */
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgb(221, 221, 221);
+  cursor: pointer;
+}
+
+.css-rdz8z7.e82lnfz1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 0; /* 부모 요소의 맨 아래에 붙이기 */
+  background-color: white; /* 배경을 흰색으로 설정하여 내용과 구분 */
+  padding: 10px 0;
+  z-index: 100; /* 다른 요소 위에 표시되도록 설정 */
+  width: 100%; /* 너비를 부모 요소에 맞추기 */
+  margin-top: 20px;
+}
+
 button {
   cursor: pointer;
 }
@@ -709,5 +915,7 @@ div {
   object-fit: contain; /* 비율을 유지하면서 영역에 맞게 이미지 표시 */
 }
 </style>
+
+
 
 
