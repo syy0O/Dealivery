@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: frontend-rollout
+spec:
+  replicas: 3  # 총 파드 수
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:  # spec 안에 template과 containers가 있어야 함
+      containers:
+        - name: frontend
+          image: simkids/dealivery-frontend:1.57  # 새로운 이미지
+          envFrom:
+            - configMapRef:
+                name: frontend-configmap
+  strategy:
+    canary:
+      steps:
+        - setWeight: 20  # 첫 번째 카나리 배포 시 20%의 파드를 새 이미지로 업데이트
+        - pause:
+            duration: 30s
+        - setWeight: 100  # 모든 파드를 새 이미지로 업데이트
