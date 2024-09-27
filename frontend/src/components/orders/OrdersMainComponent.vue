@@ -432,6 +432,7 @@ export default {
       isIconRotated: false,
       isDisplayModal: false,
       isToggleContentVisible: true,
+
       isDeliveryNotiVisible: false,
       isSameAsOrdererName: false,
       isSameAsOrdererPhone: false,
@@ -445,7 +446,6 @@ export default {
       receiverPhoneNumber: "",
     };
   },
-
   computed: {
     ...mapStores(useOrderStore, useUserStore),
     totalAmount() {
@@ -528,6 +528,7 @@ export default {
         "주문이 취소되었습니다."
       );
     },
+    
     handleBeforeUnload(event) {
       if (!this.paymentCompleted) {
         // 결제가 완료되지 않은 경우에만
