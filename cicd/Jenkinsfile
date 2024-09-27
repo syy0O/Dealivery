@@ -117,36 +117,29 @@ pipeline {
                 script{
                     echo "Editing Manifest..."
                     sh 'cd ..'
-                    withCredentials([
-                           string(credentialsId: 'github-username', variable: 'GITHUB_USERNAME'),
-                           string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN'),
-                           string(credentialsId: 'github-url', variable: 'GITHUB_URL')
-                       ]) {
-                           if (TARGET_COMPONENT == 'backend') {
-                               // 백엔드 rollout 수정 후
-                              sh '''
-                              cd cicd/develop
-                              # backend-rollout.yml 파일의 ${LATEST_VERSION}을 BUILD_NUMBER로 치환
-                              sed -i 's/\\${LATEST_VERSION}/'${BUILD_NUMBER}'/g' backend-rollout.yml
-                              sed -i 's/\\${LATEST_VERSION}/'${BUILD_NUMBER}'/g' backend-oauth-rollout.yml
+                       if (TARGET_COMPONENT == 'backend') {
+                           // 백엔드 rollout 수정 후
+                          sh '''
+                          cd cicd/develop
+                          # backend-rollout.yml 파일의 ${LATEST_VERSION}을 BUILD_NUMBER로 치환
+                          sed -i 's/\\${LATEST_VERSION}/'${BUILD_NUMBER}'/g' backend-rollout.yml
+                          sed -i 's/\\${LATEST_VERSION}/'${BUILD_NUMBER}'/g' backend-oauth-rollout.yml
 
-                              # 변경 사항 확인
-                              cat backend-rollout.yml
-                              cat backend-oauth-rollout.yml
-                              '''
-                           } else if (TARGET_COMPONENT == 'frontend') {
-                               sh '''
+                          # 변경 사항 확인
+                          cat backend-rollout.yml
+                          cat backend-oauth-rollout.yml
+                          '''
+                       } else if (TARGET_COMPONENT == 'frontend') {
+                           sh '''
 
-                               '''
-                           } else if (TARGET_COMPONENT == 'all') {
-                               sh '''
+                           '''
+                       } else if (TARGET_COMPONENT == 'all') {
+                           sh '''
 
-                               '''
-                           } else {
-                               echo "Rollout Edit Fail............................"
-                           }
+                           '''
+                       } else {
+                           echo "Rollout Edit Fail............................"
                        }
-
                 }
             }
         }
@@ -157,9 +150,9 @@ pipeline {
                     echo "Deploying Components..."
                     sh 'cd ..'
                     withCredentials([
-                           string(credentialsId: 'github-username', variable: 'GITHUB_USERNAME'),
-                           string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN'),
-                           string(credentialsId: 'github-url', variable: 'GITHUB_URL')
+                           string(credentialsId: 'github_username', variable: 'GITHUB_USERNAME'),
+                           string(credentialsId: 'github_token', variable: 'GITHUB_TOKEN'),
+                           string(credentialsId: 'repository', variable: 'GITHUB_URL')
                        ]) {
                               sh '''
                               git add .
