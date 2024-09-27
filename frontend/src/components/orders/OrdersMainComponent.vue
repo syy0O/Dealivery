@@ -431,7 +431,8 @@ export default {
       isLoading: true, // 로딩 상태
       isIconRotated: false,
       isDisplayModal: false,
-      isToggleContentVisible: false,
+      isToggleContentVisible: true,
+
       isDeliveryNotiVisible: false,
       isSameAsOrdererName: false,
       isSameAsOrdererPhone: false,
@@ -469,8 +470,10 @@ export default {
   },
   created() {
     this.init();
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
   },
   beforeUnmount() {
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
     window.removeEventListener("popstate", this.handlePopState);
   },
 
@@ -495,7 +498,6 @@ export default {
 
         this.ordererInfo = {
           ...this.userStore.userDetail,
-          point: 0,
           selectedAddress: defaultDelivery,
         };
 
@@ -510,7 +512,7 @@ export default {
             ? this.ordererInfo.point
             : tenPercentOfPrice;
 
-        history.pushState(null, null, location.href);
+        history.pushState({ ...history.state }, "", location.href);
         window.addEventListener("popstate", this.handlePopState);
 
         this.isLoading = false; // 데이터 로딩 완료 후 로딩 상태 해제
@@ -525,6 +527,19 @@ export default {
         "/",
         "주문이 취소되었습니다."
       );
+    },
+    
+    handleBeforeUnload(event) {
+      if (!this.paymentCompleted) {
+        // 결제가 완료되지 않은 경우에만
+        event.preventDefault();
+        event.returnValue = ""; // 브라우저가 사용자에게 경고를 표시하도록 함
+        this.orderStore.cancelOrder(
+          this.orderStore.orderInfo.orderIdx,
+          "/",
+          "결제가 취소되었습니다."
+        );
+      }
     },
 
     toggleContent() {
@@ -576,7 +591,9 @@ export default {
       if (this.validateAll()) {
         const paymentData = {
           paymentMethod: this.selectedPaymentMethod,
-          deliveryIdx: this.ordererInfo.selectedAddress.idx, // 배송지 정보 가져오기
+          address: this.ordererInfo.selectedAddress.address,
+          addressDetail: this.ordererInfo.selectedAddress.addressDetail,
+          postNumber: this.ordererInfo.selectedAddress.postNumber,
           usedPoint: this.usedPoint, // 사용한 포인트
           totalAmount: this.totalAmount, // 전체 결제금액에서 포인트 차감
           originalPaidAmount: this.originalTotalAmount,
