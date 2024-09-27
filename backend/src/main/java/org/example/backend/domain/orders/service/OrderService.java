@@ -139,6 +139,7 @@ public class OrderService {
                 Payment payment = paymentService.getPaymentInfo(impUid);
                 paymentService.refund(impUid, payment);
                 order.getUser().earnPoints(order.getUsedPoint());
+
                 order.setStatus(OrderStatus.ORDER_CANCEL);
 
             } catch (IamportResponseException | IOException  e) {
@@ -155,6 +156,7 @@ public class OrderService {
             Product product = productRepository.findByIdWithLock(orderedProduct.getProduct().getIdx())
                     .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_PRODUCT_NOT_FOUND));
             product.increaseStock(orderedProduct.getQuantity());
+
         });
     }
 

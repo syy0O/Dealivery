@@ -105,6 +105,7 @@ public class OrderDto {
         private String payMethod;
         private Long usedPoint;
 
+
         private String receiverName;
         private String receiverPhoneNumber;
 

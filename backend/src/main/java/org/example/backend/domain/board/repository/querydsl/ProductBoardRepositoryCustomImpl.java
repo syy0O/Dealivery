@@ -115,6 +115,10 @@ public class ProductBoardRepositoryCustomImpl implements ProductBoardRepositoryC
 	}
 
 
+	private BooleanExpression containsStatus(String search) {
+		return search == null ? null : qProductBoard.status.containsIgnoreCase(search);
+	}
+
 	// ---- 판매자 사용자 ----
 	private BooleanExpression getCondition(String status, Integer month) {
 		BooleanExpression statusExpression = statusEquals(status);
