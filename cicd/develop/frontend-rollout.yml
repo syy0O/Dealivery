@@ -22,7 +22,7 @@ template:
   spec:
     containers:
       - name: dev-frontend
-        image: simkids/dealivery-frontend:1.${LATEST_VERSION}  # 새로운 이미지
+        image: simkids/dealivery-frontend:1.21  # 새로운 이미지
         envFrom:
           - configMapRef:
               name: frontend-configmap
