@@ -117,7 +117,7 @@ pipeline {
                 script{
                     echo "Editing Manifest..."
                     sh 'cd ..'
-                    sh 'git checkout refs/remotes/origin/cicd'
+                    sh 'git checkout argoCD'
                        if (TARGET_COMPONENT == 'backend') {
                            // 백엔드 rollout 수정 후
                           sh '''
@@ -158,7 +158,7 @@ pipeline {
                               git commit -m "[Deploy] v1.${BUILD_NUMBER} ${TARGET_COMPONENT} 배포"
                               git remote set-url origin https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@${GITHUB_URL}
                               # 변경 사항을 원격 저장소의 cicd 브랜치로 푸시
-                              git push origin cicd
+                              git push origin argoCD
                               '''
                        }
 
