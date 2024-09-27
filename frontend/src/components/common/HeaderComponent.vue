@@ -32,7 +32,7 @@
       <div class="css-r7wmjj e15sbxqa3">
         <div class="css-boc80u ekdqe1a1">
           <img
-            src="@/assets/dealivery-logo.png"
+            src="@/assets/dealivery-logo2.png"
             alt="딜리버리 로고"
             class="css-17mnrrx e1s3pt0j0 logo"
             @click="routeTo('/')"
