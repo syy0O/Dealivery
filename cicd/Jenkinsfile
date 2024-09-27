@@ -122,10 +122,8 @@ pipeline {
                            // 백엔드 rollout 수정 후
                           sh '''
                           cd cicd/develop
-                          # backend-rollout.yml 파일의 ${LATEST_VERSION}을 BUILD_NUMBER로 치환
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-rollout.yml
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-oauth-rollout.yml
-                          # 변경 사항 확인
                           cat backend-rollout.yml
                           cat backend-oauth-rollout.yml
                           '''
