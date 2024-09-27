@@ -17,16 +17,16 @@ export const useUserStore = defineStore("user", {
       password: "",
     },
     userDetail: {
-      "name": "",
-      "email": "",
-      "address": "",
-      "addressDetail": "",
-      "postNumber": "",
-      "phoneNumber": "",
-      "deliveries": [],
-      "point": null
+      name: "",
+      email: "",
+      address: "",
+      addressDetail: "",
+      postNumber: "",
+      phoneNumber: "",
+      deliveries: [],
+      point: null,
     },
-    socialRedirect: ""
+    socialRedirect: "",
   }),
   persist: {
     storage: sessionStorage,
@@ -160,7 +160,8 @@ export const useUserStore = defineStore("user", {
 
     async socialLogin(loginType) {
       try {
-        window.location.href = backend + "/oauth2/authorization/" + loginType;
+        window.location.href =
+          backend + "/oauth/oauth2/authorization/" + loginType;
       } catch {
         alert("소셜 로그인 요청 수행중 문제가 발생했습니다.");
       }
@@ -304,15 +305,15 @@ export const useUserStore = defineStore("user", {
       }
     },
 
-    async editDetail(request){
+    async editDetail(request) {
       try {
         let response = await axios.put(backend + "/user/edit", request, {
           withCredentials: true,
           headers: {
-            'Content-Type': 'application/json',
-          }
+            "Content-Type": "application/json",
+          },
         });
-        if(response.data.code !== 1000){
+        if (response.data.code !== 1000) {
           return false;
         }
         return true;
@@ -320,17 +321,18 @@ export const useUserStore = defineStore("user", {
         return false;
       }
     },
-    async like(request){
+    async like(request) {
       try {
-        let response = await axios.post(backend+"/likes",request,{withCredentials:true});
-        if(response.data.code !== 1000){
+        let response = await axios.post(backend + "/likes", request, {
+          withCredentials: true,
+        });
+        if (response.data.code !== 1000) {
           return false;
         }
         return true;
       } catch (error) {
         return false;
       }
-    }
-
+    },
   },
 });
