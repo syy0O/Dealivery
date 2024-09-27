@@ -112,41 +112,64 @@ pipeline {
             }
         }
 
+        stage('Edit Manifest') {
+            steps {
+                script{
+                    echo "Editing Manifest..."
+                    sh 'cd ..'
+                    withCredentials([
+                           string(credentialsId: 'github-username', variable: 'GITHUB_USERNAME'),
+                           string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN'),
+                           string(credentialsId: 'github-url', variable: 'GITHUB_URL')
+                       ]) {
+                           if (TARGET_COMPONENT == 'backend') {
+                               // 백엔드 rollout 수정 후
+                              sh '''
+                              cd cicd/develop
+                              # backend-rollout.yml 파일의 ${LATEST_VERSION}을 BUILD_NUMBER로 치환
+                              sed -i 's/\\${LATEST_VERSION}/'${BUILD_NUMBER}'/g' backend-rollout.yml
+                              sed -i 's/\\${LATEST_VERSION}/'${BUILD_NUMBER}'/g' backend-oauth-rollout.yml
+
+                              # 변경 사항 확인
+                              cat backend-rollout.yml
+                              cat backend-oauth-rollout.yml
+                              '''
+                           } else if (TARGET_COMPONENT == 'frontend') {
+                               sh '''
+
+                               '''
+                           } else if (TARGET_COMPONENT == 'all') {
+                               sh '''
+
+                               '''
+                           } else {
+                               echo "Rollout Edit Fail............................"
+                           }
+                       }
+
+                }
+            }
+        }
+
         stage('Deploy') {
             steps {
                 script{
                     echo "Deploying Components..."
                     sh 'cd ..'
-                    if (TARGET_COMPONENT == 'backend') {
-                        // 백엔드 rollout 수정 후
-                       sh '''
-                       cd cicd/develop
-                       # backend-rollout.yml 파일의 ${LATEST_VERSION}을 BUILD_NUMBER로 치환
-                       sed -i 's/\\${LATEST_VERSION}/'${BUILD_NUMBER}'/g' backend-rollout.yml
-                       sed -i 's/\\${LATEST_VERSION}/'${BUILD_NUMBER}'/g' backend-oauth-rollout.yml
+                    withCredentials([
+                           string(credentialsId: 'github-username', variable: 'GITHUB_USERNAME'),
+                           string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN'),
+                           string(credentialsId: 'github-url', variable: 'GITHUB_URL')
+                       ]) {
+                              sh '''
+                              git add .
+                              git commit -m "[Deploy] v1.${BUILD_NUMBER} ${TARGET_COMPONENT} 배포"
+                              git remote set-url origin https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@${GITHUB_URL}
+                              # 변경 사항을 원격 저장소의 cicd 브랜치로 푸시
+                              git push origin HEAD:cicd
+                              '''
+                       }
 
-                       # 변경 사항 확인
-                       cat backend-rollout.yml
-                       cat backend-oauth-rollout.yml
-
-                       # 변경된 파일을 git에 추가하고 커밋
-                       git add backend-rollout.yml backend-oauth-rollout.yml
-                       git commit -m "[Deploy] v1.${BUILD_NUMBER} 배포"
-
-                       # 변경 사항을 원격 저장소의 cicd 브랜치로 푸시
-                       git push origin cicd
-                       '''
-                    } else if (TARGET_COMPONENT == 'frontend') {
-                        sh '''
-
-                        '''
-                    } else if (TARGET_COMPONENT == 'all') {
-                        sh '''
-
-                        '''
-                    } else {
-                        echo "Rollout Edit Fail............................"
-                    }
                 }
             }
         }

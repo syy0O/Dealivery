@@ -1,25 +1,28 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: backend-rollout
+  name: dev-backend-rollout
 spec:
   replicas: 2
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: backend
+      app: dev-backend
   template:
     metadata:
       labels:
-        app: backend
+        app: dev-backend
     spec:
       containers:
-        - name: backend
+        - name: dev-backend
           image: simkids/dealivery-backend:1.${LATEST_VERSION}
           #image: simkids/dealivery-backend:v2 <- 새로운 버전 배포 할 때
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: backend-configmap
   strategy:
     blueGreen:
       #activeService는 현재 운영중인 Blue 서비스
