@@ -113,7 +113,7 @@
                   tabindex="-1"
                 >
                   <li
-                    v-for="option in productOptions"
+                    v-for="option in this.data.products"
                     :key="option.idx"
                     @click="selectOption(option)"
                     class="MuiMenuItem-root MuiMenuItem-gutters MuiButtonBase-root css-1p79lf5"
@@ -125,13 +125,13 @@
                       <div class="css-unrh3l e12wapb66">
                         <p class="css-1k8t52o e12wapb65">
                           <span class="css-19h9nlb e12wapb64">
-                            {{ option.label }}</span
+                            {{ option.name }}</span
                           >
                         </p>
                         <div class="css-t4macj e12wapb62">
                           <div class="css-1fvrsoi e12wapb60">
                             {{
-                              option.originalPrice *
+                              option.price *
                               (
                                 1 -
                                 this.data.discountRate / 100
@@ -139,7 +139,7 @@
                             }}원
                           </div>
                           <span class="css-1s0al7f e17q5gas1"
-                            >{{ option.originalPrice.toLocaleString() }}원</span
+                            >{{ option.price.toLocaleString() }}원</span
                           >
                         </div>
                       </div>
@@ -280,9 +280,9 @@ export default {
       },
     };
   },
-  created() {
-    this.mapProductsToOptions();
-  },
+  // created() {
+  //   this.mapProductsToOptions();
+  // },
   computed: {
     totalPrice() {
       return this.cartItems.reduce(
@@ -294,6 +294,16 @@ export default {
       return this.cartItems.length > 0;
     },
     ...mapStores(useUserStore),
+  },
+  watch: {
+    data: {
+      immediate: true,
+      handler(newValue) {
+        if (newValue) {
+          this.mapProductsToOptions();
+        }
+      },
+    },
   },
   methods: {
     mapProductsToOptions() {
@@ -317,9 +327,9 @@ export default {
       } else {
         this.cartItems.push({
           idx: option.idx,
-          name: option.label,
-          price: option.originalPrice * (1 - this.data.discountRate / 100),
-          originalPrice: option.originalPrice,
+          name: option.name,
+          price: option.price * (1 - this.data.discountRate / 100),
+          originalPrice: option.price,
           quantity: 1,
         });
       }

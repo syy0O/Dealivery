@@ -54,6 +54,7 @@
               required=""
               class="css-11ntk83 e1493ofl3"
               value=""
+              @keydown.enter="handleNavigation('search', search)"
             /><button
               id="submit"
               aria-label="submit"
@@ -98,6 +99,12 @@
             >
               <span class="css-1xyu7j9 e17w4cfr2">{{ category }}</span>
             </li>
+            <li
+              class="css-59mmhh e17w4cfr4"
+              @click="handleNavigation('search', status)"
+            >
+              <span class="css-1xyu7j9 e17w4cfr2">{{ status }}</span>
+            </li>
           </ul>
         </div>
         <div class="css-s5xdrg e17w4cfr0"></div>
@@ -118,7 +125,8 @@ export default {
   data() {
     return {
       categories: ["전체", "식품", "의류", "뷰티", "라이프"],
-      search: null,
+      search: "",
+      status: "진행 전",
     };
   },
   methods: {
@@ -128,7 +136,12 @@ export default {
       };
       if (type === "category") {
         query.category = value;
+        this.search = "";
       } else if (type === "search") {
+        if (value.length < 1) {
+          alert("검색어를 두글자이상 입력해주세요.");
+          return;
+        }
         query.search = value;
       }
 

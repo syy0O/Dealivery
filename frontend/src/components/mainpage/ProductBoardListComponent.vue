@@ -6,6 +6,8 @@
           currentCategory == "undefined"
             ? currentSearch == "undefined"
               ? "전체"
+              : currentSearch == "진행 전"
+              ? "진행 전"
               : `"${currentSearch}"에 대한 검색 결과`
             : currentCategory
         }}
@@ -149,6 +151,8 @@ export default {
         this.$router.push({
           query: {
             page: pageNumber,
+            category: this.currentCategory,
+            search: this.currentSearch,
           },
         });
       } else if (pageNumber < 1) {

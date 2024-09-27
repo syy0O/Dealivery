@@ -21,6 +21,7 @@
                       class="datetime-input"
                       @change="validateDates"
                       :disabled="!isActivate"
+                      :min="minDateTime"
                     />
                     <span class="separator">~</span>
                     <input
@@ -31,6 +32,7 @@
                       class="datetime-input"
                       @change="validateDates"
                       :disabled="!isActivate"
+                      :min="minDateTime"
                     />
                   </div>
                 </td>
@@ -239,12 +241,16 @@ export default {
       thumbnailImages: [], // 전송 데이터
       detailImage: [], // 전송 데이터
       isActivate: true,
+      minDateTime: "",
     };
   },
   created() {
     if (this.$route.params.idx !== undefined) {
       this.isActivate = false;
     }
+  },
+  mounted() {
+    this.setMinDateTime();
   },
   computed: {
     ...mapStores(useBoardStore),
@@ -265,6 +271,15 @@ export default {
     },
   },
   methods: {
+    setMinDateTime() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const date = String(now.getDate()).padStart(2, "0");
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = now.getMinutes() >= 30 ? "30" : "00"; // 현재 분을 기준으로 반올림
+      this.minDateTime = `${year}-${month}-${date}T${hours}:${minutes}`;
+    },
     validateTime(time) {
       const dateTime = new Date(time);
       const minutes = dateTime.getMinutes();
