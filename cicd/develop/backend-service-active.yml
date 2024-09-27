@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: dev-backend-service-active
+spec:
+  type: NodePort
+  selector:
+    app: dev-backend
+  ports:
+    - protocol: UDP
+      port: 80
+      targetPort: 8080
+      nodePort: 30101

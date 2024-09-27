@@ -46,15 +46,12 @@ public class InitDB {
     @PostConstruct
     public void execute() {
         insertCategory();
-<<<<<<< Updated upstream
         //insertBoard();
         //insertProduct();
         //insertProductThumbnailImage();
-=======
         // insertBoard();
         // insertProduct();
         // insertProductThumbnailImage();
->>>>>>> Stashed changes
     }
     private void insertCategory(){
         List<String> categoryNames = List.of("식품", "의류", "뷰티", "라이프");
