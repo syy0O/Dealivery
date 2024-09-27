@@ -305,6 +305,7 @@ export const useUserStore = defineStore("user", {
       }
     },
 
+
     async editDetail(request) {
       try {
         let response = await axios.put(backend + "/user/edit", request, {
@@ -321,6 +322,7 @@ export const useUserStore = defineStore("user", {
         return false;
       }
     },
+
     async like(request) {
       try {
         let response = await axios.post(backend + "/likes", request, {
