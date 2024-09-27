@@ -128,6 +128,8 @@ pipeline {
                           # 변경 사항 확인
                           cat backend-rollout.yml
                           cat backend-oauth-rollout.yml
+
+                          git stash
                           '''
                        } else if (TARGET_COMPONENT == 'frontend') {
                            sh '''
@@ -155,6 +157,8 @@ pipeline {
                            string(credentialsId: 'repository', variable: 'GITHUB_URL')
                        ]) {
                               sh '''
+                              git checkout cicd
+                              git stash pop
                               git add .
                               git commit -m "[Deploy] v1.${BUILD_NUMBER} ${TARGET_COMPONENT} 배포"
                               git remote set-url origin https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@${GITHUB_URL}
