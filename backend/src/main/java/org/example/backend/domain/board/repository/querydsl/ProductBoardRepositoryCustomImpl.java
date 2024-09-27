@@ -110,10 +110,6 @@ public class ProductBoardRepositoryCustomImpl implements ProductBoardRepositoryC
 		return search == null ? null : qProductBoard.title.containsIgnoreCase(search);
 	}
 
-	private BooleanExpression containsStatus(String search) {
-		return search == null ? null : qProductBoard.status.containsIgnoreCase(search);
-	}
-
 
 	private BooleanExpression containsStatus(String search) {
 		return search == null ? null : qProductBoard.status.containsIgnoreCase(search);
