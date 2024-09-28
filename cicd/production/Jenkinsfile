@@ -122,7 +122,7 @@ pipeline {
                        if (TARGET_COMPONENT == 'backend') {
                            // 백엔드 rollout 수정 후
                           sh """
-                          cd cicd/develop
+                          cd cicd/production
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-rollout.yml
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-oauth-rollout.yml
                           """
