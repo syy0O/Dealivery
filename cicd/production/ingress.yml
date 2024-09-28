@@ -17,20 +17,20 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: backend-service-oauth-active
+                name: prod-backend-service-oauth-active
                 port:
                   number: 8080
           - path: /api
             pathType: Prefix
             backend:
               service:
-                name: backend-service-active
+                name: prod-backend-service-active
                 port:
                   number: 8080
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: frontend-service-active
+                name: prod-frontend-service-active
                 port:
                   number: 80
