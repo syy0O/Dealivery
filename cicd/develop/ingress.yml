@@ -13,6 +13,20 @@ spec:
     - host: www.dev-dealivery.kro.kr
       http:
         paths:
+          - path: /prometheus
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus-server
+                port:
+                  number: 80
+          - path: /grafana
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 80
           - path: /api/oauth
             pathType: Prefix
             backend:
