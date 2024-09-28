@@ -26,8 +26,8 @@
     <div class="css-uh04a1 e19n19480">
       <ul class="css-6q2h7w e19n19481">
         <ProductBoardListCardComponent
-          v-for="data in dataList"
-          :key="data.idx"
+          v-for="(data, index) in dataList"
+          :key="index"
           :data="data"
         ></ProductBoardListCardComponent>
       </ul>
@@ -140,6 +140,7 @@ export default {
       );
       this.totalPages = this.dataList.totalPages;
       this.dataList = this.dataList.content;
+      console.log(this.dataList);
     },
     handleClick(index) {
       this.selectedIndex = index;
@@ -387,7 +388,6 @@ div {
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   -webkit-justify-content: flex-start;
-  justify-content: space-between;
   margin: 0 -10px;
 }
 
