@@ -105,9 +105,7 @@
                   </div>
                   <div class="css-1bv2zte e1ptpt000">
                     <div>{{ answer.content }}</div>
-                  </div>
-                  <div class="css-17g9jzg e1gk8zam0">
-                    {{ answer.createdAt ? formatDate(answer.createdAt) : '작성 시간 없음' }}
+                    <div class="css-17g9jzg e1gk8zam0 answer-date-left">{{ answer.createdAt ? formatDate(answer.createdAt) : '작성 시간 없음' }}</div>
                   </div>
                 </div>
               </div>
@@ -407,6 +405,19 @@ export default {
 
 
 <style scoped>
+.author {
+  width: 150px; /* 원하는 고정 너비로 설정 */
+  text-align: center; /* 내용 가운데 정렬 */
+}
+
+.created-date {
+  width: 150px; /* 헤더 셀에도 동일한 고정 너비 적용 */
+}
+
+.status {
+  width: 150px; /* 본문 셀에도 동일한 고정 너비 적용 */
+}
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -803,6 +814,7 @@ tr {
 }
 
 .css-1brd6ns {
+  max-width: 250px;
   text-align: left;
   padding: 0px 20px;
   cursor: pointer;
@@ -856,6 +868,7 @@ div {
 }
 
 .css-1bv2zte {
+
   margin-left: 12px;
   padding-top: 2px;
   font-size: 14px;
@@ -874,8 +887,6 @@ div {
 }
 
 .css-17g9jzg {
-  padding: 0px 16px 20px;
-  margin-left: 40px;
   font-size: 14px;
   line-height: 22px;
   color: rgb(153, 153, 153);
@@ -913,6 +924,12 @@ div {
   width: 1050px;
   height: auto; /* 이미지 비율에 맞게 자동으로 높이 설정 */
   object-fit: contain; /* 비율을 유지하면서 영역에 맞게 이미지 표시 */
+}
+
+.answer-date-left {
+  text-align: left; /* 날짜를 왼쪽 정렬 */
+  margin-top: 8px; /* 답변 내용과 날짜 사이 간격 추가 */
+  color: rgb(153, 153, 153); /* 날짜 텍스트 색상 */
 }
 </style>
 

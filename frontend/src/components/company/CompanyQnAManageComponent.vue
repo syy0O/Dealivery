@@ -9,7 +9,7 @@
           <th class="tit_status">상태</th>
           <th class="tit_date">문의 등록일</th>
           <th class="tit_write">답변등록</th>
-          <th class="tit_delete">답변확인</th>
+          <th class="tit_delete">답변목록</th>
         </tr>
       </thead>
       <tbody id="addrList">
@@ -288,6 +288,31 @@ export default {
 
 
 <style scoped>
+.tit_title{
+  width: 310px;
+}
+
+.tit_name {
+  width: 75px; /* 원하는 고정 너비로 설정 */
+  text-align: center; /* 내용 가운데 정렬 */
+}
+
+.tit_status {
+  width: 75px; /* 헤더 셀에도 동일한 고정 너비 적용 */
+}
+
+.tit_date {
+  width: 75px; /* 본문 셀에도 동일한 고정 너비 적용 */
+}
+
+.tit_write{
+  width: 50px;
+}
+
+.tit_delete{
+  width: 50px;
+}
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -538,8 +563,8 @@ div {
   width: 24px;
   height: 24px;
   border: 0 none;
-  background: url(https://res.kurly.com/pc/service/cart/2007/ico_delete.svg)
-    no-repeat 50% 50%;
+  background: url('@/assets/arrow.png') no-repeat 50% 50%;
+  background-size: contain;
   font-size: 0;
   line-height: 0;
   top: 33px;
@@ -553,6 +578,17 @@ div {
   font-size: 15px;
   color: #757575;
   text-align: center;
+}
+
+.title {
+  text-align: left !important; /* 강제로 왼쪽 정렬 */
+  padding-left: 30px; /* 왼쪽에 여유 공간 추가 */
+  padding-right: 30px;
+}
+
+.addr {
+  text-align: left !important; /* 내부 텍스트도 강제로 왼쪽 정렬 */
+  padding-left: 10px; /* 왼쪽에 여유 공간 추가 */
 }
 </style>
 
