@@ -8,12 +8,14 @@ import org.example.backend.domain.board.model.entity.ProductBoard;
 import org.example.backend.domain.board.model.entity.QProductBoard;
 import org.example.backend.domain.company.model.entity.QCompany;
 import org.example.backend.global.common.constants.BoardStatus;
+import org.example.backend.global.common.constants.CategoryType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -71,16 +73,38 @@ public class ProductBoardRepositoryCustomImpl implements ProductBoardRepositoryC
 	}
 
 	// ---- 전체 사용자 ----
-	private BooleanBuilder getCondition(String search) {
+	private Predicate getCondition(String search) {
 		BooleanBuilder booleanBuilder = new BooleanBuilder();
+
 		BooleanExpression categoryCondition = containsCategory(search);
 		BooleanExpression companyCondition = containsCompanyName(search);
 		BooleanExpression titleCondition = containsTitle(search);
-		BooleanExpression statusCondition = containsStatus(BoardStatus.OPEN.getStatus());
+		BooleanExpression statusCondition = null;
+
+		// 진행 중
+		BooleanExpression openStatusCondition = containsStatus(BoardStatus.OPEN.getStatus());
+		// 진행 전
+		BooleanExpression readyStatusCondition = containsStatus(BoardStatus.READY.getStatus());
+
+		// 카테고리가 특정 값(식품, 의류, 뷰티, 라이프)인 경우에는 진행 중만
+		if (CategoryType.CLOTHES.getType().equals(search) || CategoryType.FOOD.getType().equals(search)
+			|| CategoryType.BEAUTY.getType().equals(search) || CategoryType.LIFE.getType().equals(search)) {
+			statusCondition = openStatusCondition;
+		}
+		// 카테고리가 진행 예정인 경우에는 진행 예정만
+		else if (BoardStatus.READY.getStatus().equals(search)) {
+			statusCondition = readyStatusCondition;
+			return statusCondition;
+		}
+		// 그 외 진행 중 + 진행 전 모두
+		else {
+			statusCondition = openStatusCondition.or(readyStatusCondition);
+		}
 
 		if (categoryCondition == null && companyCondition == null && titleCondition == null && statusCondition == null) {
 			return null;
 		}
+
 		if (categoryCondition != null) {
 			booleanBuilder.or(categoryCondition);
 		}
@@ -90,11 +114,11 @@ public class ProductBoardRepositoryCustomImpl implements ProductBoardRepositoryC
 		if (titleCondition != null) {
 			booleanBuilder.or(titleCondition);
 		}
-		if (search != null && search.equals(BoardStatus.READY.getStatus())) {
-			booleanBuilder.or(containsStatus(BoardStatus.READY.getStatus()));
-		} else if (statusCondition != null) {
+
+		if (statusCondition != null) {
 			booleanBuilder.and(statusCondition);
 		}
+
 		return booleanBuilder;
 	}
 
