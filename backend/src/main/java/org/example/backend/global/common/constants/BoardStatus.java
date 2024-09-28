@@ -34,15 +34,4 @@ public enum BoardStatus {
 	public String getBoardStatus() {
 		return status;
 	}
-
-	public static BoardStatus calculateStatus(LocalDateTime startedAt, LocalDateTime endedAt) {
-		LocalDateTime now = LocalDateTime.now();
-		if (now.isBefore(startedAt)) {
-			return BoardStatus.READY;
-		} else if (now.isAfter(startedAt) && now.isBefore(endedAt)) {
-			return BoardStatus.OPEN;
-		} else {
-			return BoardStatus.DONE;
-		}
-	}
 }

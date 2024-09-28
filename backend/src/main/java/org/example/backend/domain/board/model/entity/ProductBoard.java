@@ -120,7 +120,7 @@ public class ProductBoard {
 			.productThumbnailUrl(this.productThumbnailUrl)
 			.title(this.title)
 			.category(this.category.getName())
-			.status(BoardStatus.calculateStatus(this.startedAt, this.endedAt).getStatus()) // <- 이부분 수정해야됨
+			.status(this.status) // <- 이부분 수정해야됨
 			.startedAt(this.startedAt)
 			.endedAt(this.endedAt)
 			.build();
@@ -137,9 +137,5 @@ public class ProductBoard {
 			.endedAt(this.endedAt.withSecond(0).withNano(0))
 			.category(this.category.getName())
 			.build();
-	}
-
-	public void updateStatus(BoardStatus status) {
-		this.status = status.getStatus();
 	}
 }

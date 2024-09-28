@@ -160,15 +160,4 @@ public class ProductBoardService {
 			throw new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_REGISTER_FAIL_UPLOAD_IMAGE);
 		}
 	}
-
-
-	@Scheduled(cron = "0 1/30 * * * ?") // 매 30분마다 정각 또는 30분에 실행
-	public void updateStatus() {
-		List<ProductBoard> productBoards = productBoardRepository.findAll();
-		for (ProductBoard productBoard : productBoards) {
-			BoardStatus status = BoardStatus.calculateStatus(productBoard.getStartedAt(), productBoard.getEndedAt());
-			productBoard.updateStatus(status);
-		}
-		productBoardRepository.saveAll(productBoards);
-	}
 }
