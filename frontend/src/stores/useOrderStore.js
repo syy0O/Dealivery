@@ -1,6 +1,7 @@
 /* global IMP */
 
 import { defineStore } from "pinia";
+import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
 import router from '@/router';
 
@@ -59,8 +60,11 @@ export const useOrderStore = defineStore('order', {
 
         async makePayment(paymentRequest) {
             let pg = paymentRequest.paymentMethod === 'kakaopay' ? process.env.VUE_APP_KAKAOPAY_CID : process.env.VUE_APP_TOSSPAY_MID
+            console.log("pg ====> " + pg)
+
             let payMethod = paymentRequest.paymentMethod === 'kakaopay' ? 'card' : 'tosspay'
-            let merchantUid = "order_no_000" + new Date().getMilliseconds();
+            let merchantUid = "order_" + uuidv4().replace(/-/g, '').substring(0, 30);
+
             this.customData.usedPoint = paymentRequest.usedPoint;
 
             IMP.init(process.env.VUE_APP_PORTONE_STORE_ID); // 상점 식별코드
@@ -70,20 +74,26 @@ export const useOrderStore = defineStore('order', {
                 merchant_uid: merchantUid,
                 name: this.boardInfo.title,
                 amount: paymentRequest.totalAmount,
-                custom_data: this.customData
+                custom_data: this.customData,
+                m_redirect_url: "https://www.dev-dealivery.kro.kr"
             }, (rsp) => {
 
                 if (paymentRequest.paymentMethod === 'kakaopay' && !rsp.success) {
+                    console.log("카카오 결제 에러")
+                    console.log("에러메시지: " + rsp.error_msg)
                     this.cancelOrder(this.orderInfo.orderIdx, '/', '결제가 취소되었습니다. 주문이 취소됩니다.')
                     this.initData()
                 }
 
                 else if (paymentRequest.paymentMethod === 'tosspay' && rsp.error_msg != null) {
+                    console.log("토스페이 결제 에러")
+                    console.log("에러메시지: " + rsp.error_msg)
                     this.cancelOrder(this.orderInfo.orderIdx, '/', '결제가 취소되었습니다. 주문이 취소됩니다.')
                     this.initData()
                 }
 
                 else {
+                    console.log("결제 성공")
                     this.paymentInfo = { ...paymentRequest, impUid: rsp.imp_uid }
                     this.verifyPayment()
                 }
