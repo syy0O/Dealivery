@@ -55,7 +55,7 @@ public class BoardController {
 
 	@Operation(summary = "상품 게시글 목록 조회 API")
 	@GetMapping(value = "/list")
-	public BaseResponse list(Integer page, @RequestParam(required = false) String search) {
+	public BaseResponse list(@RequestParam(value = "page", defaultValue = "1")Integer page, @RequestParam(required = false) String search) {
 		Pageable pageable = PageRequest.of(page - 1, USER_LIST_SIZE);
 		Page<ProductBoardDto.BoardListResponse> boardListResponses = productBoardService.list(search, pageable);
 		return new BaseResponse(boardListResponses);
@@ -83,7 +83,7 @@ public class BoardController {
 	@Operation(summary = "판매자 회원 게시글 조회 API")
 	@GetMapping(value = "/company/list")
 	public BaseResponse companyList(
-		@AuthenticationPrincipal CustomCompanyDetails customCompanyDetails, Integer page,
+		@AuthenticationPrincipal CustomCompanyDetails customCompanyDetails, @RequestParam(value = "page", defaultValue = "1")Integer page,
 		@RequestParam(required = false) String status, @RequestParam(required = false) Integer month) {
 		if (customCompanyDetails == null) {
 			throw new InvalidCustomException(BaseResponseStatus.FAIL);
@@ -94,9 +94,6 @@ public class BoardController {
 		return new BaseResponse(boardListResponses);
 	}
 
-	/* TODO
-	@AuthenticationPrincipal 적용하면, Company Idx를 이용해 ProductBoard 필터링하는 로직 추가 되어야 함
-	* */
 	@Operation(summary = "판매자 회원 게시글 상세 조회 API")
 	@GetMapping(value = "/company/{idx}/detail")
 	public BaseResponse companyDetail(@AuthenticationPrincipal CustomCompanyDetails customCompanyDetails, @PathVariable Long idx) {

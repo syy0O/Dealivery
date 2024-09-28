@@ -10,6 +10,7 @@ import org.example.backend.domain.board.model.dto.ProductBoardDto;
 import org.example.backend.domain.board.product.model.dto.ProductDto;
 import org.example.backend.domain.board.product.model.entity.Product;
 import org.example.backend.domain.company.model.entity.Company;
+import org.example.backend.domain.likes.model.dto.LikesDto;
 import org.example.backend.domain.likes.model.entity.Likes;
 import org.example.backend.global.common.constants.BoardStatus;
 import org.springframework.data.annotation.CreatedDate;
@@ -136,6 +137,20 @@ public class ProductBoard {
 			.startedAt(this.startedAt.withSecond(0).withNano(0))
 			.endedAt(this.endedAt.withSecond(0).withNano(0))
 			.category(this.category.getName())
+			.build();
+	}
+
+	public LikesDto.LikeResponse toLikeResponse() {
+		return LikesDto.LikeResponse.builder()
+			.idx(this.idx)
+			.productThumbnailUrl(this.productThumbnailUrl)
+			.title(this.title)
+			.startedAt(this.startedAt)
+			.endedAt(this.endedAt)
+			.companyName(this.company.getCompanyName())
+			.category(this.category.getName())
+			.price(this.minimumPrice)
+			.discountRate(this.discountRate)
 			.build();
 	}
 }
