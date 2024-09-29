@@ -157,6 +157,11 @@ export default {
   mounted() {
     this.startTimer();
     this.isActive = this.data.likes;
+    if (this.isActive) {
+      this.heartIcon = heartIconActive;
+    }
+    console.log("likes여부");
+    console.log(this.data.likes);
   },
   beforeUnmount() {
     clearInterval(this.intervalId);
