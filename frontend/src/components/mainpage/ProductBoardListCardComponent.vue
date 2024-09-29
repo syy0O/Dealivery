@@ -14,7 +14,7 @@
       </label>
     </div>
     <a :href="`/board/detail/${data.idx}`" class="css-3f55di ea4dcdh1"
-      ><img :src="data.productThumbnailUrl" alt="" />
+      ><img :src="data.productThumbnailUrl" class="img-size" alt="" />
       <div class="css-wjc4eh ea4dcdh2">
         <p class="css-11z2gb8 ea4dcdh4">[{{ data.companyName }}]</p>
         <h2 class="css-sdq6iq ea4dcdh3">{{ data.title }}</h2>
@@ -62,7 +62,7 @@ export default {
       discountPrice: 0,
       isLiked: false,
       request: {
-        productBoardIdx: null
+        productBoardIdx: null,
       },
       percentage: 0, // 퍼센트 변수 추가
     };
@@ -132,14 +132,14 @@ export default {
     },
     async like() {
       this.request.productBoardIdx = this.data.idx;
-      if(!this.userStore.isLogined){
+      if (!this.userStore.isLogined) {
         alert("로그인이 필요한 서비스입니다.");
         this.$router.push("/auth/login");
-        return
+        return;
       }
-      if(await this.userStore.like(this.request)){
+      if (await this.userStore.like(this.request)) {
         this.isLiked = !this.isLiked;
-      }else{
+      } else {
         alert("관심 등록에 실패했습니다.");
       }
     },
@@ -411,7 +411,9 @@ a {
 }
 
 .css-3f55di img {
+  height: 314px;
   width: 100%;
+  object-fit: cover;
 }
 
 img {
