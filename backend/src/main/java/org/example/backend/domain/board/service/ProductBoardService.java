@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,8 @@ import org.example.backend.domain.board.product.model.entity.Product;
 import org.example.backend.domain.board.product.repository.ProductRepository;
 import org.example.backend.domain.board.repository.ProductBoardRepository;
 import org.example.backend.domain.board.repository.ProductThumbnailImageRepository;
+import org.example.backend.domain.likes.model.entity.Likes;
+import org.example.backend.domain.likes.repository.LikesRepository;
 import org.example.backend.global.common.constants.BaseResponseStatus;
 import org.example.backend.global.common.constants.BoardStatus;
 import org.example.backend.global.exception.InvalidCustomException;
@@ -43,6 +46,7 @@ public class ProductBoardService {
 	private final ProductRepository productRepository;
 	private final ProductThumbnailImageRepository productThumbnailImageRepository;
 	private final CategoryRepository categoryRepository;
+	private final LikesRepository likesRepository;
 	private final AmazonS3 s3;
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
@@ -52,9 +56,25 @@ public class ProductBoardService {
 		return productBoards.map(ProductBoard::toBoardListResponse);
 	}
 
+	public Slice<ProductBoardDto.BoardListResponse> mainList(Long userIdx, String status, Pageable pageable) {
+		Slice<ProductBoard> productBoards = productBoardRepository.findByStatus(BoardStatus.from(status).getStatus(), pageable);
+		return productBoards.map(productBoard -> {
+			boolean isLiked = likesRepository.findByUserIdxAndProductBoardIdx(userIdx, productBoard.getIdx()).isPresent();
+			return productBoard.toBoardListResponse(isLiked);
+		});
+	}
+
 	public Page<ProductBoardDto.BoardListResponse> list(String search, Pageable pageable) {
 		Page<ProductBoard> productBoards = productBoardRepository.search(search, pageable);
 		return productBoards.map(ProductBoard::toBoardListResponse);
+	}
+
+	public Page<ProductBoardDto.BoardListResponse> list(Long userIdx, String search, Pageable pageable) {
+		Page<ProductBoard> productBoards = productBoardRepository.search(search, pageable);
+		return productBoards.map(productBoard -> {
+			boolean isLiked = likesRepository.findByUserIdxAndProductBoardIdx(userIdx, productBoard.getIdx()).isPresent();
+			return productBoard.toBoardListResponse(isLiked);
+		});
 	}
 
 	public ProductBoardDto.BoardDetailResponse detail(Long idx) {
@@ -70,6 +90,22 @@ public class ProductBoardService {
 			.map(Product::toResponse)
 			.toList();
 		return productBoard.toBoardDetailResponse(productThumbnailUrls, productResponse);
+	}
+
+	public ProductBoardDto.BoardDetailResponse detail(Long userIdx, Long idx) {
+		ProductBoard productBoard = productBoardRepository.findByIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
+		List<ProductThumbnailImage> productThumbnailImages = productThumbnailImageRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
+		List<Product> products = productRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
+
+
+		List<String> productThumbnailUrls = productThumbnailImages.stream()
+			.map(ProductThumbnailImage::getProductThumbnailUrl)
+			.toList();
+		List<ProductDto.Response> productResponse = products.stream()
+			.map(Product::toResponse)
+			.toList();
+		boolean isLiked = likesRepository.findByUserIdxAndProductBoardIdx(userIdx, productBoard.getIdx()).isPresent();
+		return productBoard.toBoardDetailResponse(productThumbnailUrls, productResponse, isLiked);
 	}
 
 	@Transactional

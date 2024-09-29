@@ -20,4 +20,6 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
 
     @Query("SELECT l FROM Likes l JOIN FETCH l.productBoard WHERE l.user.idx = :userIdx")
     Page<Likes> findAllByUserIdx(@Param("userIdx") Long userIdx, Pageable pageable);
+
+    Optional<Likes> findByUserIdxAndProductBoardIdx(Long userIdx, Long productBoardIdx);
 }
