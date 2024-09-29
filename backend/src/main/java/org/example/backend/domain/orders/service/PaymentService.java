@@ -11,31 +11,37 @@ import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
+import jakarta.persistence.EntityManager;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.backend.domain.board.product.model.entity.Product;
 import org.example.backend.domain.board.product.repository.ProductRepository;
 import org.example.backend.domain.orders.model.entity.OrderedProduct;
 import org.example.backend.domain.orders.model.entity.Orders;
-import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.global.exception.InvalidCustomException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PaymentService {
     private final IamportClient iamportClient;
     private final ProductRepository productRepository;
+    private final EntityManager entityManager;
 
     public Payment getPaymentInfo(String impUid) throws IamportResponseException, IOException {
         IamportResponse<Payment> iamportResponse = iamportClient.paymentByImpUid(impUid);
         return iamportResponse.getResponse();
     }
 
+
+    @Transactional
     public void validatePayment(Payment payment, Orders order) {
 
         String customData = payment.getCustomData();
@@ -67,7 +73,10 @@ public class PaymentService {
         List<OrderedProduct> orderedProducts = order.getOrderedProducts();
         orderedProducts.forEach((orderdProduct) -> {
             Product product = productRepository.findByIdWithLock(orderdProduct.getProduct().getIdx())
-                    .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_PRODUCT_NOT_FOUND)); // 해당하는 상품을 찾을 수가 없을 때
+                        .orElseThrow(
+                                () -> new InvalidCustomException(ORDER_FAIL_PRODUCT_NOT_FOUND)); // 해당하는 상품을 찾을 수가 없을 때
+
+            entityManager.refresh(product); // 강제로 DB에서 최신 데이터를 읽어옴
 
             if (orderdProduct.getQuantity() > product.getStock()) {
                 refund(payment.getImpUid(), payment);
@@ -75,6 +84,8 @@ public class PaymentService {
             }
 
             product.decreaseStock(orderdProduct.getQuantity()); // 재고 수량 변경
+            productRepository.save(product);
+
 
             long originalPrice = product.getPrice();
             int quantity = orderdProduct.getQuantity();
@@ -84,8 +95,6 @@ public class PaymentService {
 
         return totalPrice;
     }
-
-
 
     public IamportResponse refund(String impUid, Payment info)  {
         CancelData cancelData = new CancelData(impUid, true, info.getAmount());
