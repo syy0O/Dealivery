@@ -68,6 +68,7 @@ pipeline {
                         cd frontend
                         npm i
                         npm run build
+                        git rm -rf .env
                         '''
                     } else if (TARGET_COMPONENT == 'all') {
                         sh '''
@@ -75,8 +76,13 @@ pipeline {
                         cd backend
                         ./gradlew bootJar
                         cd ../frontend
+                        sed -i "s|\\${VUE_APP_KAKAOPAY_CID}|${VUE_APP_KAKAOPAY_CID}|g" .env
+                        sed -i "s|\\${VUE_APP_TOSSPAY_MID}|${VUE_APP_TOSSPAY_MID}|g" .env
+                        sed -i "s|\\${VUE_APP_PORTONE_STORE_ID}|${VUE_APP_PORTONE_STORE_ID}|g" .env
+                        
                         npm i
                         npm run build
+                        git rm -rf .env
                         '''
                     } else {
                         echo "Build Fail........................."
