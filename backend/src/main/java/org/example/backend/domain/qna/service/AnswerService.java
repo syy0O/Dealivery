@@ -14,6 +14,8 @@ import org.example.backend.global.common.constants.BaseResponseStatus;
 import org.example.backend.global.exception.InvalidCustomException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AnswerService {
@@ -49,5 +51,15 @@ public class AnswerService {
         }
 
         answerRepository.delete(answer);
+
+        // 답변이 남아 있는지 확인
+        Question question = answer.getQuestion();
+        List<Answer> remainingAnswers = answerRepository.findAllByQuestionIdx(question.getIdx());
+
+        if (remainingAnswers.isEmpty()) {
+            // 답변이 없으면 상태를 "답변대기"로 변경
+            question.markAsWaiting();
+            questionRepository.save(question);
+        }
     }
 }

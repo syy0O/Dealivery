@@ -71,4 +71,14 @@ public class QuestionController {
         List<QuestionDto.QuestionListResponse> questionList = questionService.getQuestionsByUserEmail(userEmail);
         return new BaseResponse<>(questionList);
     }
+
+    @Operation(summary = "문의 수정 API", description = "문의 제목과 내용을 수정합니다.")
+    @PutMapping("/update/{id}")
+    public BaseResponse updateQuestion(@PathVariable Long id,
+                                       @RequestBody QuestionDto.QuestionUpdateRequest request,
+                                       @AuthenticationPrincipal UserDetails userDetails) {
+        String email = userDetails.getUsername();
+        questionService.updateQuestion(id, request, email);
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+    }
 }

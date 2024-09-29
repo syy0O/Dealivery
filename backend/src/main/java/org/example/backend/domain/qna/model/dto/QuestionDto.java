@@ -73,4 +73,13 @@ public class QuestionDto {
 
         private List<AnswerDto.AnswerResponse> answers;
     }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class QuestionUpdateRequest {
+        private String title;
+        private String content;
+    }
 }

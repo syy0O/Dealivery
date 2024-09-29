@@ -84,4 +84,19 @@ public class QuestionService {
                 .map(Question::toListResponse)  // 엔티티의 변환 메서드 사용
                 .collect(Collectors.toList());
     }
+
+    public void updateQuestion(Long id, QuestionDto.QuestionUpdateRequest request, String email) {
+        // 수정할 문의 조회
+        Question question = questionRepository.findById(id)
+                .orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.QNA_QUESTION_UPDATE_FAIL_NOT_FOUND));
+
+        // 문의 작성자와 로그인된 사용자의 이메일이 동일한지 확인
+        if (!question.getUser().getEmail().equals(email)) {
+            throw new InvalidCustomException(BaseResponseStatus.FAIL_UNAUTHORIZED);
+        }
+
+        // 문의 내용 업데이트
+        question.updateContent(request.getTitle(), request.getContent());
+        questionRepository.save(question);  // 수정된 문의 저장
+    }
 }
