@@ -43,6 +43,16 @@ export const useBoardStore = defineStore("board", {
       this.boardData = data.data.result;
       return data.data.result;
     },
+    async getLikesList(page) {
+      const response = await axios.get("/api/likes/list", {
+        params: {
+          page: page,
+        },
+        withCredentials: true,
+      });
+      console.log(response);
+      return response.data.result;
+    },
 
     // --------- 판매자 ---------
     async getProductBoardList(page) {
