@@ -60,6 +60,10 @@ pipeline {
                         '''
                     } else if (TARGET_COMPONENT == 'frontend') {
                         sh '''
+                        sed -i "s|\\${VUE_APP_KAKAOPAY_CID}|${VUE_APP_KAKAOPAY_CID}|g" frontend/.env
+                        sed -i "s|\\${VUE_APP_TOSSPAY_MID}|${VUE_APP_TOSSPAY_MID}|g" frontend/.env
+                        sed -i "s|\\${VUE_APP_PORTONE_STORE_ID}|${VUE_APP_PORTONE_STORE_ID}|g" frontend/.env
+
                         cd frontend
                         npm i
                         npm run build
@@ -96,10 +100,6 @@ pipeline {
                     } else if (TARGET_COMPONENT == 'frontend') {
                         // Docker 이미지 빌드 및 푸시
                         sh '''
-                        sed -i "s|\\${VUE_APP_KAKAOPAY_CID}|${VUE_APP_KAKAOPAY_CID}|g" frontend/.env
-                        sed -i "s|\\${VUE_APP_TOSSPAY_MID}|${VUE_APP_TOSSPAY_MID}|g" frontend/.env
-                        sed -i "s|\\${VUE_APP_PORTONE_STORE_ID}|${VUE_APP_PORTONE_STORE_ID}|g" frontend/.env
-
                         docker build --tag simkids/dealivery-frontend:1.${BUILD_NUMBER} ./frontend
                         docker push simkids/dealivery-frontend:1.${BUILD_NUMBER}
                         '''
