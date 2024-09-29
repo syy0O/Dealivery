@@ -15,9 +15,7 @@ spec:
       containers:
         - name: dev-frontend
           image: simkids/dealivery-frontend:1.67  # 새로운 이미지
-          envFrom:
-            - configMapRef:
-                name: dev-frontend-configmap
+
   strategy:
     canary:
       steps:
