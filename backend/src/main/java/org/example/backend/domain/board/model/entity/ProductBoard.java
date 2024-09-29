@@ -10,6 +10,7 @@ import org.example.backend.domain.board.model.dto.ProductBoardDto;
 import org.example.backend.domain.board.product.model.dto.ProductDto;
 import org.example.backend.domain.board.product.model.entity.Product;
 import org.example.backend.domain.company.model.entity.Company;
+import org.example.backend.domain.likes.model.dto.LikesDto;
 import org.example.backend.domain.likes.model.entity.Likes;
 import org.example.backend.global.common.constants.BoardStatus;
 import org.springframework.data.annotation.CreatedDate;
@@ -120,7 +121,7 @@ public class ProductBoard {
 			.productThumbnailUrl(this.productThumbnailUrl)
 			.title(this.title)
 			.category(this.category.getName())
-			.status(BoardStatus.calculateStatus(this.startedAt, this.endedAt).getStatus()) // <- 이부분 수정해야됨
+			.status(this.status) // <- 이부분 수정해야됨
 			.startedAt(this.startedAt)
 			.endedAt(this.endedAt)
 			.build();
@@ -139,7 +140,17 @@ public class ProductBoard {
 			.build();
 	}
 
-	public void updateStatus(BoardStatus status) {
-		this.status = status.getStatus();
+	public LikesDto.LikeResponse toLikeResponse() {
+		return LikesDto.LikeResponse.builder()
+			.idx(this.idx)
+			.productThumbnailUrl(this.productThumbnailUrl)
+			.title(this.title)
+			.startedAt(this.startedAt)
+			.endedAt(this.endedAt)
+			.companyName(this.company.getCompanyName())
+			.category(this.category.getName())
+			.price(this.minimumPrice)
+			.discountRate(this.discountRate)
+			.build();
 	}
 }
