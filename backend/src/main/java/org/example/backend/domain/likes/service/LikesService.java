@@ -10,9 +10,13 @@ import org.example.backend.domain.user.model.entity.User;
 import org.example.backend.domain.user.repository.UserRepository;
 import org.example.backend.global.common.constants.BaseResponseStatus;
 import org.example.backend.global.exception.InvalidCustomException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,5 +53,14 @@ public class LikesService {
         }else {
             likesRepository.save(request.toEntity(productBoard, user));
         }
+    }
+
+    public Page<LikesDto.LikeResponse> getLikes(Long userIdx, Pageable pageable){
+        Page<Likes> likes = likesRepository.findAllByUserIdx(userIdx, pageable);
+
+		return likes.map(like -> {
+            ProductBoard productBoard = like.getProductBoard();
+            return productBoard.toLikeResponse();
+        });
     }
 }

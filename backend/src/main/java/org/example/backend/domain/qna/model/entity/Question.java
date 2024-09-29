@@ -99,4 +99,11 @@ public class Question {
         this.content = newContent;
         this.modifiedAt = LocalDateTime.now();  // 문의가 수정될 때만 modifiedAt 갱신
     }
+
+    // 문의 제목과 내용을 수정하는 메서드
+    public void updateContent(String newTitle, String newContent) {
+        this.title = newTitle;
+        this.content = newContent;
+        this.modifiedAt = LocalDateTime.now();  // 수정 시간을 현재 시간으로 업데이트
+    }
 }
