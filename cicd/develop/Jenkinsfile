@@ -78,6 +78,8 @@ pipeline {
                             git rm -rf .env
                             """
                         } else if (TARGET_COMPONENT == 'all') {
+                            // 프론트엔드 env파일 수정
+                            
                             sh """
                             chmod +x backend/gradlew
                             cd backend
