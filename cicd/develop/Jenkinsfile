@@ -52,41 +52,51 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    if (TARGET_COMPONENT == 'backend') {
-                        sh '''
-                        chmod +x backend/gradlew
-                        cd backend
-                        ./gradlew bootJar
-                        '''
-                    } else if (TARGET_COMPONENT == 'frontend') {
-                         // 프론트엔드 env파일 수정
-                        sh '''
-                        sed -i "s|\\${VUE_APP_KAKAOPAY_CID}|${VUE_APP_KAKAOPAY_CID}|g" frontend/.env
-                        sed -i "s|\\${VUE_APP_TOSSPAY_MID}|${VUE_APP_TOSSPAY_MID}|g" frontend/.env
-                        sed -i "s|\\${VUE_APP_PORTONE_STORE_ID}|${VUE_APP_PORTONE_STORE_ID}|g" frontend/.env
-                        
-                        cd frontend
-                        npm i
-                        npm run build
-                        git rm -rf .env
-                        '''
-                    } else if (TARGET_COMPONENT == 'all') {
-                        sh '''
-                        chmod +x backend/gradlew
-                        cd backend
-                        ./gradlew bootJar
-                        cd ../frontend
-                        sed -i "s|\\${VUE_APP_KAKAOPAY_CID}|${VUE_APP_KAKAOPAY_CID}|g" .env
-                        sed -i "s|\\${VUE_APP_TOSSPAY_MID}|${VUE_APP_TOSSPAY_MID}|g" .env
-                        sed -i "s|\\${VUE_APP_PORTONE_STORE_ID}|${VUE_APP_PORTONE_STORE_ID}|g" .env
-                        
-                        npm i
-                        npm run build
-                        git rm -rf .env
-                        '''
-                    } else {
-                        echo "Build Fail........................."
-                    }
+
+                    withCredentials([
+                           string(credentialsId: 'VUE_APP_KAKAOPAY_CID', variable: 'VUE_APP_KAKAOPAY_CID'),
+                           string(credentialsId: 'VUE_APP_TOSSPAY_MID', variable: 'VUE_APP_TOSSPAY_MID'),
+                           string(credentialsId: 'VUE_APP_PORTONE_STORE_ID', variable: 'VUE_APP_PORTONE_STORE_ID')
+                       ]) {
+
+                        if (TARGET_COMPONENT == 'backend') {
+                            sh '''
+                            chmod +x backend/gradlew
+                            cd backend
+                            ./gradlew bootJar
+                            '''
+                        } else if (TARGET_COMPONENT == 'frontend') {
+                            // 프론트엔드 env파일 수정
+                            sh """
+                            sed -i "s|\\${VUE_APP_KAKAOPAY_CID}|${VUE_APP_KAKAOPAY_CID}|g" frontend/.env
+                            sed -i "s|\\${VUE_APP_TOSSPAY_MID}|${VUE_APP_TOSSPAY_MID}|g" frontend/.env
+                            sed -i "s|\\${VUE_APP_PORTONE_STORE_ID}|${VUE_APP_PORTONE_STORE_ID}|g" frontend/.env
+                            
+                            cd frontend
+                            npm i
+                            npm run build
+                            git rm -rf .env
+                            """
+                        } else if (TARGET_COMPONENT == 'all') {
+                            sh """
+                            chmod +x backend/gradlew
+                            cd backend
+                            ./gradlew bootJar
+                            cd ../frontend
+                            sed -i "s|\\${VUE_APP_KAKAOPAY_CID}|${VUE_APP_KAKAOPAY_CID}|g" .env
+                            sed -i "s|\\${VUE_APP_TOSSPAY_MID}|${VUE_APP_TOSSPAY_MID}|g" .env
+                            sed -i "s|\\${VUE_APP_PORTONE_STORE_ID}|${VUE_APP_PORTONE_STORE_ID}|g" .env
+                            
+                            npm i
+                            npm run build
+                            git rm -rf .env
+                            """
+                        } else {
+                            echo "Build Fail........................."
+                        }
+
+                    }  
+                    
                 }
             }
         }
