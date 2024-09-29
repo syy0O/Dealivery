@@ -85,7 +85,6 @@ public class OrderService {
         });
     }
 
-    @Transactional
     public void complete(User user, OrderCompleteRequest request) {
 
         Orders order = ordersRepository.findById(request.getOrderIdx()).orElseThrow(() -> new InvalidCustomException(
@@ -96,6 +95,7 @@ public class OrderService {
         }
 
         order.update(request); // 주문 추가 정보 업데이트
+        ordersRepository.save(order);
 
         String paymentId = request.getPaymentId();
 
@@ -104,18 +104,21 @@ public class OrderService {
             paymentService.validatePayment(payment, order);
             order.getUser().deductPoints(order.getUsedPoint());
             order.setStatus(OrderStatus.ORDER_COMPLETE);
+            ordersRepository.save(order);
 
         } catch (IamportResponseException | IOException e) { // 해당하는 결제 정보를 찾지 못했을 때
             order.setStatus(OrderStatus.ORDER_FAIL);
+            ordersRepository.save(order);
             throw new InvalidCustomException(ORDER_PAYMENT_FAIL);
 
         } catch (InvalidCustomException e) { // 결제 검증 중 발생한 예외 처리
             order.setStatus(OrderStatus.ORDER_FAIL);
+            ordersRepository.save(order);
             throw e;
         }
     }
 
-    @Transactional
+    //@Transactional
     public void cancel(User user, Long idx) {
         Orders order = ordersRepository.findById(idx).orElseThrow(() -> new InvalidCustomException(
                 ORDER_FAIL_NOT_FOUND));
