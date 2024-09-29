@@ -118,7 +118,7 @@ public class OrderService {
         }
     }
 
-    //@Transactional
+    @Transactional
     public void cancel(User user, Long idx) {
         Orders order = ordersRepository.findById(idx).orElseThrow(() -> new InvalidCustomException(
                 ORDER_FAIL_NOT_FOUND));
