@@ -41,7 +41,7 @@ public class PaymentService {
     }
 
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transactional
     public void validatePayment(Payment payment, Orders order) {
 
         String customData = payment.getCustomData();
