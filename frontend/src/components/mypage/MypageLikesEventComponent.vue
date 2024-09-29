@@ -187,8 +187,15 @@ export default {
   created() {
     this.getDataList();
   },
+  watch: {
+    // page가 변경되면 getDataList 호출
+    "$route.query.page"() {
+      this.getDataList();
+    },
+  },
   methods: {
     async getDataList() {
+      console.log(this.currentPage);
       const response = await this.boardStore.getLikesList(this.currentPage);
       if (response.totalPages > 0) {
         this.totalPages = response.totalPages;
