@@ -34,7 +34,7 @@ public class OrderedProduct {
 
     private Long productIdx;
 
-    public OrderedProductResponse toOrderedProductResponse(Product product, Integer discountRate) {
+    public static OrderedProductResponse toOrderedProductResponse(Integer quantity, Product product, Integer discountRate) {
         return OrderedProductResponse.builder()
                 .name(product.getName())
                 .amount(quantity)

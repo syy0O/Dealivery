@@ -20,7 +20,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import org.example.backend.domain.delivery.model.entity.Delivery;
 import org.example.backend.domain.orders.model.dto.OrderDto.OrderCompleteRequest;
 import org.example.backend.domain.board.model.entity.ProductBoard;
 import org.example.backend.domain.orders.model.dto.OrderDto.CompanyOrderDetailResponse;
@@ -105,51 +104,51 @@ public class Orders {
     }
 
 
-    public CompanyOrderListResponse toCompanyOrderListResponse(String title) {
+    public static CompanyOrderListResponse toCompanyOrderListResponse(Orders order, String title) {
         return CompanyOrderListResponse.builder()
-                .orderIdx(this.idx)
-                .ordersNumber(this.ordersNumber)
+                .orderIdx(order.idx)
+                .ordersNumber(order.ordersNumber)
                 .title(title)
-                .ordererName(this.user.getName())
-                .status(this.status.getStatus())
-                .totalPaidAmount(this.totalPaidAmount)
-                .payMethod(this.payMethod.getType())
-                .modifiedAt(this.modifiedAt)
+                .ordererName(order.user.getName())
+                .status(order.status.getStatus())
+                .totalPaidAmount(order.totalPaidAmount)
+                .payMethod(order.payMethod.getType())
+                .modifiedAt(order.modifiedAt)
                 .build();
     }
 
-    public CompanyOrderDetailResponse toCompanyOrderDetailResponse(List<OrderedProductResponse> products) {
+    public static CompanyOrderDetailResponse toCompanyOrderDetailResponse(Long orderIdx, List<OrderedProductResponse> products) {
         return CompanyOrderDetailResponse.builder()
-                .orderIdx(this.idx)
+                .orderIdx(orderIdx)
                 .products(products)
                 .build();
     }
 
-    public UserOrderListResponse toUserOrderListResponse(ProductBoard board) {
+    public static UserOrderListResponse toUserOrderListResponse(Orders order, ProductBoard board) {
         return UserOrderListResponse.builder()
-                .orderIdx(this.idx)
-                .ordersNumber(this.ordersNumber)
+                .orderIdx(order.idx)
+                .ordersNumber(order.ordersNumber)
                 .title(board.getTitle())
                 .thumnailUrl(board.getProductThumbnailUrl())
                 .minimumPrice(board.getMinimumPrice())
                 .discountRate(board.getDiscountRate())
-                .status(this.status.getStatus())
-                .createdAt(this.createdAt)
+                .status(order.status.getStatus())
+                .createdAt(order.createdAt)
                 .build();
     }
 
-    public UserOrderDetailResponse toUserOrderDetailResponse(ProductBoard board) {
+    public static UserOrderDetailResponse toUserOrderDetailResponse(Orders order, ProductBoard board) {
         return UserOrderDetailResponse.builder()
-                .ordersNumber(this.ordersNumber)
-                .status(this.status.getStatus())
-                .createdAt(this.createdAt)
-                .payMethod(this.payMethod.getType())
-                .usedPoint(this.usedPoint)
-                .totalPaidAmount(this.totalPaidAmount)
-                .originalPaidAmount(this.originalPaidAmount)
-                .receiverName(receiverName)
-                .receiverPhoneNumber(this.receiverPhoneNumber)
-                .address(this.getAddress())
+                .ordersNumber(order.ordersNumber)
+                .status(order.status.getStatus())
+                .createdAt(order.createdAt)
+                .payMethod(order.payMethod.getType())
+                .usedPoint(order.usedPoint)
+                .totalPaidAmount(order.totalPaidAmount)
+                .originalPaidAmount(order.originalPaidAmount)
+                .receiverName(order.receiverName)
+                .receiverPhoneNumber(order.receiverPhoneNumber)
+                .address(order.getAddress())
                 .build();
     }
 }

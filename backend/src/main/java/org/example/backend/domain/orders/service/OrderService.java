@@ -170,7 +170,7 @@ public class OrderService {
         return orders.map(order -> {
             String title = productBoardRepository.findById(order.getBoardIdx())
                     .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND)).getTitle();
-            return order.toCompanyOrderListResponse(title);
+            return Orders.toCompanyOrderListResponse(order, title);
         });
     }
 
@@ -188,11 +188,11 @@ public class OrderService {
         List<OrderedProduct> orederdProducts = order.getOrderedProducts();
         List<OrderedProductResponse> products = orederdProducts.stream().map(orderdProduct ->{
             Product product = productRepository.findById(orderdProduct.getProductIdx()).orElseThrow();
-            return orderdProduct.toOrderedProductResponse(product, board.getDiscountRate());
+            return OrderedProduct.toOrderedProductResponse(orderdProduct.getQuantity(), product, board.getDiscountRate());
         }
         ).collect(Collectors.toList());
 
-        return order.toCompanyOrderDetailResponse(products);
+        return Orders.toCompanyOrderDetailResponse(order.getIdx(), products);
     }
 
     public Page<UserOrderListResponse> userOrderList(User user, Integer page, String status, Integer month) {
@@ -202,7 +202,7 @@ public class OrderService {
         return orders.map(order -> {
             ProductBoard board = productBoardRepository.findById(order.getBoardIdx())
                     .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND));
-            return order.toUserOrderListResponse(board);
+            return Orders.toUserOrderListResponse(order, board);
         });
     }
 
@@ -217,6 +217,6 @@ public class OrderService {
         ProductBoard board = productBoardRepository.findById(order.getBoardIdx())
                 .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_EVENT_NOT_FOUND));
 
-        return order.toUserOrderDetailResponse(board);
+        return Orders.toUserOrderDetailResponse(order, board);
     }
 }
