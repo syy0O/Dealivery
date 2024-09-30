@@ -47,14 +47,22 @@ public class ProductBoardRepositoryCustomImpl implements ProductBoardRepositoryC
 			.selectFrom(qProductBoard)
 			.leftJoin(qProductBoard.category, qCategory).fetchJoin()
 			.leftJoin(qProductBoard.company, qCompany).fetchJoin()
+			.leftJoin(qProductBoard.products, qProduct).fetchJoin()
 			.where(getCondition(search));
-		int count = query.fetch().size();
+
+		JPQLQuery<Long> countQuery = queryFactory
+			.select(qProductBoard.count())
+			.from(qProductBoard)
+			.where(getCondition(search));
 
 		List<ProductBoard> result = query
 			.orderBy(qProductBoard.idx.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
+
+		long count = countQuery.fetch().size();
+
 		return new PageImpl<>(result, pageable, count);
 	}
 
