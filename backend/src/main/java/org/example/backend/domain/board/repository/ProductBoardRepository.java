@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ProductBoardRepository extends JpaRepository<ProductBoard, Long>, ProductBoardRepositoryCustom {
-	@Query("SELECT pb FROM ProductBoard pb JOIN FETCH pb.category JOIN FETCH pb.company WHERE pb.idx = :idx")
+	@Query("SELECT pb FROM ProductBoard pb JOIN FETCH pb.category JOIN FETCH pb.company JOIN FETCH pb.productThumbnailImages WHERE pb.idx = :idx")
 	Optional<ProductBoard> findByIdx(Long idx);
 
 	List<ProductBoard> findByCompanyEmail(String companyEmail);

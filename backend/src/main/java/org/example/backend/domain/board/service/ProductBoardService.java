@@ -81,7 +81,7 @@ public class ProductBoardService {
 
 	public ProductBoardDto.BoardDetailResponse detail(Long idx) {
 		ProductBoard productBoard = productBoardRepository.findByIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
-		List<ProductThumbnailImage> productThumbnailImages = productThumbnailImageRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
+		List<ProductThumbnailImage> productThumbnailImages = productBoard.getProductThumbnailImages();
 		List<Product> products = productRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
 
 
@@ -91,12 +91,12 @@ public class ProductBoardService {
 		List<ProductDto.Response> productResponse = products.stream()
 			.map(Product::toResponse)
 			.toList();
-		return productBoard.toBoardDetailResponse(productThumbnailUrls, productResponse);
+		return ProductBoard.toBoardDetailResponse(productBoard, productThumbnailUrls, productResponse);
 	}
 
 	public ProductBoardDto.BoardDetailResponse detail(Long userIdx, Long idx) {
 		ProductBoard productBoard = productBoardRepository.findByIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
-		List<ProductThumbnailImage> productThumbnailImages = productThumbnailImageRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
+		List<ProductThumbnailImage> productThumbnailImages = productBoard.getProductThumbnailImages();
 		List<Product> products = productRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
 
 

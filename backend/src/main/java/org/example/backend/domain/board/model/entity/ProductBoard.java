@@ -108,19 +108,19 @@ public class ProductBoard {
 			.build();
 	}
 
-	public ProductBoardDto.BoardDetailResponse toBoardDetailResponse(List<String> productThumbnailUrls, List<ProductDto.Response> products) {
+	public static ProductBoardDto.BoardDetailResponse toBoardDetailResponse(ProductBoard productBoard, List<String> productThumbnailUrls, List<ProductDto.Response> products) {
 		return ProductBoardDto.BoardDetailResponse.builder()
 			.productThumbnailUrls(productThumbnailUrls)
-			.productDetailUrl(this.productDetailUrl)
-			.title(this.title)
+			.productDetailUrl(productBoard.productDetailUrl)
+			.title(productBoard.title)
 			.products(products)
-			.startedAt(this.startedAt.withSecond(0).withNano(0))
-			.endedAt(this.endedAt.withNano(0).withNano(0))
-			.companyName(this.company.getCompanyName())
-			.category(this.category.getName())
+			.startedAt(productBoard.startedAt.withSecond(0).withNano(0))
+			.endedAt(productBoard.endedAt.withNano(0).withNano(0))
+			.companyName(productBoard.company.getCompanyName())
+			.category(productBoard.category.getName())
 			.likes(false)
 			.price(products.stream().min(Comparator.comparing(ProductDto.Response::getPrice)).map(ProductDto.Response::getPrice).orElse(null))
-			.discountRate(this.discountRate)
+			.discountRate(productBoard.discountRate)
 			.build();
 	}
 
