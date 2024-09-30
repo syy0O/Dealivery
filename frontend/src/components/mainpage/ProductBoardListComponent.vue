@@ -26,8 +26,8 @@
     <div class="css-uh04a1 e19n19480">
       <ul class="css-6q2h7w e19n19481">
         <ProductBoardListCardComponent
-          v-for="(data, index) in dataList"
-          :key="index"
+          v-for="data in dataList"
+          :key="data.idx"
           :data="data"
         ></ProductBoardListCardComponent>
       </ul>

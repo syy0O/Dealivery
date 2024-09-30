@@ -247,6 +247,7 @@ export default {
     data: {
       type: Object,
     },
+    productBoardIdx: {},
   },
   data() {
     return {
@@ -280,9 +281,12 @@ export default {
       },
     };
   },
-  // created() {
-  //   this.mapProductsToOptions();
-  // },
+  created() {
+    this.isHeartFilled = this.data.likes;
+    if (this.isHeartFilled) {
+      this.heartImage = this.filledHeartImage;
+    }
+  },
   computed: {
     totalPrice() {
       return this.cartItems.reduce(
@@ -352,7 +356,7 @@ export default {
     },
 
     async toggleHeart() {
-      this.request.productBoardIdx = 1;
+      this.request.productBoardIdx = this.productBoardIdx;
       if (!this.userStore.isLogined) {
         alert("로그인이 필요한 서비스입니다.");
         this.$router.push({
