@@ -93,6 +93,20 @@ public class ProductBoard {
 			.build();
 	}
 
+	public ProductBoardDto.BoardListResponse toBoardListResponse(Boolean isLiked) {
+		return ProductBoardDto.BoardListResponse.builder()
+			.idx(this.idx)
+			.productThumbnailUrl(this.productThumbnailUrl)
+			.title(this.title)
+			.companyName(this.company.getCompanyName())
+			.startedAt(this.startedAt.withSecond(0).withNano(0))
+			.endedAt(this.endedAt.withSecond(0).withNano(0))
+			.price(this.products.stream().min(Comparator.comparing(Product::getPrice)).map(Product::getPrice).orElse(null))
+			.discountRate(this.discountRate)
+			.likes(isLiked)
+			.build();
+	}
+
 	public ProductBoardDto.BoardDetailResponse toBoardDetailResponse(List<String> productThumbnailUrls, List<ProductDto.Response> products) {
 		return ProductBoardDto.BoardDetailResponse.builder()
 			.productThumbnailUrls(productThumbnailUrls)
@@ -103,7 +117,23 @@ public class ProductBoard {
 			.endedAt(this.endedAt.withNano(0).withNano(0))
 			.companyName(this.company.getCompanyName())
 			.category(this.category.getName())
-			.likes(false) // <-- 로그인 한 유저에 따라 달라져야 함
+			.likes(false)
+			.price(products.stream().min(Comparator.comparing(ProductDto.Response::getPrice)).map(ProductDto.Response::getPrice).orElse(null))
+			.discountRate(this.discountRate)
+			.build();
+	}
+
+	public ProductBoardDto.BoardDetailResponse toBoardDetailResponse(List<String> productThumbnailUrls, List<ProductDto.Response> products, Boolean isLiked) {
+		return ProductBoardDto.BoardDetailResponse.builder()
+			.productThumbnailUrls(productThumbnailUrls)
+			.productDetailUrl(this.productDetailUrl)
+			.title(this.title)
+			.products(products)
+			.startedAt(this.startedAt.withSecond(0).withNano(0))
+			.endedAt(this.endedAt.withNano(0).withNano(0))
+			.companyName(this.company.getCompanyName())
+			.category(this.category.getName())
+			.likes(isLiked)
 			.price(products.stream().min(Comparator.comparing(ProductDto.Response::getPrice)).map(ProductDto.Response::getPrice).orElse(null))
 			.discountRate(this.discountRate)
 			.build();
@@ -112,10 +142,6 @@ public class ProductBoard {
 
 	// 판매자 게시글 목록 조회 DTO
 	public ProductBoardDto.CompanyBoardListResponse toCompanyBoardListResponse() {
-		/* TODO
-		status 상태를 startedAt과 endedAt을 통해 자동으로 DB에 업데이트 해야함
-		추후 현재는 게시글 조회해올때마다 새로 값 세팅 해줌 -> Quartz 와 같은 스케줄링 라이브러리로 개선 예정
-		* */
 		return ProductBoardDto.CompanyBoardListResponse.builder()
 			.idx(this.idx)
 			.productThumbnailUrl(this.productThumbnailUrl)
