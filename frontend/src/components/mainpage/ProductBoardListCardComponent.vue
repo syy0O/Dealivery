@@ -77,6 +77,7 @@ export default {
     ...mapStores(useUserStore),
   },
   created() {
+    this.isLiked = this.data.likes;
     this.discountPrice = this.getDiscountPrice();
     this.calculatePercentage(); // 초기 퍼센트 계산
     setInterval(() => {
