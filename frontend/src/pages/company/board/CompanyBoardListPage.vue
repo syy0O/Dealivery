@@ -223,12 +223,6 @@ export default {
       return number ? parseInt(number[0], 10) : null;
     },
   },
-  beforeRouteEnter(to, from, next) {
-    if (from.path == "/product-boards/company") {
-      this.setBoards();
-    }
-    next();
-  },
 };
 </script>
 

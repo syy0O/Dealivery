@@ -131,10 +131,9 @@
                         <div class="css-t4macj e12wapb62">
                           <div class="css-1fvrsoi e12wapb60">
                             {{
-                              option.price *
                               (
-                                1 -
-                                this.data.discountRate / 100
+                                option.price *
+                                (1 - this.data.discountRate / 100)
                               ).toLocaleString()
                             }}원
                           </div>

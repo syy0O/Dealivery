@@ -51,7 +51,7 @@
                         :disabled="!isActivate"
                       />
                     </span>
-                    <p class="char-count">{{ charCount }} / 50</p>
+                    <p class="char-count">{{ charCount }} / 18</p>
                   </div>
                 </td>
               </tr>
@@ -59,14 +59,17 @@
               <tr>
                 <th>상품 추가</th>
                 <td colspan="2">
-                  <button
-                    id="board-link"
-                    class="addProductBtn"
-                    @click="displayModal"
-                    :disabled="!isActivate"
-                  >
-                    추가
-                  </button>
+                  <div v-if="products.length < 5">
+                    <button
+                      id="board-link"
+                      class="addProductBtn"
+                      @click="displayModal"
+                      :disabled="!isActivate"
+                    >
+                      추가
+                    </button>
+                  </div>
+                  <div v-else>상품은 5개까지 등록할 수 있습니다.</div>
                   <div v-if="isDisplayModal">
                     <CompanyBoardModalComponent
                       @closeModal="displayModal"
@@ -325,10 +328,10 @@ export default {
     },
     validateTitle() {
       this.charCount = this.title.length;
-      if (this.charCount > 50) {
-        alert("게시글 제목은 50자 이하로 입력해야 합니다.");
-        this.title = this.title.slice(0, 50);
-        this.charCount = 50;
+      if (this.charCount > 18) {
+        alert("게시글 제목은 18자 이하로 입력해야 합니다.");
+        this.title = this.title.slice(0, 18);
+        this.charCount = 18;
         return;
       }
     },
@@ -361,11 +364,11 @@ export default {
         alert(this.dateErrorMsg);
         return false;
       }
-      if (this.title.length < 1 || this.title.length > 50) {
+      if (this.title.length < 1 || this.title.length > 18) {
         alert(
           this.title.length === 0
             ? "제목을 입력해주세요."
-            : "제목을 50자 이하로 입력해주세요."
+            : "제목을 18자 이하로 입력해주세요."
         );
         return false;
       }
