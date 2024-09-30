@@ -6,12 +6,15 @@ import java.util.List;
 import org.example.backend.domain.board.category.model.entity.QCategory;
 import org.example.backend.domain.board.model.entity.ProductBoard;
 import org.example.backend.domain.board.model.entity.QProductBoard;
+import org.example.backend.domain.board.product.model.entity.QProduct;
 import org.example.backend.domain.company.model.entity.QCompany;
 import org.example.backend.global.common.constants.BoardStatus;
 import org.example.backend.global.common.constants.CategoryType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.BooleanBuilder;
@@ -28,12 +31,14 @@ public class ProductBoardRepositoryCustomImpl implements ProductBoardRepositoryC
 	private final QProductBoard qProductBoard;
 	private final QCategory qCategory;
 	private final QCompany qCompany;
+	private final QProduct qProduct;
 
 	public ProductBoardRepositoryCustomImpl(EntityManager em) {
 		this.queryFactory = new JPAQueryFactory(em);
 		this.qProductBoard = QProductBoard.productBoard;
 		this.qCategory = QCategory.category;
 		this.qCompany = QCompany.company;
+		this.qProduct = QProduct.product;
 	}
 
 	@Override
@@ -70,6 +75,26 @@ public class ProductBoardRepositoryCustomImpl implements ProductBoardRepositoryC
 			.fetch().size();
 
 		return new PageImpl<>(result, pageable, total);
+	}
+
+	@Override
+	public Slice<ProductBoard> searchByStatus(String status, Pageable pageable) {
+		int pageSize = pageable.getPageSize();
+		List<ProductBoard> productBoards = queryFactory
+			.selectFrom(qProductBoard)
+			.where(qProductBoard.status.eq(status))
+			.leftJoin(qProductBoard.category, qCategory).fetchJoin()
+			.leftJoin(qProductBoard.company, qCompany).fetchJoin()
+			.leftJoin(qProductBoard.products, qProduct).fetchJoin()
+			.offset(pageable.getOffset())
+			.limit(pageSize + 1)
+			.fetch();
+		boolean hasNext = false;
+		if (productBoards.size() > pageSize) {
+			productBoards.remove(pageSize);
+			hasNext = true;
+		}
+		return new SliceImpl<>(productBoards, pageable, hasNext);
 	}
 
 	// ---- 전체 사용자 ----
