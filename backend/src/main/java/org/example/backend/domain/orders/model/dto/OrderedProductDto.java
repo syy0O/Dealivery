@@ -21,11 +21,8 @@ public class OrderedProductDto {
         @Schema(description = "주문한 수량", example = "3")
         private Integer quantity;
         public static OrderedProduct toEntity(Request request, Orders order) {
-
-            Product product = Product.builder().idx(request.getIdx()).build();
-
             return OrderedProduct.builder()
-                    .product(product)
+                    .productIdx(request.getIdx())
                     .quantity(request.quantity)
                     .orders(order)
                     .build();

@@ -156,7 +156,7 @@ public class OrderService {
         List<OrderedProduct> orderedProducts = order.getOrderedProducts();
 
         orderedProducts.forEach((orderedProduct) -> {
-            Product product = productRepository.findByIdWithLock(orderedProduct.getProduct().getIdx())
+            Product product = productRepository.findByIdWithLock(orderedProduct.getProductIdx())
                     .orElseThrow(() -> new InvalidCustomException(ORDER_FAIL_PRODUCT_NOT_FOUND));
             product.increaseStock(orderedProduct.getQuantity());
 
@@ -186,8 +186,10 @@ public class OrderService {
         }
 
         List<OrderedProduct> orederdProducts = order.getOrderedProducts();
-        List<OrderedProductResponse> products = orederdProducts.stream().map(orderdProduct ->
-           orderdProduct.toOrderedProductResponse(board.getDiscountRate())
+        List<OrderedProductResponse> products = orederdProducts.stream().map(orderdProduct ->{
+            Product product = productRepository.findById(orderdProduct.getProductIdx()).orElseThrow();
+            return orderdProduct.toOrderedProductResponse(product, board.getDiscountRate());
+        }
         ).collect(Collectors.toList());
 
         return order.toCompanyOrderDetailResponse(products);
