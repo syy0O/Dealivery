@@ -142,15 +142,15 @@ public class ProductBoard {
 
 
 	// 판매자 게시글 목록 조회 DTO
-	public ProductBoardDto.CompanyBoardListResponse toCompanyBoardListResponse() {
+	public static ProductBoardDto.CompanyBoardListResponse toCompanyBoardListResponse(ProductBoard productBoard) {
 		return ProductBoardDto.CompanyBoardListResponse.builder()
-			.idx(this.idx)
-			.productThumbnailUrl(this.productThumbnailUrl)
-			.title(this.title)
-			.category(this.category.getName())
-			.status(this.status) // <- 이부분 수정해야됨
-			.startedAt(this.startedAt)
-			.endedAt(this.endedAt)
+			.idx(productBoard.idx)
+			.productThumbnailUrl(productBoard.productThumbnailUrl)
+			.title(productBoard.title)
+			.category(productBoard.category.getName())
+			.status(productBoard.status) // <- 이부분 수정해야됨
+			.startedAt(productBoard.startedAt)
+			.endedAt(productBoard.endedAt)
 			.build();
 	}
 

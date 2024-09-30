@@ -16,6 +16,6 @@ public interface ProductBoardRepository extends JpaRepository<ProductBoard, Long
 
 	List<ProductBoard> findByCompanyEmail(String companyEmail);
 
-	@Query("SELECT pb FROM ProductBoard pb JOIN FETCH pb.category WHERE pb.idx = :idx and pb.company.idx = :companyIdx")
+	@Query("SELECT pb FROM ProductBoard pb JOIN FETCH pb.category JOIN FETCH pb.productThumbnailImages WHERE pb.idx = :idx and pb.company.idx = :companyIdx")
 	Optional<ProductBoard> findByCompanyIdxAndIdx(Long companyIdx, Long idx);
 }

@@ -128,7 +128,7 @@ public class ProductBoardService {
 
 	public ProductBoardDto.CompanyBoardDetailResponse getCompanyDetail(Long companyIdx, Long idx) {
 		ProductBoard productBoard = productBoardRepository.findByCompanyIdxAndIdx(companyIdx, idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
-		List<ProductThumbnailImage> productThumbnailImages = productThumbnailImageRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
+		List<ProductThumbnailImage> productThumbnailImages = productBoard.getProductThumbnailImages();
 		List<Product> products = productRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
 
 		List<String> productThumbnailUrls = productThumbnailImages.stream()
