@@ -32,11 +32,9 @@ public class OrderedProduct {
     @JoinColumn(name="orders_idx")
     private Orders orders;
 
-    @ManyToOne
-    @JoinColumn(name="product_idx")
-    private Product product;
+    private Long productIdx;
 
-    public OrderedProductResponse toOrderedProductResponse(Integer discountRate) {
+    public OrderedProductResponse toOrderedProductResponse(Product product, Integer discountRate) {
         return OrderedProductResponse.builder()
                 .name(product.getName())
                 .amount(quantity)
