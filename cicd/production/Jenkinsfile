@@ -68,9 +68,9 @@ pipeline {
                         } else if (TARGET_COMPONENT == 'frontend') {
                             // 프론트엔드 env파일 수정
                             sh """
-                            sed -i "s|VUE_APP_KAKAOPAY_CID_PLACEHOLDER|${VUE_APP_KAKAOPAY_CID}|g" frontend/.env
-                            sed -i "s|VUE_APP_TOSSPAY_MID_PLACEHOLDER|${VUE_APP_TOSSPAY_MID}|g" frontend/.env
-                            sed -i "s|VUE_APP_PORTONE_STORE_ID_PLACEHOLDER|${VUE_APP_PORTONE_STORE_ID}|g" frontend/.env
+                            sed -i "s|\\\$\\{VUE_APP_KAKAOPAY_CID\\}|${VUE_APP_KAKAOPAY_CID}|g" frontend/.env
+                            sed -i "s|\\\$\\{VUE_APP_TOSSPAY_MID\\}|${VUE_APP_TOSSPAY_MID}|g" frontend/.env
+                            sed -i "s|\\\$\\{VUE_APP_PORTONE_STORE_ID\\}|${VUE_APP_PORTONE_STORE_ID}|g" frontend/.env
                             
                             cat frontend/.env
 
@@ -91,9 +91,9 @@ pipeline {
                             cd backend
                             ./gradlew bootJar
                             cd ../frontend
-                            sed -i "s|VUE_APP_KAKAOPAY_CID_PLACEHOLDER|${VUE_APP_KAKAOPAY_CID}|g" .env
-                            sed -i "s|VUE_APP_TOSSPAY_MID_PLACEHOLDER|${VUE_APP_TOSSPAY_MID}|g" .env
-                            sed -i "s|VUE_APP_PORTONE_STORE_ID_PLACEHOLDER|${VUE_APP_PORTONE_STORE_ID}|g" .env
+                            sed -i "s|\\\$\\{VUE_APP_KAKAOPAY_CID\\}|${VUE_APP_KAKAOPAY_CID}|g" .env
+                            sed -i "s|\\\$\\{VUE_APP_TOSSPAY_MID\\}|${VUE_APP_TOSSPAY_MID}|g" .env
+                            sed -i "s|\\\$\\{VUE_APP_PORTONE_STORE_ID\\}|${VUE_APP_PORTONE_STORE_ID}|g" .env
 
                             cat .env
 
