@@ -61,7 +61,7 @@ public class ProductBoardService {
 	public Slice<ProductBoardDto.BoardListResponse> mainList(Long userIdx, String status, Pageable pageable) {
 		Slice<ProductBoard> productBoards = productBoardRepository.searchByStatus(BoardStatus.from(status).getStatus(), pageable);
 		return productBoards.map(productBoard -> {
-			boolean isLiked = likesRepository.existsByProductBoardIdxAndUserIdx(userIdx, productBoard.getIdx());
+			boolean isLiked = likesRepository.existsByProductBoardIdxAndUserIdx(productBoard.getIdx(), userIdx);
 			return ProductBoard.toBoardListResponse(productBoard, isLiked);
 		});
 	}
@@ -74,7 +74,7 @@ public class ProductBoardService {
 	public Page<ProductBoardDto.BoardListResponse> list(Long userIdx, String search, Pageable pageable) {
 		Page<ProductBoard> productBoards = productBoardRepository.search(search, pageable);
 		return productBoards.map(productBoard -> {
-			boolean isLiked = likesRepository.existsByProductBoardIdxAndUserIdx(userIdx, productBoard.getIdx());
+			boolean isLiked = likesRepository.existsByProductBoardIdxAndUserIdx(productBoard.getIdx(), userIdx);
 			return ProductBoard.toBoardListResponse(productBoard, isLiked);
 		});
 	}
@@ -106,7 +106,7 @@ public class ProductBoardService {
 		List<ProductDto.Response> productResponse = products.stream()
 			.map(Product::toResponse)
 			.toList();
-		boolean isLiked = likesRepository.existsByProductBoardIdxAndUserIdx(userIdx, productBoard.getIdx());
+		boolean isLiked = likesRepository.existsByProductBoardIdxAndUserIdx(productBoard.getIdx(), userIdx);
 		return productBoard.toBoardDetailResponse(productThumbnailUrls, productResponse, isLiked);
 	}
 
