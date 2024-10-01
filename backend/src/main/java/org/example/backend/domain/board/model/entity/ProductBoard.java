@@ -79,47 +79,48 @@ public class ProductBoard {
 	/* TODO
 	likes 부분 일단 false로 처리하고 추후 로그인 되어 있는 사용자일 경우 조회해서 값 세팅하도록 변경
 	* */
-	public ProductBoardDto.BoardListResponse toBoardListResponse() {
+	public static ProductBoardDto.BoardListResponse toBoardListResponse(ProductBoard productBoard) {
+
 		return ProductBoardDto.BoardListResponse.builder()
-			.idx(this.idx)
-			.productThumbnailUrl(this.productThumbnailUrl)
-			.title(this.title)
-			.companyName(this.company.getCompanyName())
-			.startedAt(this.startedAt.withSecond(0).withNano(0))
-			.endedAt(this.endedAt.withSecond(0).withNano(0))
-			.price(this.products.stream().min(Comparator.comparing(Product::getPrice)).map(Product::getPrice).orElse(null))
-			.discountRate(this.discountRate)
+			.idx(productBoard.idx)
+			.productThumbnailUrl(productBoard.productThumbnailUrl)
+			.title(productBoard.title)
+			.companyName(productBoard.company.getCompanyName())
+			.startedAt(productBoard.startedAt.withSecond(0).withNano(0))
+			.endedAt(productBoard.endedAt.withSecond(0).withNano(0))
+			.price(productBoard.products.stream().min(Comparator.comparing(Product::getPrice)).map(Product::getPrice).orElse(null))
+			.discountRate(productBoard.discountRate)
 			.likes(false)
 			.build();
 	}
 
-	public ProductBoardDto.BoardListResponse toBoardListResponse(Boolean isLiked) {
+	public static ProductBoardDto.BoardListResponse toBoardListResponse(ProductBoard productBoard, Boolean isLiked) {
 		return ProductBoardDto.BoardListResponse.builder()
-			.idx(this.idx)
-			.productThumbnailUrl(this.productThumbnailUrl)
-			.title(this.title)
-			.companyName(this.company.getCompanyName())
-			.startedAt(this.startedAt.withSecond(0).withNano(0))
-			.endedAt(this.endedAt.withSecond(0).withNano(0))
-			.price(this.products.stream().min(Comparator.comparing(Product::getPrice)).map(Product::getPrice).orElse(null))
-			.discountRate(this.discountRate)
+			.idx(productBoard.idx)
+			.productThumbnailUrl(productBoard.productThumbnailUrl)
+			.title(productBoard.title)
+			.companyName(productBoard.company.getCompanyName())
+			.startedAt(productBoard.startedAt.withSecond(0).withNano(0))
+			.endedAt(productBoard.endedAt.withSecond(0).withNano(0))
+			.price(productBoard.products.stream().min(Comparator.comparing(Product::getPrice)).map(Product::getPrice).orElse(null))
+			.discountRate(productBoard.discountRate)
 			.likes(isLiked)
 			.build();
 	}
 
-	public ProductBoardDto.BoardDetailResponse toBoardDetailResponse(List<String> productThumbnailUrls, List<ProductDto.Response> products) {
+	public static ProductBoardDto.BoardDetailResponse toBoardDetailResponse(ProductBoard productBoard, List<String> productThumbnailUrls, List<ProductDto.Response> products) {
 		return ProductBoardDto.BoardDetailResponse.builder()
 			.productThumbnailUrls(productThumbnailUrls)
-			.productDetailUrl(this.productDetailUrl)
-			.title(this.title)
+			.productDetailUrl(productBoard.productDetailUrl)
+			.title(productBoard.title)
 			.products(products)
-			.startedAt(this.startedAt.withSecond(0).withNano(0))
-			.endedAt(this.endedAt.withNano(0).withNano(0))
-			.companyName(this.company.getCompanyName())
-			.category(this.category.getName())
+			.startedAt(productBoard.startedAt.withSecond(0).withNano(0))
+			.endedAt(productBoard.endedAt.withNano(0).withNano(0))
+			.companyName(productBoard.company.getCompanyName())
+			.category(productBoard.category.getName())
 			.likes(false)
 			.price(products.stream().min(Comparator.comparing(ProductDto.Response::getPrice)).map(ProductDto.Response::getPrice).orElse(null))
-			.discountRate(this.discountRate)
+			.discountRate(productBoard.discountRate)
 			.build();
 	}
 
@@ -141,15 +142,15 @@ public class ProductBoard {
 
 
 	// 판매자 게시글 목록 조회 DTO
-	public ProductBoardDto.CompanyBoardListResponse toCompanyBoardListResponse() {
+	public static ProductBoardDto.CompanyBoardListResponse toCompanyBoardListResponse(ProductBoard productBoard) {
 		return ProductBoardDto.CompanyBoardListResponse.builder()
-			.idx(this.idx)
-			.productThumbnailUrl(this.productThumbnailUrl)
-			.title(this.title)
-			.category(this.category.getName())
-			.status(this.status) // <- 이부분 수정해야됨
-			.startedAt(this.startedAt)
-			.endedAt(this.endedAt)
+			.idx(productBoard.idx)
+			.productThumbnailUrl(productBoard.productThumbnailUrl)
+			.title(productBoard.title)
+			.category(productBoard.category.getName())
+			.status(productBoard.status) // <- 이부분 수정해야됨
+			.startedAt(productBoard.startedAt)
+			.endedAt(productBoard.endedAt)
 			.build();
 	}
 

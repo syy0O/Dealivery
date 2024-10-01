@@ -49,7 +49,8 @@ public class BoardController {
 		Pageable pageable = getPageableByStatus(status, page);
 		if (customUserDetails == null) {
 			responses = productBoardService.mainList(status, pageable);
-		} else {
+		 }
+		else {
 			responses = productBoardService.mainList(customUserDetails.getIdx(), status, pageable);
 		}
 		return new BaseResponse(responses);

@@ -3,6 +3,7 @@ package org.example.backend.domain.board.service;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,15 +54,15 @@ public class ProductBoardService {
 	private String bucket;
 
 	public Slice<ProductBoardDto.BoardListResponse> mainList(String status, Pageable pageable) {
-		Slice<ProductBoard> productBoards = productBoardRepository.findByStatus(BoardStatus.from(status).getStatus(), pageable);
+		Slice<ProductBoard> productBoards = productBoardRepository.searchByStatus(BoardStatus.from(status).getStatus(), pageable);
 		return productBoards.map(ProductBoard::toBoardListResponse);
 	}
 
 	public Slice<ProductBoardDto.BoardListResponse> mainList(Long userIdx, String status, Pageable pageable) {
-		Slice<ProductBoard> productBoards = productBoardRepository.findByStatus(BoardStatus.from(status).getStatus(), pageable);
+		Slice<ProductBoard> productBoards = productBoardRepository.searchByStatus(BoardStatus.from(status).getStatus(), pageable);
 		return productBoards.map(productBoard -> {
-			boolean isLiked = likesRepository.findByUserIdxAndProductBoardIdx(userIdx, productBoard.getIdx()).isPresent();
-			return productBoard.toBoardListResponse(isLiked);
+			boolean isLiked = likesRepository.existsByProductBoardIdxAndUserIdx(userIdx, productBoard.getIdx());
+			return ProductBoard.toBoardListResponse(productBoard, isLiked);
 		});
 	}
 
@@ -72,14 +74,14 @@ public class ProductBoardService {
 	public Page<ProductBoardDto.BoardListResponse> list(Long userIdx, String search, Pageable pageable) {
 		Page<ProductBoard> productBoards = productBoardRepository.search(search, pageable);
 		return productBoards.map(productBoard -> {
-			boolean isLiked = likesRepository.findByUserIdxAndProductBoardIdx(userIdx, productBoard.getIdx()).isPresent();
-			return productBoard.toBoardListResponse(isLiked);
+			boolean isLiked = likesRepository.existsByProductBoardIdxAndUserIdx(userIdx, productBoard.getIdx());
+			return ProductBoard.toBoardListResponse(productBoard, isLiked);
 		});
 	}
 
 	public ProductBoardDto.BoardDetailResponse detail(Long idx) {
 		ProductBoard productBoard = productBoardRepository.findByIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
-		List<ProductThumbnailImage> productThumbnailImages = productThumbnailImageRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
+		List<ProductThumbnailImage> productThumbnailImages = productBoard.getProductThumbnailImages();
 		List<Product> products = productRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
 
 
@@ -89,12 +91,12 @@ public class ProductBoardService {
 		List<ProductDto.Response> productResponse = products.stream()
 			.map(Product::toResponse)
 			.toList();
-		return productBoard.toBoardDetailResponse(productThumbnailUrls, productResponse);
+		return ProductBoard.toBoardDetailResponse(productBoard, productThumbnailUrls, productResponse);
 	}
 
 	public ProductBoardDto.BoardDetailResponse detail(Long userIdx, Long idx) {
 		ProductBoard productBoard = productBoardRepository.findByIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
-		List<ProductThumbnailImage> productThumbnailImages = productThumbnailImageRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
+		List<ProductThumbnailImage> productThumbnailImages = productBoard.getProductThumbnailImages();
 		List<Product> products = productRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
 
 
@@ -104,7 +106,7 @@ public class ProductBoardService {
 		List<ProductDto.Response> productResponse = products.stream()
 			.map(Product::toResponse)
 			.toList();
-		boolean isLiked = likesRepository.findByUserIdxAndProductBoardIdx(userIdx, productBoard.getIdx()).isPresent();
+		boolean isLiked = likesRepository.existsByProductBoardIdxAndUserIdx(userIdx, productBoard.getIdx());
 		return productBoard.toBoardDetailResponse(productThumbnailUrls, productResponse, isLiked);
 	}
 
@@ -126,7 +128,7 @@ public class ProductBoardService {
 
 	public ProductBoardDto.CompanyBoardDetailResponse getCompanyDetail(Long companyIdx, Long idx) {
 		ProductBoard productBoard = productBoardRepository.findByCompanyIdxAndIdx(companyIdx, idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
-		List<ProductThumbnailImage> productThumbnailImages = productThumbnailImageRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
+		List<ProductThumbnailImage> productThumbnailImages = productBoard.getProductThumbnailImages();
 		List<Product> products = productRepository.findAllByProductBoardIdx(idx).orElseThrow(() -> new InvalidCustomException(BaseResponseStatus.PRODUCT_BOARD_DETAIL_FAIL));
 
 		List<String> productThumbnailUrls = productThumbnailImages.stream()
