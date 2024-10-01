@@ -7,6 +7,7 @@ import org.example.backend.global.common.constants.BaseResponseStatus;
 import org.example.backend.global.common.constants.BoardStatus;
 import org.example.backend.global.exception.InvalidCustomException;
 import org.example.backend.global.security.custom.model.dto.CustomCompanyDetails;
+import org.example.backend.global.security.custom.model.dto.CustomUserDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,32 +40,44 @@ public class BoardController {
 
 	@Operation(summary = "상품 메인 목록 조회 API")
 	@GetMapping(value = "/main/list")
-	public BaseResponse mainList(@RequestParam(value = "page", defaultValue = "1") Integer page,
+	public BaseResponse mainList(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam(value = "page", defaultValue = "1") Integer page,
 		@RequestParam(value = "status", defaultValue = "진행 전") String status) {
-		Slice<ProductBoardDto.BoardListResponse> responses;
-		if (status.equals(BoardStatus.READY.getStatus())) {
-			responses = productBoardService.mainList(BoardStatus.READY.getStatus(), PageRequest.of(page - 1, MAIN_READY, Sort.by(Sort.Direction.DESC, "idx")));
-			return new BaseResponse(responses);
-		} else if (status.equals(BoardStatus.OPEN.getStatus())) {
-			responses = productBoardService.mainList(BoardStatus.OPEN.getStatus(), PageRequest.of(page - 1, MAIN_OPEN, Sort.by(Sort.Direction.DESC, "idx")));
-			return new BaseResponse(responses);
-		} else {
+		if (!isValidStatus(status)) {
 			return new BaseResponse(BaseResponseStatus.FAIL);
 		}
+		Slice<ProductBoardDto.BoardListResponse> responses;
+		Pageable pageable = getPageableByStatus(status, page);
+		if (customUserDetails == null) {
+			responses = productBoardService.mainList(status, pageable);
+		 }
+		else {
+			responses = productBoardService.mainList(customUserDetails.getIdx(), status, pageable);
+		}
+		return new BaseResponse(responses);
 	}
 
 	@Operation(summary = "상품 게시글 목록 조회 API")
 	@GetMapping(value = "/list")
-	public BaseResponse list(@RequestParam(value = "page", defaultValue = "1")Integer page, @RequestParam(required = false) String search) {
+	public BaseResponse list(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam(value = "page", defaultValue = "1")Integer page, @RequestParam(required = false) String search) {
 		Pageable pageable = PageRequest.of(page - 1, USER_LIST_SIZE);
-		Page<ProductBoardDto.BoardListResponse> boardListResponses = productBoardService.list(search, pageable);
+		Page<ProductBoardDto.BoardListResponse> boardListResponses;
+		if (customUserDetails == null) {
+			boardListResponses = productBoardService.list(search, pageable);
+		} else {
+			boardListResponses = productBoardService.list(customUserDetails.getIdx(), search, pageable);
+		}
 		return new BaseResponse(boardListResponses);
 	}
 
 	@Operation(summary = "상품 게시글 상세 조회 API")
 	@GetMapping(value = "/{idx}/detail")
-	public BaseResponse detail(@PathVariable Long idx) {
-		ProductBoardDto.BoardDetailResponse response = productBoardService.detail(idx);
+	public BaseResponse detail(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long idx) {
+		ProductBoardDto.BoardDetailResponse response;
+		if (customUserDetails == null) {
+			response = productBoardService.detail(idx);
+		} else {
+			response = productBoardService.detail(customUserDetails.getIdx(), idx);
+		}
 		return response == null ? new BaseResponse(BaseResponseStatus.FAIL) : new BaseResponse(response);
 	}
 
@@ -102,5 +115,22 @@ public class BoardController {
 		}
 		ProductBoardDto.CompanyBoardDetailResponse response =  productBoardService.getCompanyDetail(customCompanyDetails.getIdx(), idx);
 		return response == null ? new BaseResponse(BaseResponseStatus.FAIL) : new BaseResponse(response);
+	}
+
+	private boolean isValidStatus(String status) {
+		return status.equals(BoardStatus.READY.getStatus()) || status.equals(BoardStatus.OPEN.getStatus());
+	}
+
+	private Pageable getPageableByStatus(String status, Integer page) {
+		int pageSize = getPageSizeByStatus(status);
+		return PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "idx"));
+	}
+
+	private int getPageSizeByStatus(String status) {
+		if (status.equals(BoardStatus.READY.getStatus())) {
+			return MAIN_READY;
+		} else {
+			return MAIN_OPEN;
+		}
 	}
 }
