@@ -74,6 +74,10 @@ pipeline {
 
                             cat frontend/.env
 
+                            echo ${VUE_APP_KAKAOPAY_CID}
+                            echo ${VUE_APP_TOSSPAY_MID}
+                            echo ${VUE_APP_PORTONE_STORE_ID}
+                            
                             cd frontend
                             npm i
                             npm run build
@@ -92,6 +96,11 @@ pipeline {
                             sed -i "s|\\${VUE_APP_PORTONE_STORE_ID}|${VUE_APP_PORTONE_STORE_ID}|g" .env
 
                             cat .env
+
+                            echo ${VUE_APP_KAKAOPAY_CID}
+                            echo ${VUE_APP_TOSSPAY_MID}
+                            echo ${VUE_APP_PORTONE_STORE_ID}
+
                             
                             npm i
                             npm run build
