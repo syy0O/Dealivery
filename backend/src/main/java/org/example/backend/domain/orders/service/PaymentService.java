@@ -24,7 +24,6 @@ import org.example.backend.domain.orders.model.entity.OrderedProduct;
 import org.example.backend.domain.orders.model.entity.Orders;
 import org.example.backend.global.exception.InvalidCustomException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -33,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaymentService {
     private final IamportClient iamportClient;
     private final ProductRepository productRepository;
-    private final EntityManager entityManager;
 
     public Payment getPaymentInfo(String impUid) throws IamportResponseException, IOException {
         IamportResponse<Payment> iamportResponse = iamportClient.paymentByImpUid(impUid);
@@ -72,11 +70,9 @@ public class PaymentService {
 
         List<OrderedProduct> orderedProducts = order.getOrderedProducts();
         orderedProducts.forEach((orderdProduct) -> {
-            Product product = productRepository.findByIdWithLock(orderdProduct.getProduct().getIdx())
+            Product product = productRepository.findByIdWithLock(orderdProduct.getProductIdx())
                         .orElseThrow(
                                 () -> new InvalidCustomException(ORDER_FAIL_PRODUCT_NOT_FOUND)); // 해당하는 상품을 찾을 수가 없을 때
-
-            entityManager.refresh(product); // 강제로 DB에서 최신 데이터를 읽어옴
 
             if (orderdProduct.getQuantity() > product.getStock()) {
                 refund(payment.getImpUid(), payment);
