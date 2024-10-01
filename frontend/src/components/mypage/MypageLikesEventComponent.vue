@@ -87,7 +87,7 @@
                     <div class="css-2qdoqn e19er7v40">
                       <button
                         class="css-17giheb e4nu7ef3"
-                        @click="removeItem(index)"
+                        @click="removeItem(data.idx)"
                       >
                         <span class="css-nytqmg e4nu7ef1">삭제</span>
                       </button>
@@ -147,6 +147,7 @@
 
 <script>
 import { useBoardStore } from "@/stores/useBoardStore";
+import { useUserStore } from "@/stores/useUserStore";
 import { mapStores } from "pinia";
 export default {
   data() {
@@ -156,6 +157,9 @@ export default {
       pages: [],
       pagesPerGroup: 5,
       totalElements: 0,
+      request: {
+        productBoardIdx: null,
+      },
     };
   },
   computed: {
@@ -183,12 +187,20 @@ export default {
       return pageNumbers;
     },
     ...mapStores(useBoardStore),
+    ...mapStores(useUserStore),
   },
   created() {
     this.getDataList();
   },
+  watch: {
+    // page가 변경되면 getDataList 호출
+    "$route.query.page"() {
+      this.getDataList();
+    },
+  },
   methods: {
     async getDataList() {
+      console.log(this.currentPage);
       const response = await this.boardStore.getLikesList(this.currentPage);
       if (response.totalPages > 0) {
         this.totalPages = response.totalPages;
@@ -224,6 +236,21 @@ export default {
     },
     removeItem(index) {
       this.dataList.splice(index, 1);
+      this.toggleHeart(index);
+    },
+    async toggleHeart(index) {
+      this.request.productBoardIdx = index;
+      if (!this.userStore.isLogined) {
+        alert("로그인이 필요한 서비스입니다.");
+        this.$router.push("/auth/login");
+        return;
+      }
+      if (await this.userStore.like(this.request)) {
+        alert("관심 등록을 취소했습니다.");
+      } else {
+        alert("실패했습니다.");
+      }
+      window.location.reload();
     },
   },
   mounted() {
