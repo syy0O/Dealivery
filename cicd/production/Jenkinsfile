@@ -72,6 +72,8 @@ pipeline {
                             sed -i "s|\\${VUE_APP_TOSSPAY_MID}|${VUE_APP_TOSSPAY_MID}|g" frontend/.env
                             sed -i "s|\\${VUE_APP_PORTONE_STORE_ID}|${VUE_APP_PORTONE_STORE_ID}|g" frontend/.env
 
+                            cat frontend/.env
+
                             cd frontend
                             npm i
                             npm run build
@@ -89,6 +91,8 @@ pipeline {
                             sed -i "s|\\${VUE_APP_TOSSPAY_MID}|${VUE_APP_TOSSPAY_MID}|g" .env
                             sed -i "s|\\${VUE_APP_PORTONE_STORE_ID}|${VUE_APP_PORTONE_STORE_ID}|g" .env
 
+                            cat .env
+                            
                             npm i
                             npm run build
                             git rm -rf .env
