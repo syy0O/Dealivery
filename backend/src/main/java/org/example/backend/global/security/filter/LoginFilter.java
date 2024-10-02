@@ -18,6 +18,9 @@ import org.example.backend.global.security.jwt.model.entity.CompanyRefreshToken;
 import org.example.backend.global.security.jwt.model.entity.UserRefreshToken;
 import org.example.backend.global.security.jwt.repository.CompanyRefreshTokenRepository;
 import org.example.backend.global.security.jwt.repository.UserRefreshTokenRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -35,12 +38,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final Integer COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
-
+    private final String contextPath;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final CompanyRefreshTokenRepository companyRefreshTokenRepository;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
 
+    
 //    /login uri접속시 실행
 //    ;를 구분자로 email,type 분리
 //    type을 포함한 커스텀 authToken을 기반으로 인증절차 수행
@@ -144,19 +148,20 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     //생성된 토큰과 유저를 구분할 3개의 토큰을 브라우저에 세팅
     private void createTokenCookies(HttpServletResponse response, String accessToken, String refreshToken, String type) {
+        System.out.println(contextPath);
         Cookie aToken = new Cookie("AToken", accessToken);
-        aToken.setPath("/");
+        aToken.setPath(contextPath);
         aToken.setHttpOnly(true);
         aToken.setSecure(true);
 
         Cookie rToken = new Cookie("RToken", refreshToken);
-        rToken.setPath("/");
+        rToken.setPath(contextPath);
         rToken.setHttpOnly(true);
         rToken.setSecure(true);
         rToken.setMaxAge(COOKIE_MAX_AGE);
 
         Cookie typeCookie = new Cookie("type", type);
-        typeCookie.setPath("/");
+        typeCookie.setPath(contextPath);
         typeCookie.setSecure(true);
         typeCookie.setHttpOnly(true);
 

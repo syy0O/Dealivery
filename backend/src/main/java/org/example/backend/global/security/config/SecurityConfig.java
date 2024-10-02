@@ -32,6 +32,7 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtUtil jwtUtil;
+    private final String contextPath;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final CompanyRefreshTokenRepository companyRefreshTokenRepository;
@@ -107,7 +108,7 @@ public class SecurityConfig {
             );
 
         //필터생성 및 설정추가
-        LoginFilter loginFilter = new LoginFilter(jwtUtil, authenticationManager(authenticationConfiguration)
+        LoginFilter loginFilter = new LoginFilter(contextPath, jwtUtil, authenticationManager(authenticationConfiguration)
                 ,companyRefreshTokenRepository,userRefreshTokenRepository);
         loginFilter.setFilterProcessesUrl("/login");
         loginFilter.setAuthenticationFailureHandler(loginFailureHandler);
@@ -121,7 +122,7 @@ public class SecurityConfig {
             config.userInfoEndpoint((endPoint) -> endPoint.userService(oAuth2Service));
         });
 
-        http.addFilterBefore(new JwtFilter(jwtUtil, companyRefreshTokenRepository, userRefreshTokenRepository), LoginFilter.class);
+        http.addFilterBefore(new JwtFilter(jwtUtil, contextPath, companyRefreshTokenRepository, userRefreshTokenRepository), LoginFilter.class);
         http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

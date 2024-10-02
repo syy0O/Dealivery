@@ -17,6 +17,7 @@ import org.example.backend.global.security.jwt.model.entity.CompanyRefreshToken;
 import org.example.backend.global.security.jwt.model.entity.UserRefreshToken;
 import org.example.backend.global.security.jwt.repository.CompanyRefreshTokenRepository;
 import org.example.backend.global.security.jwt.repository.UserRefreshTokenRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +30,7 @@ import java.io.IOException;
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
+    private final String contextPath;
     private final CompanyRefreshTokenRepository companyRefreshTokenRepository;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
 
@@ -85,7 +87,7 @@ public class JwtFilter extends OncePerRequestFilter {
             //문제 없을 경우 엑세스 토큰 쿠키 갱신
             accessToken = reissuedAccessToken;
             Cookie aToken = new Cookie("AToken", accessToken);
-            aToken.setPath("/");
+            aToken.setPath(contextPath);
             aToken.setHttpOnly(true);
             aToken.setSecure(true);
             response.addCookie(aToken);
