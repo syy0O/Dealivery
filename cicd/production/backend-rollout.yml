@@ -3,7 +3,7 @@ kind: Rollout
 metadata:
   name: prod-backend-rollout
 spec:
-  replicas: 10
+  replicas: 3
   revisionHistoryLimit: 2
   selector:
     matchLabels:
@@ -23,13 +23,6 @@ spec:
           envFrom:
             - configMapRef:
                name: prod-backend-configmap
-          resources:
-            requests:
-              cpu: "500m"    # 요청하는 CPU
-              memory: "512Mi" # 요청하는 메모리
-            limits:
-              cpu: "1000m"   # 최대 사용할 CPU
-              memory: "1Gi"   # 최대 사용할 메모리
   strategy:
     blueGreen:
       #activeService는 현재 운영중인 Blue 서비스
