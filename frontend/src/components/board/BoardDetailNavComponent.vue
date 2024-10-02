@@ -115,14 +115,14 @@
       </table>
       <div class="css-rdz8z7 e82lnfz1" v-if="totalInquiries > 0">
         <!-- 처음 페이지로 이동 -->
-          <a class="page-unselected" @click="goToPage(1)">
+          <a class="page-unselected" @click="goToFirstPage">
             <img
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAHCAQAAABwkq/rAAAAHUlEQVR42mNgAIPi/8X/kWkwA8SE0UQIMJAsCKMBBzk27fqtkcYAAAAASUVORK5CYII="
               alt="처음 페이지로 이동"
             />
           </a>
           <!-- 이전 페이지로 이동 -->
-          <a class="page-unselected" @click="prevPageGroup">
+          <a class="page-unselected" @click="prevPage">
             <img
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAHCAQAAABqrk9lAAAAGElEQVR42mNgAIPi/8X/4QwwE5PBQJADAAKSG3cyVhtXAAAAAElFTkSuQmCC"
               alt="이전 페이지로 이동"/>
@@ -138,13 +138,13 @@
             {{ pageNumber }}
           </a>
           <!-- 다음 페이지로 이동 -->
-          <a class="page-unselected" @click="nextPageGroup">
+          <a class="page-unselected" @click="nextPage">
             <img
             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAHCAQAAABqrk9lAAAAGUlEQVR42mMo/l/8nwECQEwCHEwGhAlRBgA2mht3SwgzrwAAAABJRU5ErkJggg=="
             alt="다음 페이지로 이동"/>
           </a>
           <!-- 마지막 페이지로 이동 -->
-          <a class="page-unselected" @click="goToPage(totalPages)">
+          <a class="page-unselected" @click="goToLastPage">
             <img
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAHCAQAAABwkq/rAAAAIElEQVR42mMo/l/8n4GBgQFGQ5kgDowmQZCwAMImhDkAb0k27Zcisn8AAAAASUVORK5CYII="
               alt="마지막 페이지로 이동"/>
@@ -239,7 +239,7 @@ export default {
       expandedInquiryIndex: null,
       editingIndex: null,
       currentPage: 1,
-      pageSize: 6,
+      pageSize: 5,
       totalInquiries: 0,
       pagesPerGroup: 5,
       // 사용자 정보를 직접 관리하기 위해 새로운 상태 추가
@@ -355,17 +355,21 @@ export default {
         this.loadInquiries();
       }
     },
-    prevPageGroup() {
-      const newPage = this.startPage - 1;
-      if (newPage >= 1) {
-        this.goToPage(newPage);
-      }
+    goToFirstPage(){
+      this.goToPage(1);
     },
-    nextPageGroup() {
-      const newPage = this.endPage + 1;
-      if (newPage <= this.totalPages){
-        this.goToPage(newPage);
-      }
+    goToLastPage(){
+      this.goToPage(this.totalPages);
+    },
+    prevPage() {
+        if (this.currentPage > 1) {
+            this.goToPage(this.currentPage - 1); // 현재 페이지의 이전 페이지로 이동
+        }
+    },
+    nextPage() {
+        if (this.currentPage < this.totalPages) {
+            this.goToPage(this.currentPage + 1); // 현재 페이지의 다음 페이지로 이동
+        }
     },
     // 새로운 사용자 정보 로드 메서드 추가
     async getUserDetailWithoutAlert() {

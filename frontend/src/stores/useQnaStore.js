@@ -13,9 +13,6 @@ export const useQnaStore = defineStore("qna", {
                 if (response.data.isSuccess) {
                     this.inquiries = response.data.result.content;
                     this.totalInquiries = response.data.result.totalElements;
-
-                    console.log(`현재 페이지: ${page}`);
-                    console.log("받아온 문의 목록:", this.inquiries);
                 } else {
                     console.error('문의 목록을 불러오는 중 오류 발생:', response.data.message);
                 }
