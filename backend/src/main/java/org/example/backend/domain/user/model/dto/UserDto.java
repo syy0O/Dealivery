@@ -27,7 +27,7 @@ public class UserDto {
         private String email;
 
         @NotBlank
-        @Size(max = 10)
+        @Size(max = 30)
         private String name;
 
         @NotBlank
@@ -109,7 +109,7 @@ public class UserDto {
         private String email;
 
         @NotBlank
-        @Size(max = 10)
+        @Size(max = 30)
         private String name;
 
         @NotBlank
