@@ -148,20 +148,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     //생성된 토큰과 유저를 구분할 3개의 토큰을 브라우저에 세팅
     private void createTokenCookies(HttpServletResponse response, String accessToken, String refreshToken, String type) {
-        System.out.println(contextPath);
         Cookie aToken = new Cookie("AToken", accessToken);
-        aToken.setPath(contextPath);
         aToken.setHttpOnly(true);
         aToken.setSecure(true);
 
         Cookie rToken = new Cookie("RToken", refreshToken);
-        rToken.setPath(contextPath);
         rToken.setHttpOnly(true);
         rToken.setSecure(true);
         rToken.setMaxAge(COOKIE_MAX_AGE);
 
         Cookie typeCookie = new Cookie("type", type);
-        typeCookie.setPath(contextPath);
         typeCookie.setSecure(true);
         typeCookie.setHttpOnly(true);
 

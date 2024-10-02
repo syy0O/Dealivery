@@ -56,6 +56,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("http://localhost:8081"); // 허용할 출처
         config.addAllowedOrigin("http://localhost:3000"); // 허용할 출처
+        config.addAllowedOrigin("/api"); // 허용할 출처
         config.addAllowedOrigin(domain); // 허용할 출처
         config.addAllowedOrigin(domain + "/api"); // 허용할 출처
         config.addAllowedOriginPattern("*"); // 허용할 출처
