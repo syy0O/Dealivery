@@ -122,7 +122,7 @@
             />
           </a>
           <!-- 이전 페이지로 이동 -->
-          <a class="page-unselected" @click="prevPage">
+          <a class="page-unselected" @click="prevPageGroup">
             <img
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAHCAQAAABqrk9lAAAAGElEQVR42mNgAIPi/8X/4QwwE5PBQJADAAKSG3cyVhtXAAAAAElFTkSuQmCC"
               alt="이전 페이지로 이동"/>
@@ -191,7 +191,10 @@ export default {
     },
     visiblePages() {
       const pageNumbers = [];
-      for (let i = this.startPage; i <= this.endPage; i++) {
+      const startPage = Math.floor((this.currentPage - 1) / this.pagesPerGroup) * this.pagesPerGroup + 1;
+      const endPage = Math.min(startPage + this.pagesPerGroup - 1, this.totalPages);
+      
+      for (let i = startPage; i <= endPage; i++) {
         pageNumbers.push(i);
       }
       return pageNumbers;
@@ -252,16 +255,10 @@ export default {
 
       // 사용자 정보를 alert 없이 로드
       this.getUserDetailWithoutAlert().then(() => {
-        this.qnaStore.fetchInquiries().then(() => {
-          const inquiries = this.qnaStore.inquiries
-            .filter((inquiry) => inquiry.productBoardIdx === this.productBoardIdx)
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        this.qnaStore.fetchInquiries(this.productBoardIdx, this.currentPage).then(() => {
+          this.totalInquiries = this.qnaStore.totalInquiries;
 
-          this.totalInquiries = inquiries.length;
-          this.localTableData = inquiries.slice(
-            (this.currentPage - 1) * this.pageSize,
-            this.currentPage * this.pageSize
-          );
+          this.localTableData = this.qnaStore.inquiries;
         });
       });
     },
@@ -343,7 +340,6 @@ export default {
     },
     // 수정/삭제 버튼이 노출될 조건 체크
     shouldShowEditDeleteButtons(row) {
-      console.log("row.email->" + row.email + "  userEmail->" + this.userDetailWithoutAlert.email);
       return row.answerStatus === '답변대기' && row.email === this.userDetailWithoutAlert.email;
     },
     checkPageAdjustments() {
@@ -379,7 +375,6 @@ export default {
         });
         if (response.data.code === 1000) {
           this.userDetailWithoutAlert = response.data.result;
-          console.log(this.userDetailWithoutAlert)
           return true;
         } else {
           console.log("사용자 정보 조회 실패");
