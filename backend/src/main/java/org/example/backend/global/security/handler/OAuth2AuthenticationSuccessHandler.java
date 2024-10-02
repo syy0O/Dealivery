@@ -71,10 +71,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private void createTokenCookies(HttpServletResponse response, String accessToken, String refreshToken, String type) {
         Cookie aToken = new Cookie("AToken", accessToken);
+        aToken.setPath("/");
         aToken.setHttpOnly(true);
         aToken.setSecure(true);
 
         Cookie rToken = new Cookie("RToken", refreshToken);
+        rToken.setPath("/");
         rToken.setHttpOnly(true);
         rToken.setSecure(true);
         rToken.setMaxAge(COOKIE_MAX_AGE);

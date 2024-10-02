@@ -1,6 +1,7 @@
 package org.example.backend.global.security.config;
 
 
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.global.security.custom.service.OAuth2Service;
 import org.example.backend.global.security.filter.JwtFilter;
@@ -23,6 +24,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -32,7 +34,6 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtUtil jwtUtil;
-    private final String contextPath;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final CompanyRefreshTokenRepository companyRefreshTokenRepository;
@@ -90,11 +91,25 @@ public class SecurityConfig {
         );
         //로그아웃 처리
         http.logout(logout -> {
-            logout.logoutUrl("/logout");
-            logout.logoutSuccessHandler(customLogoutSuccessHandler);
-            logout.deleteCookies("JSESSIONID","AToken","RToken","type");
-            logout.invalidateHttpSession(true);
-            logout.permitAll();
+            logout.logoutUrl("/logout")
+                    .logoutSuccessHandler(customLogoutSuccessHandler)
+                    .addLogoutHandler(new CookieClearingLogoutHandler(
+                            new Cookie("type", null) {{
+                                setPath("/");// root 경로의 쿠키 삭제
+                                setMaxAge(0);
+                            }},
+                            new Cookie("AToken", null) {{
+                                setPath("/");  // root 경로의 쿠키 삭제
+                                setMaxAge(0);
+                            }},
+                            new Cookie("RToken", null) {{
+                                setPath("/");  // root 경로의 쿠키 삭제
+                                setMaxAge(0);
+                            }}
+                    ))
+                    .invalidateHttpSession(true)
+                    .deleteCookies("AToken", "RToken", "type")
+                    .permitAll();
         });
 
         http.oauth2Login(
@@ -109,7 +124,7 @@ public class SecurityConfig {
             );
 
         //필터생성 및 설정추가
-        LoginFilter loginFilter = new LoginFilter(contextPath, jwtUtil, authenticationManager(authenticationConfiguration)
+        LoginFilter loginFilter = new LoginFilter(jwtUtil, authenticationManager(authenticationConfiguration)
                 ,companyRefreshTokenRepository,userRefreshTokenRepository);
         loginFilter.setFilterProcessesUrl("/login");
         loginFilter.setAuthenticationFailureHandler(loginFailureHandler);
@@ -123,7 +138,7 @@ public class SecurityConfig {
             config.userInfoEndpoint((endPoint) -> endPoint.userService(oAuth2Service));
         });
 
-        http.addFilterBefore(new JwtFilter(jwtUtil, contextPath, companyRefreshTokenRepository, userRefreshTokenRepository), LoginFilter.class);
+        http.addFilterBefore(new JwtFilter(jwtUtil, companyRefreshTokenRepository, userRefreshTokenRepository), LoginFilter.class);
         http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

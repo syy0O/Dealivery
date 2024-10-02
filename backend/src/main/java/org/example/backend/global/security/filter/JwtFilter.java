@@ -30,7 +30,6 @@ import java.io.IOException;
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
-    private final String contextPath;
     private final CompanyRefreshTokenRepository companyRefreshTokenRepository;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
 
@@ -87,7 +86,7 @@ public class JwtFilter extends OncePerRequestFilter {
             //문제 없을 경우 엑세스 토큰 쿠키 갱신
             accessToken = reissuedAccessToken;
             Cookie aToken = new Cookie("AToken", accessToken);
-            aToken.setPath(contextPath);
+            aToken.setPath("/");
             aToken.setHttpOnly(true);
             aToken.setSecure(true);
             response.addCookie(aToken);
