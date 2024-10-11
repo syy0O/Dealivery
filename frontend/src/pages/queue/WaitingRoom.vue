@@ -26,7 +26,7 @@
         * 접속이 완료될 때까지 페이지를 닫지 마세요.
       </div>
 
-      <button @click="closeModal">닫기</button>
+      <button @click="clickCloseBtn">닫기</button>
     </div>
   </div>
 </template>
@@ -86,6 +86,14 @@ export default {
     },
   },
   methods: {
+    clickCloseBtn() {
+      const boardIdx = this.boardIdx;
+      const userId = this.userStore.userDetail.userIdx;
+
+      this.queueStore.exitQueue(boardIdx, userId);
+      this.closeModal();
+    },
+
     closeModal() {
       this.$emit("close");
       clearInterval(this.intervalId); // 인터벌 제거
