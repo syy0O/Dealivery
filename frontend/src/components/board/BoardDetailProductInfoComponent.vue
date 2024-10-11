@@ -226,7 +226,7 @@
       </button>
 
       <button
-        @click="emitSubmitOrder"
+        @click="checkOrder"
         :class="
           isBeforeOpenTime
             ? 'cart-button css-1qirdbn-disabled'
@@ -244,14 +244,24 @@
         >
       </button>
     </div>
+    <WaitingRoom
+      :isModalVisible="isModalVisible"
+      @close="closeModal"
+      :boardIdx="this.$route.params.idx"
+    />
   </section>
 </template>
 
 <script>
 import { useUserStore } from "@/stores/useUserStore";
+import { useQueueStore } from "@/stores/useQueueStore";
+import WaitingRoom from "@/pages/queue/WaitingRoom.vue";
 import { mapStores } from "pinia";
 export default {
   name: "BoardDetailProductInfoComponent",
+  components: {
+    WaitingRoom,
+  },
   props: {
     data: {
       type: Object,
@@ -288,6 +298,7 @@ export default {
       request: {
         productBoardIdx: null,
       },
+      isModalVisible: false,
     };
   },
   created() {
@@ -309,7 +320,7 @@ export default {
     isAnySelected() {
       return this.cartItems.length > 0;
     },
-    ...mapStores(useUserStore),
+    ...mapStores(useUserStore, useQueueStore),
   },
   watch: {
     data: {
@@ -386,8 +397,7 @@ export default {
         alert("관심 등록에 실패했습니다.");
       }
     },
-
-    emitSubmitOrder() {
+    async checkOrder() {
       if (!this.userStore.isLogined) {
         alert("로그인이 필요한 서비스입니다.");
         this.$router.push({
@@ -396,11 +406,32 @@ export default {
         });
         return;
       }
+
       if (!this.isAnySelected) {
         alert("상품을 선택하세요.");
         return;
       }
 
+      let res = await this.userStore.getDetail();
+      if (!res) {
+        alert("회원 정보 조회에 실패했습니다.");
+        return;
+      }
+
+      let boardIdx = this.$route.params.idx;
+      let userIdx = this.userStore.userDetail.userIdx;
+
+      let result = await this.queueStore.isAllowed(boardIdx, userIdx);
+
+      if (result) {
+        this.emitSubmitOrder();
+        return;
+      }
+
+      this.openModal();
+    },
+
+    emitSubmitOrder() {
       let orderRequest = {
         boardInfo: {
           idx: this.$route.params.idx,
@@ -409,8 +440,14 @@ export default {
         },
         cartItems: this.cartItems,
       };
-
       this.$emit("submitOrder", orderRequest);
+    },
+
+    openModal() {
+      this.isModalVisible = true;
+    },
+    closeModal() {
+      this.isModalVisible = false;
     },
   },
 };
