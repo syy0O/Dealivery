@@ -21,7 +21,7 @@ export const useQueueStore = defineStore("queue", {
                     withCredentials: true,  // 쿠키를 함께 전송
                 });
 
-                if (response.data.code === 1000 || response.data.result.rank <= 1) {
+                if (response.data.code === 1000) {
                     console.log(response.data)
                     return true;
                 }
