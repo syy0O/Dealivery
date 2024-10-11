@@ -61,6 +61,7 @@ export default {
       if (newVal) {
         this.closeModal(); // 모달 닫기
         clearInterval(this.intervalId); // 인터벌 해제
+        this.$emit("emitOrder");
       }
     },
     isModalVisible(newVal) {
@@ -72,6 +73,7 @@ export default {
         const userId = this.userStore.userDetail.userIdx;
 
         this.queueStore.updateWaitingQueue(boardIdx, userId);
+
         this.intervalId = setInterval(() => {
           this.queueStore.updateWaitingQueue(boardIdx, userId);
         }, 3000);
@@ -90,15 +92,6 @@ export default {
       document.body.classList.remove("modal-open");
       document.body.style.overflow = "";
     },
-  },
-  mounted() {
-    // const boardIdx = this.$route.params.boardIdx;
-    // const userId = this.$store.state.userId; // 사용자 정보가 저장된 Pinia 스토어에서 userId 가져오기
-    // // 대기열 정보를 주기적으로 업데이트
-    // this.queueStore.updateWaitingQueue(boardIdx, userId);
-    // this.intervalId = setInterval(() => {
-    //   this.queueStore.updateWaitingQueue(boardIdx, userId);
-    // }, 3000);
   },
   beforeUnmount() {
     //clearInterval(this.intervalId); // 컴포넌트가 파괴될 때 인터벌 해제
