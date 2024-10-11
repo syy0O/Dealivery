@@ -36,6 +36,7 @@ const router = createRouter({
     return { top: 0 }; // 스크롤을 (0, 0) 위치로 이동
   },
   routes: [
+
     {
       path: "/",
       component: MainPage,
