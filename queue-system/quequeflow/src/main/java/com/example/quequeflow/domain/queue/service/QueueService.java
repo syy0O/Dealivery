@@ -114,7 +114,7 @@ public class QueueService {
 		Long waitQueueCount = getCount(waitQueueKey);
 		Long proceedQueueCount = getCount(proceedQueueKey);
 
-		if (waitQueueCount == 0 && proceedQueueCount < MAX_PROCEED_SIZE) {
+		if (waitQueueCount == 1 && proceedQueueCount < MAX_PROCEED_SIZE) {
 			return proceedQueueKey;
 		}
 		return waitQueueKey;
