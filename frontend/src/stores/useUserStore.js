@@ -211,6 +211,7 @@ export const useUserStore = defineStore("user", {
         });
         if (response.data.code === 1000) {
           this.userDetail = response.data.result;
+          console.log("회원 디테일 정보 ====>" + this.userDetail.userIdx)
           return true;
         } else {
           return false;
