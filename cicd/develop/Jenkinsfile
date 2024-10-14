@@ -34,7 +34,11 @@ pipeline {
                     if(commitMessage.contains('merge')){
                         if (commitMessage.contains('frontend')) {
                             TARGET_COMPONENT = 'frontend'
-                        } else if (commitMessage.contains('backend')) {
+                        }
+                        else if (commitMessage.contains('queue')) {
+                            TARGET_COMPONENT = 'queue'
+                        }
+                        else if (commitMessage.contains('backend')) {
                             TARGET_COMPONENT = 'backend'
                         } else if (commitMessage.contains('all')) {
                             TARGET_COMPONENT = 'all'
@@ -65,7 +69,15 @@ pipeline {
                             cd backend
                             ./gradlew bootJar
                             '''
-                        } else if (TARGET_COMPONENT == 'frontend') {
+                        }
+                        else if (TARGET_COMPONENT == 'queue') {
+                             sh '''
+                             chmod +x queue-system/quequeflow/gradlew
+                             cd queue-system/quequeflow
+                             ./gradlew bootJar
+                             '''
+                        }
+                        else if (TARGET_COMPONENT == 'frontend') {
                             // 프론트엔드 env파일 수정
                             sh """
                             sed -i "s|\\${VUE_APP_KAKAOPAY_CID}|${VUE_APP_KAKAOPAY_CID}|g" frontend/.env
@@ -84,6 +96,11 @@ pipeline {
                             chmod +x backend/gradlew
                             cd backend
                             ./gradlew bootJar
+
+                            chmod +x ../queue-system/quequeflow/gradlew
+                            cd ../queue-system/quequeflow
+                            ./gradlew bootJar
+
                             cd ../frontend
                             sed -i "s|\\${VUE_APP_KAKAOPAY_CID}|${VUE_APP_KAKAOPAY_CID}|g" .env
                             sed -i "s|\\${VUE_APP_TOSSPAY_MID}|${VUE_APP_TOSSPAY_MID}|g" .env
@@ -116,7 +133,15 @@ pipeline {
                        docker build --tag simkids/dealivery-backend:1.${BUILD_NUMBER} ./backend
                        docker push simkids/dealivery-backend:1.${BUILD_NUMBER}
                        '''
-                    } else if (TARGET_COMPONENT == 'frontend') {
+                    }
+                    else if (TARGET_COMPONENT == 'queue') {
+                       sh '''
+                       docker build --tag simkids/dealivery-queue:1.${BUILD_NUMBER} ./queue-system/quequeflow
+                       docker push simkids/dealivery-queue:1.${BUILD_NUMBER}
+                       '''
+
+                    }
+                    else if (TARGET_COMPONENT == 'frontend') {
                         // Docker 이미지 빌드 및 푸시
                         sh '''
                         docker build --tag simkids/dealivery-frontend:1.${BUILD_NUMBER} ./frontend
@@ -149,7 +174,15 @@ pipeline {
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-rollout.yml
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-oauth-rollout.yml
                           """
-                       } else if (TARGET_COMPONENT == 'frontend') {
+                       }
+                       else if (TARGET_COMPONENT == 'queue') {
+                       sh """
+                         cd cicd/develop
+                         sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' queue-rollout.yml
+                         """
+
+                       }
+                       else if (TARGET_COMPONENT == 'frontend') {
                           sh """
                           cd cicd/develop
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' frontend-rollout.yml
@@ -159,6 +192,7 @@ pipeline {
                           cd cicd/develop
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-rollout.yml
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' backend-oauth-rollout.yml
+                          sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' queue-rollout.yml
                           sed -i 's/:1\\.[0-9]\\+/:1.${BUILD_NUMBER}/g' frontend-rollout.yml
                           """
                        } else {
