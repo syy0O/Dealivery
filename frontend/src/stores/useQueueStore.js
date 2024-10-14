@@ -21,7 +21,7 @@ export const useQueueStore = defineStore("queue", {
                     withCredentials: true,  // 쿠키를 함께 전송
                 });
 
-                if (response.data.code === 1000 || response.data.result.rank <= 1) {
+                if (response.data.code === 1000) {
                     console.log(response.data)
                     return true;
                 }
@@ -58,9 +58,6 @@ export const useQueueStore = defineStore("queue", {
                         minute: "2-digit",
                     });
                     this.exitQueue = true;
-
-                    this.monitorCookieExpiration(boardIdx, userIdx);
-
                     console.log("빠져나가야햄!!")
                     return;
 
@@ -81,22 +78,14 @@ export const useQueueStore = defineStore("queue", {
             }
         },
 
-        monitorCookieExpiration(boardIdx, userIdx) {
-            const maxAgeSeconds = 300; // 쿠키 만료 시간 (초 단위)
-            setTimeout(async () => {
-                try {
-                    await axios.post(backend + "/delete", {
-                        boardIdx: boardIdx,
-                        userIdx: userIdx
-                    }, {
-                        withCredentials: true
-                    });
-                    console.log("쿠키 만료됨, 백엔드에 키값 삭제 요청");
-                } catch (error) {
-                    console.error("쿠키 삭제 요청 실패:", error);
-                }
-            }, maxAgeSeconds * 1000); // 300초 후 실행 (쿠키 만료 시간)
-        },
+        async exitQueue(boardIdx, userIdx) {
+            await axios.post(backend + "/delete", {
+                boardIdx: boardIdx,
+                userIdx: userIdx
+            }, {
+                withCredentials: true
+            });
+        }
 
     },
 });

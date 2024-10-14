@@ -10,7 +10,6 @@
       <h1 class="css-13lg2xu ezpe9l11">
         {{ data.title }}
       </h1>
-      <!-- <h2 class="css-1q0tnnd ezpe9l10">큰 일교차를 견대고 열매를 맺은</h2> -->
     </div>
     <h2 class="css-abwjr2 e1q8tigr4">
       <span class="css-5nirzt e1q8tigr3">{{ data.discountRate }}%</span
@@ -247,6 +246,7 @@
     <WaitingRoom
       :isModalVisible="isModalVisible"
       @close="closeModal"
+      @emitOrder="emitSubmitOrder"
       :boardIdx="this.$route.params.idx"
     />
   </section>
