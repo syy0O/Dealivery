@@ -17,6 +17,7 @@ export const useUserStore = defineStore("user", {
       password: "",
     },
     userDetail: {
+      userIdx: null,
       name: "",
       email: "",
       address: "",

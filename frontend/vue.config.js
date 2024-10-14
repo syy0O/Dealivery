@@ -8,6 +8,11 @@ module.exports = defineConfig({
         changeOrigin: true,
         pathRewrite: { "^/api": "" },
       },
+      "/queue": {
+        target: "http://localhost:9090/queue",
+        changeOrigin: true,
+        pathRewrite: { "^/queue": "" }, // /queue를 제거
+      }
     },
   },
   transpileDependencies: true,
