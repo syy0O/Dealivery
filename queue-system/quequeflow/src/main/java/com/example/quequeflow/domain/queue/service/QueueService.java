@@ -36,6 +36,9 @@ public class QueueService {
 	private final String USER_QUEUE_WAIT_KEY = "queue:wait";
 	// 진행 큐
 	private final String USER_QUEUE_PROCEED_KEY = "queue:proceed";
+
+	private final long NANO_SECONDS = 1000000000l;
+
 	@Value("${queue.proceed.max-size}")
 	private int MAX_PROCEED_SIZE;
 
@@ -51,9 +54,7 @@ public class QueueService {
 
 		// endedAt에서 미세한 시간 차이를 추가한 점수 부여 (나노초 단위로 계산)
 		Instant inst = endedAt.plusMinutes(10).toInstant(ZoneOffset.UTC);
-		long time = inst.getEpochSecond();
-		time *= 1000000000L;  // 초 단위를 나노초 단위로 변환
-		time += inst.getNano();  // 나노초를 더해 미세한 차이 부여
+		long time = convertSecondToNano(inst, 0);
 
 		// Redisson의 ScoredSortedSet을 사용하여 대기열 생성, StringCodec을 사용
 		RScoredSortedSet<String> waitQueue = writeRedissonClient.getScoredSortedSet(waitQueueKey);
@@ -76,22 +77,20 @@ public class QueueService {
 	// 쓰기 작업 : 쿠키값 없고 대기열 등록 안돼있을 때, 대기열 등록하는 메소드
 	public Long registerWaitQueue(final Long boardIdx, final Long userIdx) {
 		String queueKey = choiceQueue(boardIdx);
+		RScoredSortedSet<String> queue = writeRedissonClient.getScoredSortedSet(queueKey);
 
 		// 미세한 시간 차이를 추가한 점수 부여 (현재 타임스탬프에 사용자 ID를 더하는 방식)
 		Instant inst = Instant.now();
-		long time = inst.getEpochSecond();
-		time *= 1000000000l;
-		time += inst.getNano();
-
-		RScoredSortedSet<String> queue = writeRedissonClient.getScoredSortedSet(queueKey);
 
 		// 대기 없이 바로 진입
 		if (queueKey.equals(getProceedQueueKey(boardIdx))) {
+			long time = convertSecondToNano(inst, 180);
 			queue.add(time, userIdx.toString());
 			return -1L;
 		}
 
 		// 대기 존재 시 등록
+		long time = convertSecondToNano(inst, 0);
 		boolean added = queue.add(time, userIdx.toString());
 
 		if (!added) {
@@ -197,7 +196,10 @@ public class QueueService {
 			}
 
 			waitQueue.remove(member);  // 대기 큐에서 삭제
-			proceedQueue.add(Instant.now().getEpochSecond(), member);  // 진행 큐로 이동
+
+			Instant instant = Instant.now();
+			long score = convertSecondToNano(instant, 180);
+			proceedQueue.add(score, member);  // 진행 큐로 이동
 		}
 
 		return (long) members.size();
@@ -209,11 +211,48 @@ public class QueueService {
 		return proceedQueue.contains(userIdx.toString());
 	}
 
+	public void removeExpiredEntries(Set<String> proceedQueueKeys) {
+		// 현재 Unix 타임스탬프를 가져옴
+		Instant instant = Instant.now();
+		long currentTime = convertSecondToNano(instant, 0);
+
+		for (String proceedQueueKey : proceedQueueKeys) {
+			try {
+				// Redisson을 사용하여 ZSet을 가져옴
+				RScoredSortedSet<String> proceedQueue = writeRedissonClient.getScoredSortedSet(proceedQueueKey);
+
+				// 현재 시간보다 score 값이 작은 요소들을 삭제
+				int removedCount = proceedQueue.removeRangeByScore(
+						0.0, true, // 시작 범위 0, inclusive (포함)
+						(double) currentTime, true // 종료 범위 현재 시간, inclusive (포함)
+				);
+
+				log.info("Removed {} expired entries from proceed queue: {}", removedCount, proceedQueueKey);
+			} catch (RedisException e) {
+				log.error("Error while removing expired entries from queue: {}", proceedQueueKey, e);
+			}
+		}
+	}
+
+	public long convertSecondToNano(Instant inst, long expiredTime){
+		long time = inst.getEpochSecond();
+		time *= NANO_SECONDS;
+		time += inst.getNano();
+
+		expiredTime *= NANO_SECONDS;
+
+		time += expiredTime;
+
+		return time;
+	}
+
 	@Scheduled(fixedRateString = "${queue.delay}")
 	public void scheduleAllowUser() {
 
 		log.info("called scheduling...");
 		Set<String> proccedQueueKeys = getProceedQueueKeys();
+
+		removeExpiredEntries(proccedQueueKeys);
 
 		for (String key : proccedQueueKeys) {
 			Long cnt = getCount(key);
