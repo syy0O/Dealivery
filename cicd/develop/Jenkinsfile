@@ -138,7 +138,7 @@ pipeline {
                             cd ../board
                             ./gradlew bootJar
 
-                            cd ../order
+                            cd ../orders
                             ./gradlew bootJar
 
                             cd ../gateway
@@ -194,7 +194,7 @@ pipeline {
                     }else if (TARGET_COMPONENT == 'order') {
                        // Docker 이미지 빌드 및 푸시
                        sh '''
-                       docker build --tag simkids/dealivery-orders:1.${BUILD_NUMBER} ./backend/order
+                       docker build --tag simkids/dealivery-orders:1.${BUILD_NUMBER} ./backend/orders
                        docker push simkids/dealivery-orders:1.${BUILD_NUMBER}
                        '''
                     }else if (TARGET_COMPONENT == 'gateway') {
@@ -222,7 +222,7 @@ pipeline {
                         docker build --tag simkids/dealivery-auth:1.${BUILD_NUMBER} ./backend/auth
                         docker build --tag simkids/dealivery-gateway:1.${BUILD_NUMBER} ./backend/gateway
                         docker build --tag simkids/dealivery-user:1.${BUILD_NUMBER} ./backend/user
-                        docker build --tag simkids/dealivery-orders:1.${BUILD_NUMBER} ./backend/order
+                        docker build --tag simkids/dealivery-orders:1.${BUILD_NUMBER} ./backend/orders
                         docker build --tag simkids/dealivery-gateway:1.${BUILD_NUMBER} ./backend/gateway
                         docker build --tag simkids/dealivery-frontend:1.${BUILD_NUMBER} ./frontend
                         docker build --tag simkids/dealivery-queue:1.${BUILD_NUMBER} ./queue-system/quequeflow
