@@ -223,7 +223,7 @@ pipeline {
                         docker build --tag simkids/dealivery-gateway:1.${BUILD_NUMBER} ./backend/gateway
                         docker build --tag simkids/dealivery-user:1.${BUILD_NUMBER} ./backend/user
                         docker build --tag simkids/dealivery-orders:1.${BUILD_NUMBER} ./backend/orders
-                        docker build --tag simkids/dealivery-gateway:1.${BUILD_NUMBER} ./backend/gateway
+                        docker build --tag simkids/dealivery-board:1.${BUILD_NUMBER} ./backend/board
                         docker build --tag simkids/dealivery-frontend:1.${BUILD_NUMBER} ./frontend
                         docker build --tag simkids/dealivery-queue:1.${BUILD_NUMBER} ./queue-system/quequeflow
                         docker push simkids/dealivery-board:1.${BUILD_NUMBER}
