@@ -53,3 +53,4 @@ domain: ${DOMAIN}
 
 custom:
   kafka-url: ${KAFKA_URL}
+  feign-url: ${FEIGN_URL}
