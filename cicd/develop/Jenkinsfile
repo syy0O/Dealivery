@@ -138,7 +138,7 @@ pipeline {
                             cd ../board
                             ./gradlew bootJar
 
-                            cd ../order
+                            cd ../orders
                             ./gradlew bootJar
 
                             cd ../gateway
