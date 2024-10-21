@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "board-service", url = "http://localhost:8000/api",contextId = "boardServiceClientForOrders")
+@FeignClient(name = "board-service", url = "${custom.feign-url}",contextId = "boardServiceClientForOrders")
 @Component
 public interface BoardServiceClient {
 

@@ -245,7 +245,12 @@ pipeline {
             steps {
                 script{
                     echo "Editing Manifest..."
-                    sh 'cd ..'
+                    if(TARGET_COMPONENT == 'queue' || TARGET_COMPONENT == 'frontend' || TARGET_COMPONENT == 'all' ){
+                        sh 'cd ..'
+                    }else{
+                        sh 'cd ../..'
+                    }
+
                     sh 'git checkout argoCD'
                        if (TARGET_COMPONENT == 'auth') {
                            // 백엔드 rollout 수정 후
