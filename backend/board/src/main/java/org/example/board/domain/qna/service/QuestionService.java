@@ -1,4 +1,4 @@
-package org.example.backend.domain.qna.service;
+package org.example.board.domain.qna.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.board.domain.board.model.entity.ProductBoard;
