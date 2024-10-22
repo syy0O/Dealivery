@@ -66,9 +66,7 @@ public class UserService {
     }
 
     public UserDto.AuthUserNotFoundResponse getAuthUser(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new InvalidCustomException(BaseResponseStatus.USER_DETAIL_FAIL_USER_NOT_FOUND
-                ));
-        return user.toAuthUserNotFoundResponse();
+        User user = userRepository.findByEmail(email).orElse(null);
+        return user != null ? user.toAuthUserNotFoundResponse() : null;
     }
 }
