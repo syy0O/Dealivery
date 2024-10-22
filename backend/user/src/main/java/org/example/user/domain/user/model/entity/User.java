@@ -91,7 +91,7 @@ public class User {
 
     public UserDto.UserSignupComplete toUserSignupComplete(){
         return UserDto.UserSignupComplete.builder()
-                .userIdx(this.idx)
+                .idx(this.idx)
                 .name(this.name)
                 .email(this.email)
                 .password(this.password)

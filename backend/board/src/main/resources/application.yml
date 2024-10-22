@@ -1,4 +1,7 @@
 spring:
+  kafka:
+    listener:
+      retries: 3  # 최대 재시도 횟수
   application:
     name: board-service
   datasource:
@@ -48,6 +51,7 @@ server:
       charset: UTF-8
       force: true
     context-path: ${CONTEXT_PATH}
+  port: 8082
 
 domain: ${DOMAIN}
 

@@ -53,6 +53,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             if(user == null) {
                 getRedirectStrategy().sendRedirect(request, response, domain + "/login/redirect?" + "isSuccess=" + true + "&isExist=" + false
                         + "&name=" + name + "&email=" + email + "&type=" + type);
+                return;
             }
             else {
                 userRepository.save(user);

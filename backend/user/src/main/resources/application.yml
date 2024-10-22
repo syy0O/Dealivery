@@ -10,6 +10,9 @@ project:
     url: ${MAIL_URL}
 
 spring:
+  kafka:
+    listener:
+      retries: 3  # 최대 재시도 횟수
   application:
     name: user-service
   mail:
@@ -56,6 +59,7 @@ server:
       charset: UTF-8
       force: true
     context-path: ${CONTEXT_PATH}
+  port: 8081
 
 custom:
   kafka-url: ${KAFKA_URL}
