@@ -528,7 +528,7 @@ export default {
         "주문이 취소되었습니다."
       );
     },
-    
+
     handleBeforeUnload(event) {
       if (!this.paymentCompleted) {
         // 결제가 완료되지 않은 경우에만
