@@ -103,9 +103,9 @@ public class OrderService {
         Orders order = ordersRepository.findById(request.getOrderIdx()).orElseThrow(() -> new InvalidCustomException(
                 ORDER_FAIL_NOT_FOUND));
         User user = validAndGetUser(userIdx);
-        if (order.getUser().getIdx() != user.getIdx()) {
-            throw new InvalidCustomException(ORDER_PAYMENT_FAIL);
-        }
+//        if (order.getUser().getIdx() != user.getIdx()) {
+//            throw new InvalidCustomException(ORDER_PAYMENT_FAIL);
+//        }
 
         order.update(request); // 주문 추가 정보 업데이트
         ordersRepository.save(order);
