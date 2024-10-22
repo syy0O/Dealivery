@@ -99,8 +99,8 @@ public class UserController {
         return new BaseResponse();
     }
 
-    @GetMapping("/user-email")
-    public UserDto.AuthUserNotFoundResponse getUserEmail(@RequestParam String email){
+    @PostMapping("/user-email")
+    public UserDto.AuthUserNotFoundResponse getUserEmail(@RequestBody String email){
         return userService.getAuthUser(email);
     }
 }
