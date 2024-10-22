@@ -1,6 +1,7 @@
 package org.example.gateway.global.filter;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.gateway.global.constants.RedisKeys;
 import org.example.gateway.global.security.model.dto.CustomUserDetails;
 import org.example.gateway.global.util.JwtUtil;
@@ -24,6 +25,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 @Component
+@Slf4j
 public class JwtFilter implements WebFilter {
     private final JwtUtil jwtUtil;
     private final RedisTemplate<String, Object> slaveRedisTemplate;
@@ -41,6 +43,7 @@ public class JwtFilter implements WebFilter {
 
         // 쿠키가 없을 시 필터 통과
         if (cookieArray == null || cookieArray.isEmpty()) {
+            log.info("토큰없음");
             return chain.filter(exchange);
         }
 
