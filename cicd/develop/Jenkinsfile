@@ -96,8 +96,8 @@ pipeline {
                             '''
                         }else if (TARGET_COMPONENT == 'order') {
                             sh '''
-                            chmod +x backend/order/gradlew
-                            cd backend/order
+                            chmod +x backend/orders/gradlew
+                            cd backend/orders
                             ./gradlew bootJar
                             '''
                         }else if (TARGET_COMPONENT == 'queue') {
