@@ -14,7 +14,9 @@
     <h2 class="css-abwjr2 e1q8tigr4">
       <span class="css-5nirzt e1q8tigr3">{{ data.discountRate }}%</span
       ><span class="css-9pf1ze e1q8tigr2">{{
-        (this.data.price * (1 - this.data.discountRate / 100)).toLocaleString()
+        Math.floor(
+          this.data.price * (1 - this.data.discountRate / 100)
+        ).toLocaleString()
       }}</span
       ><span class="css-1x9cx9j e1q8tigr1">원</span>
     </h2>
@@ -301,12 +303,6 @@ export default {
       isModalVisible: false,
     };
   },
-  created() {
-    this.isHeartFilled = this.data.likes;
-    if (this.isHeartFilled) {
-      this.heartImage = this.filledHeartImage;
-    }
-  },
   computed: {
     isBeforeOpenTime() {
       return Date.now() < new Date(this.data.startedAt).getTime();
@@ -328,6 +324,7 @@ export default {
       handler(newValue) {
         if (newValue) {
           this.mapProductsToOptions();
+          this.changeHeart();
         }
       },
     },
@@ -339,6 +336,13 @@ export default {
         label: product.name, // 이름 앞에 '[99치킨]' 추가
         originalPrice: product.price,
       }));
+    },
+    changeHeart() {
+      this.isHeartFilled = this.data.likes;
+      if (this.isHeartFilled) {
+        console.log("likes 여부:", this.data.likes);
+        this.heartImage = this.filledHeartImage;
+      }
     },
     toggleDropdown() {
       this.isDropdownOpen = !this.isDropdownOpen;
