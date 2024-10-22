@@ -210,7 +210,7 @@ public class UserDto {
     @AllArgsConstructor
     @Builder
     public static class UserSignupComplete{
-        private Long userIdx;
+        private Long idx;
         private String name;
         private String email;
         private String password;

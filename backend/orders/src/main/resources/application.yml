@@ -1,4 +1,7 @@
 spring:
+  kafka:
+    listener:
+      retries: 3  # 최대 재시도 횟수
   application:
     name: order-service
   datasource:
