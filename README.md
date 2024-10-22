@@ -1,6 +1,6 @@
 # 🎉 Dealivery - 핫딜만 모아보는 커머스 플랫폼 
 <div align="center">
-  <img width="719" alt="리드미 메인" src="https://github.com/user-attachments/assets/08d517aa-229b-452e-a264-62e4bff02b91">
+  <img src="./docs/img/logo.png" alt="logo" width="719">
 </div>
 
 
@@ -92,8 +92,8 @@
 ---
 # 🌟 프로젝트 배경
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/128039e9-2fd9-441e-9ae9-00931338089b" alt="프로젝트 배경1" width="45%">
-  <img src="https://github.com/user-attachments/assets/24cbf9f0-fcfa-40cd-9210-503e939b726d" alt="프로젝트 배경2" width="40%">
+  <img src="./docs/img/프로젝트배경_1.png" alt="프로젝트 배경1" width="45%">
+  <img src="./docs/img/프로젝트배경_2.jpg" alt="프로젝트 배경2" width="40%">
 </div>
 
 <br>
@@ -107,6 +107,7 @@
 
 # 🔮 프로젝트 소개
 <br>
+
 `Dealivery`는 이런 불편함을 해소하기 위해 탄생한 **커머스 플랫폼**입니다. 다양한 브랜드와 기업의 이벤트성 판매 정보를 한 곳에 모아, 원하는 상품을 빠르게 찾아 구매할 수 있도록 지원합니다. <br>
 
 동시에, **판매자에게는 판매 시스템 운영의 부담을 줄이고, 안정적인 환경에서 이벤트 판매에 집중할 수 있는 기회를 제공**합니다.
@@ -130,12 +131,12 @@
 <br>
   <details>
     <summary><b>📝 ERD</b></summary></br>
-        <img src="https://github.com/user-attachments/assets/9ca4e567-2c51-4da8-b189-0d37149ddd22" alt="ERD">
+        <img src="./docs/img/ERD.png" alt="ERD" width="75%">
   </details>
 
   <details>
     <summary><b>⚙️ 시스템아키텍처</b></summary></br>
-        <img src="https://github.com/user-attachments/assets/e4f3d3f8-aefc-418a-927c-2fbfb441eaab" alt="시스템아키텍처">
+        <img src="./docs/img/시스템아키텍처.png" alt="시스템아키텍처" width="75%">
   </details>
 
 ▶ [**🎨 화면설계서 바로가기**](https://www.figma.com/design/RHr92dX8HXnizNP1vGE1ty/Simkids?node-id=0-1&t=7v4DwQsb6o9BLGLc-1)
