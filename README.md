@@ -145,10 +145,10 @@
 
 <br>
 
-# 🚀 개발 폴더로 이동하기
-
-### ▶ [**Frontend**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/tree/main/frontend)
+# 📂 개발 폴더로 이동하기
 
 ### ▶ [**Backend**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/tree/main/backend)
 
 ### ▶ [**CI/CD**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/tree/main/cicd)
+
+### ▶ [**Frontend**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/tree/main/frontend)
