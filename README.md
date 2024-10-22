@@ -51,41 +51,52 @@
 
 ---
 # 🔧 기술 스택
-<br>
-<div align="center">
-    <img src="https://img.shields.io/badge/html5-%23E34F26?style=flat&logo=html5&logoColor=white">
-    <img src="https://img.shields.io/badge/css3-%231572B6?style=flat&logo=css3&logoColor=white">
-    <img src="https://img.shields.io/badge/javascript-%23323330?style=flat&logo=javascript&logoColor=%23F7DF1E">
-    <img src="https://img.shields.io/badge/vue.js-%2335495e?style=flat&logo=vuedotjs&logoColor=%234FC08D">
-</div>
 
-<div align="center">
-    <img src="https://img.shields.io/badge/jenkins-CF4045?style=flat&logo=jenkins&logoColor=white">
-    <img src="https://img.shields.io/badge/docker-002260?style=flat&logo=docker&logoColor=white">
-    <img src="https://img.shields.io/badge/kubernetes-%231572B6?style=flat&logo=kubernetes&logoColor=white">
-    <img src="https://img.shields.io/badge/argo-EF7B4D?style=flat&logo=argo&logoColor=white">
-    <img src="https://img.shields.io/badge/Longhorn-%23323330?style=flat&logo=Longhorn&logoColor=white">
-</div>
+### Backend
+<img src="https://img.shields.io/badge/Java-F7DF1E?style=flat&logo=Java&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=flat&logo=springboot&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Spring Cloud-6DB33F?style=flat&logo=spring&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Kafka-231F20?style=flat&logo=apachekafka&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/JWT-000000?style=flat&logo=jsonwebtokens&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/JPA-%233574A3?style=flat&logo=JPA&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/QueryDSL-%233574A3?style=flat&logo=QueryDSL&logoColor=white">
 
-<div align="center">
-    <img src="https://img.shields.io/badge/mariadb-%23003545?style=flat&logo=mariadb&logoColor=white">
-    <img src="https://img.shields.io/badge/nginx-%23009639?style=flat&logo=nginx&logoColor=white">
-    <img src="https://img.shields.io/badge/git-F05032?style=flat&logo=git&logoColor=white">
-    <img src="https://img.shields.io/badge/ubuntu-E95420?style=flat&logo=ubuntu&logoColor=white">
-</div>
+### Server
+<img src="https://img.shields.io/badge/Redis-%23FF4438?style=flat&logo=redis&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Docker-002260?style=flat&logo=docker&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Kubernetes-%231572B6?style=flat&logo=kubernetes&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Longhorn-%23323330?style=flat&logo=Longhorn&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Zookeeper-E95420?style=flat&logo=zookeeper&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Nginx-%23009639?style=flat&logo=nginx&logoColor=white">
 
-<div align="center">
-    <img src="https://img.shields.io/badge/java-F7DF1E?style=flat&logo=java&logoColor=white">
-    <img src="https://img.shields.io/badge/springboot-6DB33F?style=flat&logo=springboot&logoColor=white">
-    <img src="https://img.shields.io/badge/kafka-231F20?style=flat&logo=apachekafka&logoColor=white">
-    <img src="https://img.shields.io/badge/redis-%23FF4438?style=flat&logo=redis&logoColor=white">
-</div>
+### Database
+<img src="https://img.shields.io/badge/MariaDB-%23003545?style=flat&logo=mariadb&logoColor=white">
 
-<div align="center">
-    <img src="https://img.shields.io/badge/notion-000000?style=flat&logo=notion&logoColor=white">
-    <img src="https://img.shields.io/badge/googledocs-4285F4?style=flat&logo=googledocs&logoColor=white">
-    <img src="https://img.shields.io/badge/github-181717?style=flat&logo=github&logoColor=white">
-</div>
+### Cloud
+<img src="https://img.shields.io/badge/Amazon-FF9900?style=flat&logo=amazon&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Amazon S3-569A31?style=flat&logo=amazons3&logoColor=white">
+
+### CI/CD
+<img src="https://img.shields.io/badge/Jenkins-CF4045?style=flat&logo=jenkins&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Argo-EF7B4D?style=flat&logo=argo&logoColor=white">
+
+### Testing
+<img src="https://img.shields.io/badge/JMeter-D22128?style=flat&logo=apachejmeter&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Locust-%23009639?style=flat&logo=locust&logoColor=white">
+
+### Frontend
+<img src="https://img.shields.io/badge/HTML5-%23E34F26?style=flat&logo=html5&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/CSS-%231572B6?style=flat&logo=css3&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/JavaScript-%23323330?style=flat&logo=javascript&logoColor=%23F7DF1E">&nbsp;
+<img src="https://img.shields.io/badge/Vue.js-%2335495e?style=flat&logo=vuedotjs&logoColor=%234FC08D">
+
+### Version Control & Collaboration
+<img src="https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white">
+
+### Operating System
+<img src="https://img.shields.io/badge/Ubuntu-E95420?style=flat&logo=ubuntu&logoColor=white">
 
 <br>
 
