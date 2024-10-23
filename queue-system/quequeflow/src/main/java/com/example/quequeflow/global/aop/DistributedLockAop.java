@@ -1,5 +1,8 @@
 package com.example.quequeflow.global.aop;
 
+import static com.example.quequeflow.global.common.constants.BaseResponseStatus.ROCK_FAIL;
+
+import com.example.quequeflow.global.common.constants.BaseResponse;
 import com.example.quequeflow.global.util.CustomSpringELParser;
 import java.lang.reflect.Method;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +42,7 @@ public class DistributedLockAop {
             boolean available = rLock.tryLock(distributedLock.waitTime(), distributedLock.leaseTime(), distributedLock.timeUnit());  // (2)
             if (!available) {
                 log.info("Lock 획득 실패={}", key);
-                return false;
+                return new BaseResponse<>(ROCK_FAIL);//false;
             }
 
             log.info("로직 수행");
