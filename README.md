@@ -52,51 +52,49 @@
 ---
 # 🔧 기술 스택
 
+### Frontend
+<img src="https://img.shields.io/badge/Vue.js-%2335495e?style=&logo=vuedotjs&logoColor=%234FC08D">&nbsp;
+<img src="https://img.shields.io/badge/Nginx-%23009639?style=flat&logo=nginx&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Pinia-%23FFF000?style=flat&logo=pinia&logoColor=white">&nbsp;
+
 ### Backend
-<img src="https://img.shields.io/badge/Java-F7DF1E?style=flat&logo=Java&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=flat&logo=springboot&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Spring Security-6DB33F?style=flat&logo=springsecurity&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Spring Cloud-6DB33F?style=flat&logo=spring&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Kafka-231F20?style=flat&logo=apachekafka&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/JWT-000000?style=flat&logo=jsonwebtokens&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/JPA-%233574A3?style=flat&logo=JPA&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/QueryDSL-%233574A3?style=flat&logo=QueryDSL&logoColor=white">
+<img src="https://img.shields.io/badge/QueryDSL-%233574A3?style=flat&logo=QueryDSL&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Oauth-%23003545?style=flat&logo=oauth&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/JWT-000000?style=flat&logo=jsonwebtokens&logoColor=white">&nbsp;
 
-### Server
+### DB/Storage
+<img src="https://img.shields.io/badge/MariaDB-%23003545?style=flat&logo=mariadb&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Amazon S3-569A31?style=flat&logo=amazons3&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Redis-%23FF4438?style=flat&logo=redis&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Docker-002260?style=flat&logo=docker&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Kubernetes-%231572B6?style=flat&logo=kubernetes&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Longhorn-%23323330?style=flat&logo=Longhorn&logoColor=white">&nbsp;
+
+### Message Queue
+<img src="https://img.shields.io/badge/Kafka-231F20?style=flat&logo=apachekafka&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Zookeeper-E95420?style=flat&logo=zookeeper&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Nginx-%23009639?style=flat&logo=nginx&logoColor=white">
-
-### Database
-<img src="https://img.shields.io/badge/MariaDB-%23003545?style=flat&logo=mariadb&logoColor=white">
-
-### Cloud
-<img src="https://img.shields.io/badge/Amazon-FF9900?style=flat&logo=amazon&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Amazon S3-569A31?style=flat&logo=amazons3&logoColor=white">
 
 ### CI/CD
+<img src="https://img.shields.io/badge/Kubernetes-%231572B6?style=flat&logo=kubernetes&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Docker-002260?style=flat&logo=docker&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Jenkins-CF4045?style=flat&logo=jenkins&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Argo-EF7B4D?style=flat&logo=argo&logoColor=white">
+<img src="https://img.shields.io/badge/ArgoCD-EF7B4D?style=flat&logo=argo&logoColor=white">&nbsp;
 
-### Testing
+### Monotoring
+<img src="https://img.shields.io/badge/Grafana-F46800?style=flat&logo=Grafana&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Prometheus-E6522C?style=flat&logo=Prometheus&logoColor=white">&nbsp;
+
+### Test&VCS
 <img src="https://img.shields.io/badge/JMeter-D22128?style=flat&logo=apachejmeter&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Locust-%23009639?style=flat&logo=locust&logoColor=white">
-
-### Frontend
-<img src="https://img.shields.io/badge/HTML5-%23E34F26?style=flat&logo=html5&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/CSS-%231572B6?style=flat&logo=css3&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/JavaScript-%23323330?style=flat&logo=javascript&logoColor=%23F7DF1E">&nbsp;
-<img src="https://img.shields.io/badge/Vue.js-%2335495e?style=flat&logo=vuedotjs&logoColor=%234FC08D">
-
-### Version Control & Collaboration
+<img src="https://img.shields.io/badge/Locust-%23009639?style=flat&logo=locust&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white">
 
-### Operating System
-<img src="https://img.shields.io/badge/Ubuntu-E95420?style=flat&logo=ubuntu&logoColor=white">
+### Cooperation
+<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=Discord&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=Figma&logoColor=white">&nbsp;
 
 <br>
 
