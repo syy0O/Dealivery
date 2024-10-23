@@ -102,7 +102,7 @@ public class OrderService {
 
         Orders order = ordersRepository.findById(request.getOrderIdx()).orElseThrow(() -> new InvalidCustomException(
                 ORDER_FAIL_NOT_FOUND));
-        User user = validAndGetUser(userIdx);
+//        User user = validAndGetUser(userIdx);
 //        if (order.getUser().getIdx() != user.getIdx()) {
 //            throw new InvalidCustomException(ORDER_PAYMENT_FAIL);
 //        }
@@ -118,19 +118,19 @@ public class OrderService {
             order.getUser().deductPoints(order.getUsedPoint());
             order.setStatus(OrderStatus.ORDER_COMPLETE);
             ordersRepository.save(order);
-            orderQueueService.exitQueue(order.getBoardIdx(), user.getIdx());
+            orderQueueService.exitQueue(order.getBoardIdx(), userIdx/*user.getIdx()*/);
 
 
         } catch (IamportResponseException | IOException e) { // 해당하는 결제 정보를 찾지 못했을 때
             order.setStatus(OrderStatus.ORDER_FAIL);
             ordersRepository.save(order);
-            orderQueueService.exitQueue(order.getBoardIdx(), user.getIdx());
+            orderQueueService.exitQueue(order.getBoardIdx(), userIdx/*user.getIdx()*/);
             throw new InvalidCustomException(ORDER_PAYMENT_FAIL);
 
         } catch (InvalidCustomException e) { // 결제 검증 중 발생한 예외 처리
             order.setStatus(OrderStatus.ORDER_FAIL);
             ordersRepository.save(order);
-            orderQueueService.exitQueue(order.getBoardIdx(), user.getIdx());
+            orderQueueService.exitQueue(order.getBoardIdx(), userIdx/*user.getIdx()*/);
             throw e;
         }
 
@@ -140,14 +140,14 @@ public class OrderService {
     public void cancel(Long userIdx, Long idx) {
         Orders order = ordersRepository.findById(idx).orElseThrow(() -> new InvalidCustomException(
                 BaseResponseStatus.ORDER_FAIL_NOT_FOUND));
-        User user = validAndGetUser(userIdx);
-        if (order.getUser().getIdx() != user.getIdx())  { // 해당하는 사용자의 주문이 아닐 때
-            throw new InvalidCustomException(ORDER_CANCEL_FAIL);
-        }
+//        User user = validAndGetUser(userIdx);
+//        if (order.getUser().getIdx() != user.getIdx())  { // 해당하는 사용자의 주문이 아닐 때
+//            throw new InvalidCustomException(ORDER_CANCEL_FAIL);
+//        }
 
         if (order.getStatus() !=  OrderStatus.ORDER_COMPLETE) {
             ordersRepository.delete(order);
-            orderQueueService.exitQueue(order.getBoardIdx(), user.getIdx());
+            orderQueueService.exitQueue(order.getBoardIdx(), userIdx/*user.getIdx()*/);
             return;
         }
 
