@@ -16,7 +16,8 @@ public enum BaseResponseStatus {
     // 큐에 이미 등록됨
     QUEUE_ALREADY_REGISTERED_USER(false, 9200, "이미 대기열에 등록되어 있습니다"),
 
-    WAITING_IN_QUEUE(false,9300, "대기열에 있습니다. 대기 중입니다.");
+    WAITING_IN_QUEUE(false,9300, "대기열에 있습니다. 대기 중입니다."),
+    ROCK_FAIL(false, 9400, "락 획득에 실패했습니다. 다시 시도하세요.");
 
 
     private boolean isSuccess;
