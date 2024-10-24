@@ -8,7 +8,6 @@ import CompanyBoardListPage from "../pages/company/board/CompanyBoardListPage.vu
 import OrdersPage from "@/pages/user/orders/OrdersPage.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import CompanySignupComponent from "@/components/company/CompanySignupComponent.vue";
-import InvalidUrlComponent from "@/components/user/InvalidUrlComponent.vue";
 import FindPasswordWaitComponent from "@/components/user/FindPasswordWaitComponent.vue";
 import FindPasswordComponent from "@/components/user/FindPasswordComponent.vue";
 import ResetPasswordComponent from "@/components/user/ResetPasswordComponent.vue";
@@ -29,6 +28,7 @@ import MypageOrderDetail from "@/components/mypage/MypageOrderDetailComponent.vu
 import MypageDetailEditComponent from "@/components/mypage/MypageDetailEditComponent.vue";
 import MypageDetailComponent from "@/components/mypage/MypageDetailComponent.vue";
 import { useUserStore } from "@/stores/useUserStore";
+import InvalidUrlPage from "@/pages/common/InvalidUrlPage.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -59,11 +59,6 @@ const router = createRouter({
         {
           path: "company/signup",
           component: CompanySignupComponent,
-          meta: { requiresAuth: false },
-        },
-        {
-          path: "invalid",
-          component: InvalidUrlComponent,
           meta: { requiresAuth: false },
         },
         {
@@ -188,6 +183,11 @@ const router = createRouter({
           meta: { requiresAuth: true, roles: ["ROLE_USER"] },
         },
       ],
+    },
+    {
+       // 정해진 경로 외 모든 경로를 매칭
+      path: '/:pathMatch(.*)*',
+      component: InvalidUrlPage, // InvalidUrl 페이지로 이동
     },
   ],
 });
