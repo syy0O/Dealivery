@@ -52,10 +52,10 @@ public class PaymentService {
 
         AtomicLong totalPrice = validateAndDecreaseStock(payment, usedPoint, order, discountRate);
 
-//        if (usedPoint > order.getUser().getPoint()) {
-//            refund(payment.getImpUid(), payment);
-//            throw new InvalidCustomException(ORDER_VALIDATION_FAIL_PRICE_MISMATCH);
-//        }
+        if (usedPoint > order.getUser().getPoint()) {
+            refund(payment.getImpUid(), payment);
+            throw new InvalidCustomException(ORDER_VALIDATION_FAIL_PRICE_MISMATCH);
+        }
 
        if (amount != totalPrice.intValue()) {
            refund(payment.getImpUid(), payment);

@@ -90,9 +90,9 @@ public class OrderService {
         Orders order = ordersRepository.findById(request.getOrderIdx()).orElseThrow(() -> new InvalidCustomException(
                 ORDER_FAIL_NOT_FOUND));
 
-//        if (order.getUser().getIdx() != user.getIdx()) {
-//            throw new InvalidCustomException(ORDER_PAYMENT_FAIL);
-//        }
+        if (order.getUser().getIdx() != user.getIdx()) {
+            throw new InvalidCustomException(ORDER_PAYMENT_FAIL);
+        }
 
         order.update(request); // 주문 추가 정보 업데이트
         ordersRepository.save(order);
@@ -102,7 +102,7 @@ public class OrderService {
         try {
             Payment payment = paymentService.getPaymentInfo(paymentId);
             paymentService.validatePayment(payment, order);
-//            order.getUser().deductPoints(order.getUsedPoint());
+            order.getUser().deductPoints(order.getUsedPoint());
             order.setStatus(OrderStatus.ORDER_COMPLETE);
             ordersRepository.save(order);
 
