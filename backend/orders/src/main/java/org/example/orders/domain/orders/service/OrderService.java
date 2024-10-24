@@ -102,10 +102,10 @@ public class OrderService {
 
         Orders order = ordersRepository.findById(request.getOrderIdx()).orElseThrow(() -> new InvalidCustomException(
                 ORDER_FAIL_NOT_FOUND));
-//        User user = validAndGetUser(userIdx);
-//        if (order.getUser().getIdx() != user.getIdx()) {
-//            throw new InvalidCustomException(ORDER_PAYMENT_FAIL);
-//        }
+        User user = validAndGetUser(userIdx);
+        if (order.getUser().getIdx() != user.getIdx()) {
+            throw new InvalidCustomException(ORDER_PAYMENT_FAIL);
+        }
 
         order.update(request); // 주문 추가 정보 업데이트
         ordersRepository.save(order);
@@ -140,10 +140,10 @@ public class OrderService {
     public void cancel(Long userIdx, Long idx) {
         Orders order = ordersRepository.findById(idx).orElseThrow(() -> new InvalidCustomException(
                 BaseResponseStatus.ORDER_FAIL_NOT_FOUND));
-//        User user = validAndGetUser(userIdx);
-//        if (order.getUser().getIdx() != user.getIdx())  { // 해당하는 사용자의 주문이 아닐 때
-//            throw new InvalidCustomException(ORDER_CANCEL_FAIL);
-//        }
+        User user = validAndGetUser(userIdx);
+        if (order.getUser().getIdx() != user.getIdx())  { // 해당하는 사용자의 주문이 아닐 때
+            throw new InvalidCustomException(ORDER_CANCEL_FAIL);
+        }
 
         if (order.getStatus() !=  OrderStatus.ORDER_COMPLETE) {
             ordersRepository.delete(order);
