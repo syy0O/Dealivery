@@ -1,6 +1,5 @@
-# 🎉 Dealivery - 핫딜만 모아보는 커머스 플랫폼 
 <div align="center">
-  <img src="./docs/img/logo.png" alt="logo" width="719">
+  <img src="./docs/img/logo.png" alt="logo" width="780">
 </div>
 
 
