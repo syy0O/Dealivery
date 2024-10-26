@@ -1256,6 +1256,10 @@ svg:not(:root) {
   font-weight: 500;
 }
 
+button{
+  cursor: pointer
+}
+
 .payment-inactive {
   display: block;
   padding: 0px 10px;
