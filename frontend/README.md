@@ -8,29 +8,11 @@
     &nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/vue.js-%2335495e?style=flat&logo=vuedotjs&logoColor=%234FC08D">
     <br>
 </div>
-<br>
+<br><br>
 
 
 ---
 
-# 🚀 주요 기술
-## 크론잡(CronJob)으로 자동화된 게시글 상태 변경
+# 시연 영상 및 자세한 설명은 Wiki에서 확인해주세요. 
 
-
-
-
-
-#  🎥 핵심 기능 시연
-
-### 회원기능
-GIF 추가 예정
-
-### 게시글 상태 변경
-GIF 추가 예정
-
-### 주문 & 결제
-GIF 추가 예정
-
-
-### 문의 & 답변
-![문의시연](https://github.com/user-attachments/assets/3a0f7278-76cb-4a76-b8d1-e2e87b7ebc21)
+### ▶ [**Wiki 바로가기 📖**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/wiki/%EA%B8%B0%EB%8A%A5-%EC%8B%9C%EC%97%B0-%EC%98%81%EC%83%81)
