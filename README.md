@@ -153,6 +153,16 @@
 
 <br>
 
+---
+
+# 📚 기술적 소개는 Wiki에서 확인할 수 있습니다.
+
+### ▶ [**Wiki 바로가기**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/wiki)
+
+<br>
+
+---
+
 # 📂 개발 폴더로 이동하기
 
 ### ▶ [**Backend**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/tree/main/backend)
