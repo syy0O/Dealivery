@@ -58,6 +58,7 @@ public class PaymentService {
             throw new InvalidCustomException(BaseResponseStatus.ORDER_VALIDATION_FAIL_PRICE_MISMATCH);
         }
 
+        // 재고 확인로직
        // if (amount != totalPrice.intValue()) {
        //     refund(payment.getImpUid(), payment);
        //     throw new InvalidCustomException(BaseResponseStatus.ORDER_VALIDATION_FAIL_PRICE_MISMATCH);
