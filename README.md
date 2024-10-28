@@ -155,8 +155,8 @@
 
 ---
 
-# 📚 기술적 소개는 Wiki에서 확인할 수 있습니다.
-
+# 📚 기술 소개
+> 자세한 내용은 Wiki에서 확인할 수 있습니다.
 ### ▶ [**Wiki 바로가기**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/wiki/%EA%B8%B0%EC%88%A0%EC%A0%81-%EA%B3%A0%EB%AF%BC)
 
 <br>
