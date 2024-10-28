@@ -133,9 +133,14 @@ export default {
     },
     async like() {
       this.request.productBoardIdx = this.data.idx;
+      console.log(this.userStore.roles[0]);
       if (!this.userStore.isLogined) {
         alert("로그인이 필요한 서비스입니다.");
         this.$router.push("/auth/login");
+        return;
+      }
+      if (this.userStore.roles[0] == "ROLE_COMPANY") {
+        alert("판매자는 좋아요 버튼을 누를 수 없습니다.");
         return;
       }
       if (await this.userStore.like(this.request)) {
