@@ -13,7 +13,7 @@
 
 # 📚 기술 소개
 > 배포 과정 및 자세한 내용은 Wiki에서 확인할 수 있습니다.
-### ▶ [**Wiki 바로가기**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/wiki/%EA%B8%B0%EC%88%A0%EC%A0%81-%EA%B3%A0%EB%AF%BC)
+### ▶ [**Wiki 바로가기**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/wiki/%EA%B8%B0%EC%88%A0%EC%A0%81-%EA%B3%A0%EB%AF%BC#-%EB%AC%B4%EC%A4%91%EB%8B%A8-%EB%B0%B0%ED%8F%AC%EB%A5%BC-%EC%9C%84%ED%95%9C-cicd-%EA%B5%AC%EC%B6%95)
 
 <br>
 
