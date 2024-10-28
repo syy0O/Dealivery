@@ -10,9 +10,18 @@
 </div>
 <br><br>
 
+---
+
+# 📽️ 시연 영상
+> 시연 영상 및 자세한 내용은 Wiki에서 확인할 수 있습니다.
+### ▶ [**Wiki 바로가기**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/wiki/%EA%B8%B0%EB%8A%A5-%EC%8B%9C%EC%97%B0-%EC%98%81%EC%83%81)
+
+<br>
 
 ---
 
-# 시연 영상 및 자세한 설명은 Wiki에서 확인해주세요. 
+# 📂 개발 폴더로 이동하기
 
-### ▶ [**Wiki 바로가기 📖**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/wiki/%EA%B8%B0%EB%8A%A5-%EC%8B%9C%EC%97%B0-%EC%98%81%EC%83%81)
+### ▶ [**Backend**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/tree/main/backend)
+
+### ▶ [**CI/CD**](https://github.com/beyond-sw-camp/be06-fin-SimKids-Dealivery/tree/main/cicd)
