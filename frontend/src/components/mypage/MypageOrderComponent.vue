@@ -47,20 +47,16 @@
                 </div>
                 <div class="css-vts8bc e9fxgjh2">
                   <div class="css-1tf2711 e73mjag8">
-                    <a href="/goods/5054274" class="css-1ll9bqd e73mjag0">
-                      <img
-                        :src="order.thumnailUrl"
-                        class="css-13pph03 e73mjag7"
-                      />
-                    </a>
+                    <img
+                      :src="order.thumnailUrl"
+                      class="css-13pph03 e73mjag7"
+                    />
                     <div class="_17g6wc40">
-                      <a href="/goods/5054274" class="css-1ll9bqd e73mjag0">
-                        <p
-                          class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-1dl78ek e73mjag3"
-                        >
-                          {{ order.title }}
-                        </p>
-                      </a>
+                      <p
+                        class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou13 _97oqoud ldmw177i css-1dl78ek e73mjag3"
+                      >
+                        {{ order.title }}
+                      </p>
                       <div class="css-1tf2711 e73mjag8">
                         <p
                           class="_97oqoup _97oqouw _97oqou6 ldmw177b _97oqou1a _97oqouk ldmw177r _97oqou11 _97oqoub ldmw177k css-1dl78ek e73mjag4"
