@@ -133,7 +133,8 @@
                           <div class="css-1fvrsoi e12wapb60">
                             {{
                               Math.round(
-                                option.price * (1 - this.data.discountRate / 100)
+                                option.price *
+                                  (1 - this.data.discountRate / 100)
                               ).toLocaleString()
                             }}원
                           </div>
@@ -389,6 +390,10 @@ export default {
           path: "/auth/login",
           query: { redirect: this.$route.fullPath },
         });
+        return;
+      }
+      if (this.userStore.roles[0] == "ROLE_COMPANY") {
+        alert("판매자는 좋아요 버튼을 누를 수 없습니다.");
         return;
       }
       if (await this.userStore.like(this.request)) {
