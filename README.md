@@ -26,21 +26,18 @@
       <th>유송연</th>
       <th>오규림</th>
       <th>송나경</th>
-      <th>김은선</th>
     </tr>
     <tr>
       <td><img src="https://avatars.githubusercontent.com/u/69503955?v=4" width="100" height="100"/></td>
       <td><img src="https://avatars.githubusercontent.com/u/86238720?v=4" width="100" height="100"/></td>
       <td><img src="https://avatars.githubusercontent.com/u/77095330?v=4" width="100" height="100"/></td>
       <td><img src="https://avatars.githubusercontent.com/u/101664417?v=4" width="100" height="100"/></td>
-      <td><img src="https://avatars.githubusercontent.com/u/152248322?v=4" width="100" height="100"/></td>
     </tr>
     <tr>
       <td><a href="https://github.com/kangkings">@kangkings</a></td>
       <td><a href="https://github.com/syy0O">@syy0O</a></td>
       <td><a href="https://github.com/ohgyulim">@ohgyulim</a></td>
       <td><a href="https://github.com/NakyungSong">@NakyungSong</a></td>
-      <td><a href="https://github.com/kkkeess">@kkkeess</a></td>
     </tr>
   </table>
 </div>
