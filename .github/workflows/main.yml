@@ -36,7 +36,13 @@ jobs:
         chmod +x ./gradlew
         ./gradlew clean assemble # backend 디렉토리 내에서 Gradle 빌드
 
-    # 6. EC2 서버에 파일 전송
+    # 6. 비공개 키에 chmod 400 권한 부여
+    - name: Set permissions for private key
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > backend-server.pem
+        chmod 400 backend-server.pem
+
+    # 7. EC2 서버에 파일 전송
     - name: Copy file via SSH
       uses: appleboy/scp-action@v0.1.7
       with:
@@ -46,14 +52,15 @@ jobs:
         port: 22
         source: "backend/build/libs/backend-0.0.1-SNAPSHOT.jar"
         target: "/home/ubuntu/backend" # EC2 서버의 backend 폴더로 지정
+        key_path: "backend-server.pem"
 
-    # 7. Spring 애플리케이션 재시작 스크립트 실행
+    # 8. Spring 애플리케이션 재시작 스크립트 실행
     - name: Restart Spring project
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.EC2_IP }}
         username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.SSH_private_KEY }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
           # backend 폴더로 이동
