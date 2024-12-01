@@ -36,11 +36,11 @@ jobs:
         chmod +x ./gradlew
         ./gradlew clean assemble # backend 디렉토리 내에서 Gradle 빌드
 
-    # 6. 비공개 키에 chmod 400 권한 부여
+    # 6. 비공개 키에 권한 부여
     - name: Set permissions for private key
       run: |
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > backend-server.pem
-        chmod 600 backend-server.pem
+        chmod 400 backend-server.pem
 
     # 7. EC2 서버에 파일 전송
     - name: Copy file via SSH
