@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main  # main 브랜치에 머지될 때 실행
+      - main
 
 jobs:
   deploy:
@@ -35,10 +35,10 @@ jobs:
         # SSH 설정
         mkdir -p ~/.ssh
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+        chmod 400 ~/.ssh/id_rsa
 
-        # 빌드된 파일 전송 (backend 디렉토리 내부의 build/libs)
-        scp -o StrictHostKeyChecking=no backend/build/libs/*.jar $EC2_USER@$EC2_HOST:/home/ec2-user/app.jar
+        # 빌드된 파일 전송
+        scp -o StrictHostKeyChecking=no backend/build/libs/*.jar $EC2_USER@$EC2_HOST:/home/$EC2_USER/app.jar
 
         # EC2에서 JAR 실행
         ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
