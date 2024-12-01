@@ -39,10 +39,11 @@ jobs:
         chmod 400 ~/.ssh/id_rsa
 
         # 빌드된 파일 전송
-        scp -o StrictHostKeyChecking=no backend/build/libs/*.jar $EC2_USER@$EC2_HOST:/home/$EC2_USER/app.jar
+        scp -o StrictHostKeyChecking=no backend/build/libs/*.jar $EC2_USER@$EC2_HOST:/home/dealivery/app.jar
 
         # EC2에서 JAR 실행
         ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
         pkill -f 'java -jar' || true
+        sleep 5
         nohup java -jar /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &
         EOF
