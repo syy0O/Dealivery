@@ -46,7 +46,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         source: "backend/build/libs/backend-0.0.1-SNAPSHOT.jar"
-        target: "/home/ubuntu/backend" # EC2 서버의 backend 폴더로 지정
+        target: "/home/ubuntu/backend/backend-0.0.1-SNAPSHOT.jar" # EC2 서버의 backend 폴더로 지정
         debug: true
 
     # 8. Spring 애플리케이션 재시작 스크립트 실행
