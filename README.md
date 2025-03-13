@@ -141,7 +141,7 @@
 
   <details>
     <summary><b>⚙️ 시스템아키텍처</b></summary></br>
-        <img src="./docs/img/시스템아키텍처.png" alt="시스템아키텍처" width="75%">
+        <img src="./docs/시스템구조도_monolitic.png" alt="시스템아키텍처" width="75%">
   </details>
 
 ▶ [**🎨 화면설계서 바로가기**](https://www.figma.com/design/RHr92dX8HXnizNP1vGE1ty/Simkids?node-id=0-1&t=7v4DwQsb6o9BLGLc-1)
